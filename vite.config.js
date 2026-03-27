@@ -20,18 +20,42 @@ export default defineConfig({
         "icons/apple-touch-icon.svg",
         "icons/favicon.svg",
         "icons/*.png",
+        "screenshots/*.png",
       ],
       manifest: {
         name: "RPSLS Tournament",
         short_name: "RPSLS",
         description:
           "Mobile-first Rock, Paper, Scissors, Lizard, Spock tournament game built with Vue 3.",
+        id: "/",
         theme_color: "#0f172a",
         background_color: "#0f172a",
         display: "standalone",
+        display_override: ["window-controls-overlay", "standalone"],
         start_url: "/",
         scope: "/",
         lang: "hu",
+        protocol_handlers: [
+          {
+            protocol: "web+rpsls",
+            url: "/?action=%s",
+          },
+        ],
+        screenshots: [
+          {
+            src: "/screenshots/rpsls-desktop-wide.png",
+            sizes: "1280x720",
+            type: "image/png",
+            form_factor: "wide",
+            label: "RPSLS Tournament desktop gameplay view",
+          },
+          {
+            src: "/screenshots/rpsls-mobile.png",
+            sizes: "540x960",
+            type: "image/png",
+            label: "RPSLS Tournament mobile gameplay view",
+          },
+        ],
         icons: [
           {
             src: "/icons/pwa-192x192.png",
