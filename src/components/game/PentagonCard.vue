@@ -75,6 +75,7 @@ const revealClass = computed(() => {
 });
 
 const ownerLabel = computed(() => {
-  return props.owner === "ai" ? t("game.ai") : t("game.player");
+  if (props.owner === "ai") return t("game.ai");
+  return uiStore.playerName || t("game.player");
 });
 </script>

@@ -11,8 +11,12 @@
         >
           <p>{{ t("game.resumeFailed") }}</p>
         </section>
-        <OpponentBadge />
-        <ScoreBoard />
+
+        <section class="game-summary-row">
+          <OpponentBadge />
+          <ScoreBoard />
+        </section>
+
         <GameBoard />
 
         <section

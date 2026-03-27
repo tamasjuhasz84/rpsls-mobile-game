@@ -1,6 +1,7 @@
 {
   "app.title": "Kő, Papír, Olló, Gyík, Spock",
   "home.subtitle": "Torna mód",
+  "home.playerName": "Játékos neve",
   "menu.start": "Játék indítása",
   "menu.continue": "Folytatás",
   "menu.rules": "Szabályok",

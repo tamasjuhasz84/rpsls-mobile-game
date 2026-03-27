@@ -1,6 +1,7 @@
 {
   "app.title": "Rock, Paper, Scissors, Lizard, Spock",
   "home.subtitle": "Tournament mode",
+  "home.playerName": "Player name",
   "menu.start": "Start game",
   "menu.continue": "Continue",
   "menu.rules": "Rules",

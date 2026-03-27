@@ -6,6 +6,7 @@ export const useUiStore = defineStore("ui", {
     locale: "hu",
     soundEnabled: false,
     hapticsEnabled: false,
+    playerName: "",
   }),
 
   getters: {
@@ -14,12 +15,23 @@ export const useUiStore = defineStore("ui", {
   },
 
   actions: {
+    normalizePlayerName(value) {
+      if (typeof value !== "string") return "";
+      return value.trim().slice(0, 20);
+    },
+
     persistUiState() {
       saveUiState({
         locale: this.locale,
         soundEnabled: this.soundEnabled,
         hapticsEnabled: this.hapticsEnabled,
+        playerName: this.playerName,
       });
+    },
+
+    setPlayerName(name) {
+      this.playerName = this.normalizePlayerName(name);
+      this.persistUiState();
     },
 
     setLocale(locale) {
@@ -36,6 +48,7 @@ export const useUiStore = defineStore("ui", {
       this.locale = payload.locale === "en" ? "en" : "hu";
       this.soundEnabled = payload.soundEnabled === true;
       this.hapticsEnabled = payload.hapticsEnabled === true;
+      this.playerName = this.normalizePlayerName(payload.playerName);
     },
 
     toggleSound() {

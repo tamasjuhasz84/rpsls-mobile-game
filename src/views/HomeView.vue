@@ -5,6 +5,22 @@
       <h1>{{ t("app.title") }}</h1>
       <p class="subtitle">{{ t("home.subtitle") }}</p>
 
+      <div class="player-name-field">
+        <label class="player-name-label" for="player-name-input">
+          {{ t("home.playerName") }}
+        </label>
+        <input
+          id="player-name-input"
+          class="player-name-input"
+          type="text"
+          :value="uiStore.playerName"
+          :placeholder="t('game.player')"
+          maxlength="20"
+          autocomplete="nickname"
+          @input="updatePlayerName"
+        />
+      </div>
+
       <div class="mode-switch">
         <button
           :class="['mode-button', mode === 'bo3' && 'active']"
@@ -155,6 +171,11 @@ function toggleLanguage() {
 
 function setMode(newMode) {
   tournamentStore.setMode(newMode);
+}
+
+function updatePlayerName(event) {
+  const nextName = event?.target?.value ?? "";
+  uiStore.setPlayerName(nextName);
 }
 
 function startGame() {

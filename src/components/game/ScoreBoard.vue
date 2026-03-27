@@ -7,7 +7,7 @@
 
     <div class="score-main">
       <div class="score-item">
-        <span class="score-label">{{ t("score.player") }}</span>
+        <span class="score-label">{{ playerLabel }}</span>
         <strong class="score-value">{{ tournamentStore.playerScore }}</strong>
       </div>
 
@@ -25,13 +25,19 @@
 import { computed } from "vue";
 import { useI18n } from "vue-i18n";
 import { useTournamentStore } from "@/stores/tournament";
+import { useUiStore } from "@/stores/ui";
 
 const tournamentStore = useTournamentStore();
+const uiStore = useUiStore();
 const { t } = useI18n();
 
 const targetText = computed(() => {
   return tournamentStore.targetWins === 5
     ? t("match.firstTo5")
     : t("match.firstTo3");
+});
+
+const playerLabel = computed(() => {
+  return uiStore.playerName || t("game.player");
 });
 </script>

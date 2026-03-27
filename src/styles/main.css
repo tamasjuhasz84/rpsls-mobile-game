@@ -231,14 +231,14 @@ a:focus-visible {
 
 .home-screen {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: center;
 }
 
 .hero-card {
   width: 100%;
   max-width: 420px;
-  padding: var(--space-4xl);
+  padding: 14px;
   border-radius: var(--radius-2xl);
   background: var(--color-surface-strong);
   border: 1px solid var(--color-border);
@@ -248,25 +248,59 @@ a:focus-visible {
 
 .hero-card h1 {
   margin: 0 0 var(--space-sm);
-  font-size: 32px;
+  font-size: 28px;
   line-height: 1.1;
 }
 
 .subtitle {
-  margin: 0 0 var(--space-4xl);
+  margin: 0 0 var(--space-md);
   color: var(--color-text-muted);
+}
+
+.player-name-field {
+  display: grid;
+  gap: 4px;
+  margin-bottom: 6px;
+}
+
+.player-name-label {
+  margin: 0;
+  font-size: 10px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  opacity: 0.7;
+}
+
+.player-name-input {
+  width: 100%;
+  min-height: 30px;
+  padding: 0 var(--space-sm);
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--color-border);
+  background: var(--color-surface-soft);
+  color: var(--color-text);
+}
+
+.player-name-input::placeholder {
+  color: var(--color-text-soft);
 }
 
 .button-stack {
   display: grid;
-  gap: var(--space-md);
+  gap: 6px;
+}
+
+.home-screen .primary-button,
+.home-screen .secondary-button,
+.home-screen .mode-button {
+  min-height: 40px;
 }
 
 .mode-switch {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: var(--space-xs);
-  margin-bottom: var(--space-xl);
+  margin-bottom: var(--space-sm);
 }
 
 .mode-button {
@@ -284,14 +318,14 @@ a:focus-visible {
 }
 
 .lang-switch {
-  margin-top: var(--space-xl);
+  margin-top: var(--space-sm);
   display: flex;
   justify-content: center;
 }
 
 .lang-switch button {
-  min-height: var(--button-height-md);
-  padding: 0 var(--space-lg);
+  min-height: 36px;
+  padding: 0 var(--space-md);
   border-radius: var(--radius-sm);
   border: 1px solid var(--color-border);
   background: var(--color-button-secondary-bg);
@@ -301,8 +335,8 @@ a:focus-visible {
 /* ---------- Stats panel ---------- */
 
 .stats-panel {
-  margin-top: var(--space-xl);
-  padding: var(--space-lg);
+  margin-top: 8px;
+  padding: 8px;
   border-radius: var(--radius-lg);
   border: 1px solid var(--color-border);
   background: var(--color-surface);
@@ -317,8 +351,8 @@ a:focus-visible {
 .stats-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: var(--space-xs) var(--space-2xs);
-  margin-bottom: var(--space-md);
+  gap: 4px 2px;
+  margin-bottom: 6px;
 }
 
 .stats-cell {
@@ -329,7 +363,7 @@ a:focus-visible {
 }
 
 .stats-value {
-  font-size: 18px;
+  font-size: 15px;
   font-weight: 700;
   line-height: 1;
 }
@@ -343,7 +377,7 @@ a:focus-visible {
 }
 
 .stats-label {
-  font-size: 10px;
+  font-size: 9px;
   text-transform: uppercase;
   letter-spacing: 0.06em;
   opacity: 0.65;
@@ -352,7 +386,7 @@ a:focus-visible {
 .stats-reset-button {
   display: block;
   width: 100%;
-  min-height: 36px;
+  min-height: 30px;
   padding: 0 var(--space-md);
   border-radius: var(--radius-sm);
   border: 1px solid var(--color-border);
@@ -449,6 +483,11 @@ a:focus-visible {
 
 .game-main-column,
 .game-side-column {
+  display: grid;
+  gap: var(--space-lg);
+}
+
+.game-summary-row {
   display: grid;
   gap: var(--space-lg);
 }
@@ -1155,6 +1194,238 @@ a:focus-visible {
 
 /* ---------- Shared responsive rules ---------- */
 
+@media (max-width: 767px) {
+  .home-screen {
+    align-items: flex-start;
+  }
+
+  .hero-card {
+    padding: 12px;
+  }
+
+  .hero-card h1 {
+    font-size: 24px;
+  }
+
+  .subtitle {
+    margin-bottom: var(--space-sm);
+  }
+
+  .player-name-field {
+    margin-bottom: 4px;
+  }
+
+  .player-name-input {
+    min-height: 28px;
+    font-size: 13px;
+  }
+
+  .button-stack {
+    gap: 6px;
+  }
+
+  .home-screen .primary-button,
+  .home-screen .secondary-button,
+  .home-screen .mode-button {
+    min-height: 38px;
+  }
+
+  .stats-panel {
+    margin-top: 6px;
+  }
+
+  .game-screen {
+    gap: var(--space-md);
+  }
+
+  .game-screen .topbar {
+    padding: var(--space-xs);
+    gap: 6px;
+  }
+
+  .game-screen .topbar-actions {
+    gap: 6px;
+  }
+
+  .game-screen .topbar-link {
+    min-width: 0;
+    min-height: 36px;
+    padding: 0 10px;
+    font-size: 12px;
+  }
+
+  .game-screen .topbar-icon-button {
+    width: 36px;
+    min-height: 36px;
+  }
+
+  .game-layout,
+  .game-main-column,
+  .game-side-column {
+    gap: 10px;
+  }
+
+  .game-summary-row {
+    grid-template-columns: minmax(0, 1.15fr) minmax(112px, 0.85fr);
+    gap: 10px;
+    align-items: stretch;
+  }
+
+  .game-screen .opponent-badge,
+  .game-screen .scoreboard,
+  .game-screen .game-board,
+  .game-screen .move-selector,
+  .game-screen .match-status-panel,
+  .game-screen .resume-failed-notice {
+    padding: var(--space-md);
+  }
+
+  .opponent-badge {
+    gap: 2px;
+  }
+
+  .opponent-top {
+    gap: var(--space-xs);
+    margin-bottom: 2px;
+  }
+
+  .opponent-round,
+  .opponent-subtitle,
+  .score-target,
+  .score-label,
+  .move-selector-status {
+    font-size: 11px;
+  }
+
+  .opponent-name {
+    font-size: 18px;
+    line-height: 1.15;
+  }
+
+  .scoreboard {
+    gap: 6px;
+  }
+
+  .score-header {
+    gap: var(--space-xs);
+    margin-bottom: 0;
+  }
+
+  .score-main {
+    gap: var(--space-md);
+  }
+
+  .score-value,
+  .score-divider {
+    font-size: 24px;
+  }
+
+  .game-board {
+    gap: 12px;
+    min-height: 170px;
+  }
+
+  .countdown-placeholder,
+  .countdown-display {
+    gap: 4px;
+    padding: 0;
+  }
+
+  .countdown-number {
+    font-size: clamp(34px, 11vw, 50px);
+  }
+
+  .countdown-label {
+    font-size: 13px;
+  }
+
+  .result-state {
+    gap: 12px;
+  }
+
+  .result-cards {
+    grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+    gap: 6px;
+  }
+
+  .result-cards-versus {
+    font-size: 10px;
+    align-self: center;
+  }
+
+  .pentagon-card-shape {
+    min-height: 108px;
+    padding: 12px 8px;
+  }
+
+  .pentagon-card-content {
+    gap: 4px;
+  }
+
+  .pentagon-card-owner {
+    font-size: 10px;
+  }
+
+  .pentagon-card-icon {
+    width: 34px;
+    height: 34px;
+    font-size: 28px;
+  }
+
+  .pentagon-card-title {
+    font-size: 14px;
+    line-height: 1.15;
+  }
+
+  .result-text {
+    font-size: 18px;
+  }
+
+  .result-explanation {
+    font-size: 13px;
+  }
+
+  .move-selector {
+    gap: 8px;
+  }
+
+  .move-selector-header {
+    align-items: baseline;
+    gap: var(--space-xs);
+  }
+
+  .move-list {
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 6px;
+  }
+
+  .move-button {
+    min-height: 62px;
+    padding: 8px 4px 6px;
+    grid-template-columns: 1fr;
+    justify-items: center;
+    gap: 4px;
+    text-align: center;
+    border-radius: 14px;
+  }
+
+  .move-button-icon {
+    width: 22px;
+    height: 22px;
+    font-size: 22px;
+  }
+
+  .move-button-text {
+    font-size: 9px;
+    line-height: 1.15;
+    font-weight: 700;
+  }
+
+  .match-status-text {
+    font-size: 14px;
+  }
+}
+
 @media (min-width: 768px) {
   :root {
     --screen-padding-x: 20px;
@@ -1162,8 +1433,106 @@ a:focus-visible {
     --screen-padding-bottom: 36px;
   }
 
+  .game-screen {
+    gap: var(--space-md);
+  }
+
+  .game-screen .topbar {
+    padding: var(--space-sm) var(--space-md);
+  }
+
+  .game-layout,
+  .game-main-column,
+  .game-side-column,
+  .game-summary-row {
+    gap: 12px;
+  }
+
+  .game-screen .opponent-badge,
+  .game-screen .scoreboard,
+  .game-screen .game-board,
+  .game-screen .move-selector,
+  .game-screen .match-status-panel,
+  .game-screen .resume-failed-notice {
+    padding: var(--space-md);
+  }
+
   .topbar {
     align-items: center;
+  }
+
+  .game-summary-row {
+    grid-template-columns: 1fr;
+  }
+
+  .opponent-name {
+    font-size: 22px;
+  }
+
+  .scoreboard {
+    gap: var(--space-xs);
+  }
+
+  .score-header {
+    margin-bottom: 0;
+  }
+
+  .score-value,
+  .score-divider {
+    font-size: 26px;
+  }
+
+  .game-board {
+    gap: var(--space-xl);
+    min-height: 268px;
+  }
+
+  .countdown-number {
+    font-size: clamp(50px, 9vw, 74px);
+  }
+
+  .countdown-label {
+    font-size: 16px;
+  }
+
+  .result-state {
+    gap: 14px;
+  }
+
+  .pentagon-card-shape {
+    min-height: 154px;
+    padding: 14px var(--space-md);
+  }
+
+  .pentagon-card-icon {
+    width: 48px;
+    height: 48px;
+    font-size: 36px;
+  }
+
+  .pentagon-card-title {
+    font-size: 18px;
+  }
+
+  .move-selector {
+    gap: var(--space-sm);
+  }
+
+  .move-list {
+    gap: 8px;
+  }
+
+  .move-button {
+    min-height: 58px;
+    padding: 0 var(--space-lg);
+  }
+
+  .move-button-text {
+    font-size: 15px;
+  }
+
+  .match-status-panel {
+    gap: var(--space-sm);
   }
 
   .result-cards {
@@ -1182,11 +1551,11 @@ a:focus-visible {
   }
 
   .hero-card {
-    padding: 32px;
+    padding: 20px;
   }
 
   .hero-card h1 {
-    font-size: 40px;
+    font-size: 30px;
   }
 }
 
@@ -1199,12 +1568,12 @@ a:focus-visible {
 
   .game-layout {
     grid-template-columns: minmax(0, 1fr) var(--game-sidebar-width);
-    gap: var(--space-xl);
+    gap: 14px;
   }
 
   .game-main-column,
   .game-side-column {
-    gap: var(--space-xl);
+    gap: 14px;
   }
 }
 
