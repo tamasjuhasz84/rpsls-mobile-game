@@ -32,5 +32,10 @@ yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
 
+# Android signing files
+android/keystore.properties
+android/*.jks
+android/*.keystore
+
 # Test coverage
 coverage/
