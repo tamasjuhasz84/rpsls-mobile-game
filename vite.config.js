@@ -16,7 +16,11 @@ export default defineConfig({
       registerType: "autoUpdate",
       injectRegister: false,
       manifestFilename: "manifest.json",
-      includeAssets: ["icons/**/*.svg"],
+      includeAssets: [
+        "icons/apple-touch-icon.svg",
+        "icons/favicon.svg",
+        "icons/*.png",
+      ],
       manifest: {
         name: "RPSLS Tournament",
         short_name: "RPSLS",
@@ -30,21 +34,21 @@ export default defineConfig({
         lang: "hu",
         icons: [
           {
-            src: "/icons/pwa-192x192.svg",
+            src: "/icons/pwa-192x192.png",
             sizes: "192x192",
-            type: "image/svg+xml",
+            type: "image/png",
             purpose: "any",
           },
           {
-            src: "/icons/pwa-512x512.svg",
+            src: "/icons/pwa-512x512.png",
             sizes: "512x512",
-            type: "image/svg+xml",
+            type: "image/png",
             purpose: "any",
           },
           {
-            src: "/icons/pwa-maskable.svg",
+            src: "/icons/pwa-maskable.png",
             sizes: "512x512",
-            type: "image/svg+xml",
+            type: "image/png",
             purpose: "maskable",
           },
         ],
