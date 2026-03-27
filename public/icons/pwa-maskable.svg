@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512" role="img" aria-label="RPSLS Tournament maskable icon">
+  <rect width="512" height="512" rx="96" fill="#0b1220" />
+  <circle cx="256" cy="256" r="152" fill="#1d4ed8" stroke="#f8fafc" stroke-width="20" />
+  <path d="M256 128 350 196 314 322 198 322 162 196Z" fill="#67e8f9" opacity="0.96" />
+  <text x="256" y="286" text-anchor="middle" font-size="120" font-family="Arial, sans-serif" font-weight="700" fill="#ffffff">5</text>
+</svg>

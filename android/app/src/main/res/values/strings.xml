@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">RPSLS Tournament</string>
+    <string name="title_activity_main">RPSLS Tournament</string>
+    <string name="package_name">com.rpsls.mobile</string>
+    <string name="custom_url_scheme">com.rpsls.mobile</string>
+</resources>

@@ -106,10 +106,15 @@ export const useTournamentStore = defineStore("tournament", {
       const cleanup =
         typeof options.cleanup === "function" ? options.cleanup : null;
       const size = Number.isInteger(options.size) ? options.size : 4;
+      const selectedMode =
+        options.mode === "bo5" || options.mode === "bo3"
+          ? options.mode
+          : this.mode;
 
       if (cleanup) cleanup();
 
       this.resetTournament();
+      this.setMode(selectedMode);
       clearGameState();
 
       const bracket = buildTournament(size);
