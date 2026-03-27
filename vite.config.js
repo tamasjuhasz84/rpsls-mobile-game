@@ -5,13 +5,18 @@ import path from "path";
 
 export default defineConfig({
   base: "/",
+  publicDir: "public",
+  build: {
+    outDir: "dist",
+    emptyOutDir: true,
+  },
   plugins: [
     vue(),
     VitePWA({
       registerType: "autoUpdate",
       injectRegister: false,
       manifestFilename: "manifest.json",
-      includeAssets: ["icons/apple-touch-icon.svg", "icons/favicon.svg"],
+      includeAssets: ["icons/**/*.svg"],
       manifest: {
         name: "RPSLS Tournament",
         short_name: "RPSLS",
