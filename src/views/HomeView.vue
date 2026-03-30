@@ -21,10 +21,16 @@
         />
       </div>
 
-      <div class="mode-switch">
+      <div
+        class="mode-switch"
+        role="group"
+        :aria-label="t('home.modeSelector')"
+      >
         <button
           :class="['mode-button', mode === 'bo3' && 'active']"
           type="button"
+          :aria-label="t('match.firstTo3')"
+          :aria-pressed="mode === 'bo3'"
           @click="setMode('bo3')"
         >
           {{ t("match.firstTo3") }}
@@ -33,9 +39,21 @@
         <button
           :class="['mode-button', mode === 'bo5' && 'active']"
           type="button"
+          :aria-label="t('match.firstTo5')"
+          :aria-pressed="mode === 'bo5'"
           @click="setMode('bo5')"
         >
           {{ t("match.firstTo5") }}
+        </button>
+
+        <button
+          :class="['mode-button', mode === 'survival' && 'active']"
+          type="button"
+          :aria-label="t('match.survival')"
+          :aria-pressed="mode === 'survival'"
+          @click="setMode('survival')"
+        >
+          {{ t("match.survival") }}
         </button>
       </div>
 
@@ -233,6 +251,60 @@
         </template>
       </section>
 
+      <section class="leaderboard-panel">
+        <p class="section-label">{{ t("leaderboard.title") }}</p>
+
+        <div class="leaderboard-columns">
+          <article class="leaderboard-column">
+            <h3 class="leaderboard-heading">{{ t("leaderboard.daily") }}</h3>
+            <p v-if="!topDailyEntries.length" class="leaderboard-empty">
+              {{ t("leaderboard.emptyDaily") }}
+            </p>
+            <ol v-else class="leaderboard-list">
+              <li
+                v-for="(entry, index) in topDailyEntries"
+                :key="entry.id"
+                class="leaderboard-item"
+                :aria-label="getLeaderboardEntryA11yText(entry, index + 1)"
+              >
+                <span class="leaderboard-rank">{{ index + 1 }}</span>
+                <div class="leaderboard-main">
+                  <p class="leaderboard-name">{{ entry.playerName }}</p>
+                  <p class="leaderboard-meta">
+                    {{ getLeaderboardModeLabel(entry) }}
+                  </p>
+                </div>
+                <span class="leaderboard-score">{{ entry.score }}</span>
+              </li>
+            </ol>
+          </article>
+
+          <article class="leaderboard-column">
+            <h3 class="leaderboard-heading">{{ t("leaderboard.allTime") }}</h3>
+            <p v-if="!topAllTimeEntries.length" class="leaderboard-empty">
+              {{ t("leaderboard.emptyAllTime") }}
+            </p>
+            <ol v-else class="leaderboard-list">
+              <li
+                v-for="(entry, index) in topAllTimeEntries"
+                :key="entry.id"
+                class="leaderboard-item"
+                :aria-label="getLeaderboardEntryA11yText(entry, index + 1)"
+              >
+                <span class="leaderboard-rank">{{ index + 1 }}</span>
+                <div class="leaderboard-main">
+                  <p class="leaderboard-name">{{ entry.playerName }}</p>
+                  <p class="leaderboard-meta">
+                    {{ getLeaderboardModeLabel(entry) }}
+                  </p>
+                </div>
+                <span class="leaderboard-score">{{ entry.score }}</span>
+              </li>
+            </ol>
+          </article>
+        </div>
+      </section>
+
       <div class="lang-switch">
         <button
           type="button"
@@ -256,6 +328,7 @@ import { useGameStore } from "@/stores/game";
 import { useStatsStore } from "@/stores/stats";
 import { useDailyChallengeStore } from "@/stores/dailyChallenge";
 import { useMissionStore } from "@/stores/mission";
+import { useLeaderboardStore } from "@/stores/leaderboard";
 import { useI18n } from "vue-i18n";
 import { loadGameState, saveLanguage } from "@/utils/storage";
 import { trackEvent } from "@/services/analytics";
@@ -267,11 +340,13 @@ const gameStore = useGameStore();
 const statsStore = useStatsStore();
 const dailyStore = useDailyChallengeStore();
 const missionStore = useMissionStore();
+const leaderboardStore = useLeaderboardStore();
 const { t, locale } = useI18n();
 const isDailyExpanded = ref(false);
 
 dailyStore.hydrateToday();
 missionStore.hydrateToday();
+leaderboardStore.hydrateToday();
 
 const dailyChallenge = computed(() => dailyStore.challenge);
 const savedTournament = computed(() => loadGameState()?.tournament || null);
@@ -332,6 +407,30 @@ const modeLabelKey = computed(() => {
     ? "daily.modeBo5"
     : "daily.modeBo3";
 });
+
+const topDailyEntries = computed(() =>
+  leaderboardStore.dailyEntries.slice(0, 5),
+);
+const topAllTimeEntries = computed(() =>
+  leaderboardStore.allTimeEntries.slice(0, 5),
+);
+
+function getLeaderboardModeLabel(entry) {
+  if (!entry || typeof entry !== "object") return t("match.firstTo3");
+  if (entry.mode === "bo5") return t("match.firstTo5");
+  if (entry.mode === "survival") return t("match.survival");
+  if (entry.mode === "legacy") return t("leaderboard.modeLegacy");
+  return t("match.firstTo3");
+}
+
+function getLeaderboardEntryA11yText(entry, rank) {
+  return t("leaderboard.entryA11y", {
+    rank,
+    name: entry?.playerName || t("game.player"),
+    mode: getLeaderboardModeLabel(entry),
+    score: entry?.score ?? 0,
+  });
+}
 
 function toggleLanguage() {
   uiStore.toggleLocale();

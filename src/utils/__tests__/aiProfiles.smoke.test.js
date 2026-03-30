@@ -1,6 +1,7 @@
 import { describe, it, expect } from "vitest";
 import {
   getAiProfileForOpponent,
+  getOpponentArchetypeForSlot,
   normalizeAiProfile,
 } from "@/utils/aiProfiles";
 
@@ -27,9 +28,28 @@ describe("getAiProfileForOpponent", () => {
     const profile = getAiProfileForOpponent(7, 8);
 
     expect(profile.strategyType).toBe("boss");
+    expect(profile.archetypeKey).toBe("grandmaster");
+    expect(typeof profile.strategyFlavorKey).toBe("string");
     expect(profile.difficultyTier).toBe(5);
     expect(profile.favoriteMoves).toHaveLength(2);
     expect(profile.adaptationChance).toBeGreaterThan(0.5);
+  });
+});
+
+describe("getOpponentArchetypeForSlot", () => {
+  it("korai körben rookieBluffer archetype-ot ad", () => {
+    const archetype = getOpponentArchetypeForSlot(0, 4);
+
+    expect(archetype.key).toBe("rookieBluffer");
+    expect(typeof archetype.introKey).toBe("string");
+    expect(archetype.introKey.length).toBeGreaterThan(0);
+  });
+
+  it("utolsó körben grandmaster archetype-ot ad", () => {
+    const archetype = getOpponentArchetypeForSlot(3, 4);
+
+    expect(archetype.key).toBe("grandmaster");
+    expect(archetype.strategyType).toBe("boss");
   });
 });
 

@@ -11,6 +11,7 @@ import {
 } from "./utils/featureFlags";
 import { useUiStore } from "./stores/ui";
 import { useStatsStore } from "./stores/stats";
+import { useLeaderboardStore } from "./stores/leaderboard";
 import { initAnalytics, trackEvent, trackScreen } from "./services/analytics";
 import { initMonitoring, captureException } from "./services/monitoring";
 import "./styles/main.css";
@@ -34,6 +35,9 @@ uiStore.applyRuntimeFeatureFlagOverrides(runtimeFeatureFlagOverrides);
 
 const statsStore = useStatsStore();
 statsStore.hydrateFromStorage(loadStats() || {});
+
+const leaderboardStore = useLeaderboardStore();
+leaderboardStore.hydrateToday();
 
 const savedLang = loadLanguage() || uiStore.locale || "hu";
 uiStore.setLocale(savedLang);

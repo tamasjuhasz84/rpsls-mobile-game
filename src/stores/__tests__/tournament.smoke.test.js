@@ -50,6 +50,12 @@ describe("startNewTournament", () => {
     expect(store.targetWins).toBe(3);
   });
 
+  it("survival mód esetén targetWins === 3 és mode survival", () => {
+    const store = setupStore({ mode: "survival" });
+    expect(store.mode).toBe("survival");
+    expect(store.targetWins).toBe(3);
+  });
+
   it("newTournament előtt törli a korábbi mentést", () => {
     const store = setupStore({ size: 4 });
     store.startNewTournament({ size: 2 });
@@ -156,6 +162,50 @@ describe("advanceOpponent", () => {
     const store = setupStore({ size: 4 });
     store.advanceOpponent();
     expect(store.currentRoundIndex).toBe(0);
+  });
+
+  it("survival módban új ellenfelet generál, ha elfogyott a bracket", () => {
+    const store = setupStore({ mode: "survival" });
+    const initialLength = store.bracket.length;
+
+    winMatch(store, 3);
+    store.advanceOpponent();
+
+    expect(store.currentRoundIndex).toBe(1);
+    expect(store.bracket.length).toBe(initialLength + 1);
+    expect(store.matchFinished).toBe(false);
+  });
+});
+
+describe("survival scoring", () => {
+  it("player körgyőzelem pontot ad survival módban", () => {
+    const store = setupStore({ mode: "survival" });
+    const before = store.survivalScore;
+
+    store.registerRoundResult("player");
+
+    expect(store.survivalScore).toBeGreaterThan(before);
+    expect(store.survivalRoundWins).toBe(1);
+  });
+
+  it("meccsgyőzelemkor nő a survival ellenfél számláló és score", () => {
+    const store = setupStore({ mode: "survival" });
+
+    winMatch(store, 3);
+
+    expect(store.survivalOpponentsDefeated).toBe(1);
+    expect(store.survivalScore).toBeGreaterThan(120);
+    expect(store.tournamentFinished).toBe(false);
+    expect(store.matchFinished).toBe(true);
+  });
+
+  it("survival módban vereségre véget ér a run", () => {
+    const store = setupStore({ mode: "survival" });
+
+    loseMatch(store, 3);
+
+    expect(store.tournamentFinished).toBe(true);
+    expect(store.tournamentLost).toBe(true);
   });
 });
 

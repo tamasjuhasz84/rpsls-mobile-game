@@ -2,24 +2,24 @@
   <aside class="panel move-selector">
     <div class="move-selector-header">
       <p class="section-label">{{ t("game.moves") }}</p>
-      <span class="move-selector-status">
+      <span class="move-selector-status" role="status" aria-live="polite">
         {{ statusText }}
       </span>
     </div>
 
-    <div class="move-list">
-      <MoveButton
-        v-for="move in moveOptions"
-        :key="move.value"
-        :move="move"
-        :selected="gameStore.currentMove === move.value"
-        :disabled="!gameStore.isCountdownPhase"
-        :locked="
-          gameStore.lockedMove === move.value && !gameStore.isCountdownPhase
-        "
-        @select="handleSelect"
-      />
-    </div>
+    <ul class="move-list" :aria-label="t('game.moves')">
+      <li v-for="move in moveOptions" :key="move.value" class="move-list-item">
+        <MoveButton
+          :move="move"
+          :selected="gameStore.currentMove === move.value"
+          :disabled="!gameStore.isCountdownPhase"
+          :locked="
+            gameStore.lockedMove === move.value && !gameStore.isCountdownPhase
+          "
+          @select="handleSelect"
+        />
+      </li>
+    </ul>
   </aside>
 </template>
 

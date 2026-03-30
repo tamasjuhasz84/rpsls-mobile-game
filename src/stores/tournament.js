@@ -1,5 +1,8 @@
 import { defineStore } from "pinia";
-import { buildTournament } from "@/utils/tournamentBuilder";
+import {
+  buildTournament,
+  buildSurvivalOpponent,
+} from "@/utils/tournamentBuilder";
 import { saveGameState, loadGameState, clearGameState } from "@/utils/storage";
 
 export const useTournamentStore = defineStore("tournament", {
@@ -10,6 +13,10 @@ export const useTournamentStore = defineStore("tournament", {
     dailyChallengeId: "",
     playerScore: 0,
     aiScore: 0,
+    survivalScore: 0,
+    survivalOpponentsDefeated: 0,
+    survivalRoundWins: 0,
+    survivalRoundDraws: 0,
     currentOpponent: null,
     bracket: [],
     currentRoundIndex: 0,
@@ -28,6 +35,7 @@ export const useTournamentStore = defineStore("tournament", {
       state.bracket.length > 0 &&
       state.currentRoundIndex >= state.bracket.length - 1,
     hasSavedProgress: (state) => state.bracket.length > 0,
+    isSurvivalMode: (state) => state.mode === "survival",
   },
 
   actions: {
@@ -63,8 +71,20 @@ export const useTournamentStore = defineStore("tournament", {
     },
 
     setMode(mode) {
-      this.mode = mode === "bo5" ? "bo5" : "bo3";
-      this.targetWins = this.mode === "bo5" ? 5 : 3;
+      if (mode === "bo5") {
+        this.mode = "bo5";
+        this.targetWins = 5;
+        return;
+      }
+
+      if (mode === "survival") {
+        this.mode = "survival";
+        this.targetWins = 3;
+        return;
+      }
+
+      this.mode = "bo3";
+      this.targetWins = 3;
     },
 
     setBracket(bracket = []) {
@@ -73,6 +93,10 @@ export const useTournamentStore = defineStore("tournament", {
       this.currentOpponent = bracket[0] ?? null;
       this.playerScore = 0;
       this.aiScore = 0;
+      this.survivalScore = 0;
+      this.survivalOpponentsDefeated = 0;
+      this.survivalRoundWins = 0;
+      this.survivalRoundDraws = 0;
       this.matchFinished = false;
       this.tournamentFinished = false;
       this.tournamentLost = false;
@@ -83,7 +107,12 @@ export const useTournamentStore = defineStore("tournament", {
     },
 
     hydrateFromStorage(payload = {}) {
-      this.mode = payload.mode === "bo5" ? "bo5" : "bo3";
+      this.mode =
+        payload.mode === "bo5"
+          ? "bo5"
+          : payload.mode === "survival"
+            ? "survival"
+            : "bo3";
       this.targetWins = this.mode === "bo5" ? 5 : 3;
       this.sessionType =
         payload.sessionType === "daily" ? "daily" : "tournament";
@@ -96,6 +125,22 @@ export const useTournamentStore = defineStore("tournament", {
         0,
       );
       this.aiScore = this.normalizeNonNegativeNumber(payload.aiScore, 0);
+      this.survivalScore = this.normalizeNonNegativeNumber(
+        payload.survivalScore,
+        0,
+      );
+      this.survivalOpponentsDefeated = this.normalizeNonNegativeNumber(
+        payload.survivalOpponentsDefeated,
+        0,
+      );
+      this.survivalRoundWins = this.normalizeNonNegativeNumber(
+        payload.survivalRoundWins,
+        0,
+      );
+      this.survivalRoundDraws = this.normalizeNonNegativeNumber(
+        payload.survivalRoundDraws,
+        0,
+      );
       this.bracket = Array.isArray(payload.bracket) ? payload.bracket : [];
       this.currentRoundIndex = this.normalizeNonNegativeNumber(
         payload.currentRoundIndex,
@@ -118,7 +163,9 @@ export const useTournamentStore = defineStore("tournament", {
         ? options.bracket
         : null;
       const selectedMode =
-        options.mode === "bo5" || options.mode === "bo3"
+        options.mode === "bo5" ||
+        options.mode === "bo3" ||
+        options.mode === "survival"
           ? options.mode
           : this.mode;
 
@@ -136,7 +183,9 @@ export const useTournamentStore = defineStore("tournament", {
 
       const bracket = customBracket?.length
         ? customBracket
-        : buildTournament(size);
+        : selectedMode === "survival"
+          ? [buildSurvivalOpponent(0)]
+          : buildTournament(size);
       this.setBracket(bracket);
 
       saveGameState({
@@ -173,12 +222,29 @@ export const useTournamentStore = defineStore("tournament", {
         dailyChallengeId: this.dailyChallengeId,
         playerScore: this.playerScore,
         aiScore: this.aiScore,
+        survivalScore: this.survivalScore,
+        survivalOpponentsDefeated: this.survivalOpponentsDefeated,
+        survivalRoundWins: this.survivalRoundWins,
+        survivalRoundDraws: this.survivalRoundDraws,
         bracket: this.bracket,
         currentRoundIndex: this.currentRoundIndex,
         matchFinished: this.matchFinished,
         tournamentFinished: this.tournamentFinished,
         tournamentLost: this.tournamentLost,
       };
+    },
+
+    getCurrentOpponentDifficultyTier() {
+      const tier = Number(this.currentOpponent?.aiProfile?.difficultyTier);
+      if (!Number.isFinite(tier)) return 1;
+      return Math.max(1, Math.min(Math.round(tier), 5));
+    },
+
+    getSurvivalMatchBonus() {
+      const flawlessBonus = Math.max(this.targetWins - this.aiScore, 0) * 22;
+      const difficultyBonus = this.getCurrentOpponentDifficultyTier() * 14;
+      const streakBonus = Math.min(this.survivalOpponentsDefeated, 20) * 5;
+      return 120 + flawlessBonus + difficultyBonus + streakBonus;
     },
 
     setOpponent(opponent) {
@@ -190,9 +256,17 @@ export const useTournamentStore = defineStore("tournament", {
 
       if (winner === "player") {
         this.playerScore += 1;
+        if (this.mode === "survival") {
+          this.survivalRoundWins += 1;
+          this.survivalScore += 16;
+        }
       } else if (winner === "ai") {
         this.aiScore += 1;
       } else if (winner === "draw") {
+        if (this.mode === "survival") {
+          this.survivalRoundDraws += 1;
+          this.survivalScore += 4;
+        }
         return;
       }
 
@@ -203,6 +277,12 @@ export const useTournamentStore = defineStore("tournament", {
       if (this.playerScore >= this.targetWins) {
         this.matchFinished = true;
         this.markCurrentOpponentStatus("defeated");
+
+        if (this.mode === "survival") {
+          this.survivalOpponentsDefeated += 1;
+          this.survivalScore += this.getSurvivalMatchBonus();
+          return;
+        }
 
         if (this.isLastOpponent) {
           this.tournamentFinished = true;
@@ -230,9 +310,14 @@ export const useTournamentStore = defineStore("tournament", {
     advanceOpponent() {
       if (!this.matchFinished) return;
       if (this.tournamentFinished) return;
-      if (this.isLastOpponent) return;
+
+      if (this.mode !== "survival" && this.isLastOpponent) return;
 
       const nextIndex = this.currentRoundIndex + 1;
+      if (this.mode === "survival" && !this.bracket[nextIndex]) {
+        this.bracket.push(buildSurvivalOpponent(nextIndex));
+      }
+
       const nextOpponent = this.bracket[nextIndex];
 
       if (!nextOpponent) {
@@ -271,6 +356,10 @@ export const useTournamentStore = defineStore("tournament", {
       this.dailyChallengeId = "";
       this.playerScore = 0;
       this.aiScore = 0;
+      this.survivalScore = 0;
+      this.survivalOpponentsDefeated = 0;
+      this.survivalRoundWins = 0;
+      this.survivalRoundDraws = 0;
       this.currentOpponent = null;
       this.bracket = [];
       this.currentRoundIndex = 0;

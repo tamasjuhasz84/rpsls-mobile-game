@@ -5,6 +5,10 @@
       <span class="score-target">{{ targetText }}</span>
     </div>
 
+    <p v-if="isSurvivalMode" class="score-survival-line">
+      {{ t("score.survivalPoints", { score: tournamentStore.survivalScore }) }}
+    </p>
+
     <div class="score-main">
       <div class="score-item">
         <span class="score-label">{{ playerLabel }}</span>
@@ -32,10 +36,16 @@ const uiStore = useUiStore();
 const { t } = useI18n();
 
 const targetText = computed(() => {
+  if (tournamentStore.mode === "survival") {
+    return t("match.survival");
+  }
+
   return tournamentStore.targetWins === 5
     ? t("match.firstTo5")
     : t("match.firstTo3");
 });
+
+const isSurvivalMode = computed(() => tournamentStore.mode === "survival");
 
 const playerLabel = computed(() => {
   return uiStore.playerName || t("game.player");

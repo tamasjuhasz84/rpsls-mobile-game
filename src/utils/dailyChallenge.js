@@ -1,4 +1,7 @@
-import { getAiProfileForOpponent } from "./aiProfiles.js";
+import {
+  getAiProfileForOpponent,
+  getOpponentArchetypeForSlot,
+} from "./aiProfiles.js";
 import { generateSeededOpponentName } from "./opponentNameGenerator.js";
 
 function pad(value) {
@@ -49,11 +52,17 @@ function pickBracketSize(random) {
 function createBracket(seed, size) {
   return Array.from({ length: size }, (_, index) => {
     const nodeSeed = seed + index * 101;
+    const archetype = getOpponentArchetypeForSlot(index, size);
 
     return {
       id: index + 1,
-      name: generateSeededOpponentName(nodeSeed),
+      name: generateSeededOpponentName(nodeSeed, {
+        archetypeKey: archetype.key,
+      }),
       status: index === 0 ? "current" : "pending",
+      archetypeKey: archetype.key,
+      strategyFlavorKey: archetype.strategyFlavorKey,
+      opponentIntroKey: archetype.introKey,
       aiProfile: getAiProfileForOpponent(index, size),
     };
   });

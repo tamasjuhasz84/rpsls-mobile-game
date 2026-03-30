@@ -76,6 +76,41 @@
             >
               {{ t(secondaryActionKey) }}
             </button>
+
+            <section class="share-result-card">
+              <p class="section-label">{{ t("share.cardTitle") }}</p>
+              <p class="share-result-preview">{{ shareResultText }}</p>
+
+              <p
+                v-if="shouldHighlightStreak"
+                class="win-streak-highlight"
+                role="status"
+                aria-live="polite"
+              >
+                {{
+                  t("share.winStreakHighlight", {
+                    count: statsStore.currentStreak,
+                  })
+                }}
+              </p>
+
+              <button
+                class="secondary-button full-width-button"
+                type="button"
+                @click="handleShareResult"
+              >
+                {{ t("share.cta") }}
+              </button>
+
+              <p
+                v-if="shareFeedbackKey"
+                class="share-feedback"
+                role="status"
+                aria-live="polite"
+              >
+                {{ t(shareFeedbackKey) }}
+              </p>
+            </section>
           </template>
 
           <template v-else>
@@ -109,6 +144,41 @@
             >
               {{ t("daily.claimReward") }}
             </button>
+
+            <section class="share-result-card">
+              <p class="section-label">{{ t("share.cardTitle") }}</p>
+              <p class="share-result-preview">{{ shareResultText }}</p>
+
+              <p
+                v-if="shouldHighlightStreak"
+                class="win-streak-highlight"
+                role="status"
+                aria-live="polite"
+              >
+                {{
+                  t("share.winStreakHighlight", {
+                    count: statsStore.currentStreak,
+                  })
+                }}
+              </p>
+
+              <button
+                class="secondary-button full-width-button"
+                type="button"
+                @click="handleShareResult"
+              >
+                {{ t("share.cta") }}
+              </button>
+
+              <p
+                v-if="shareFeedbackKey"
+                class="share-feedback"
+                role="status"
+                aria-live="polite"
+              >
+                {{ t(shareFeedbackKey) }}
+              </p>
+            </section>
           </template>
         </section>
       </section>
@@ -139,7 +209,9 @@ import { useUiStore } from "@/stores/ui";
 import { useStatsStore } from "@/stores/stats";
 import { useDailyChallengeStore } from "@/stores/dailyChallenge";
 import { useMissionStore } from "@/stores/mission";
+import { useLeaderboardStore } from "@/stores/leaderboard";
 import { saveGameState, clearGameState } from "@/utils/storage";
+import { buildShareResultText } from "@/utils/shareResult";
 import { trackEvent } from "@/services/analytics";
 
 const route = useRoute();
@@ -150,6 +222,7 @@ const uiStore = useUiStore();
 const statsStore = useStatsStore();
 const dailyStore = useDailyChallengeStore();
 const missionStore = useMissionStore();
+const leaderboardStore = useLeaderboardStore();
 const { start, stop } = useCountdown();
 const { getAiMove, registerRound, resetHistory } = useAiOpponent();
 const { play } = useFeedbackAudio();
@@ -167,11 +240,15 @@ let trackedMatchStartKeys = new Set();
 let trackedMatchEndKeys = new Set();
 let trackedTournamentEndKeys = new Set();
 let trackedDailyCompleteKeys = new Set();
+let trackedLeaderboardKeys = new Set();
 
 const resumeFailed = ref(false);
+const shareFeedbackKey = ref("");
 const showMotivationPanel = computed(() => {
   return uiStore.isFeatureEnabled("matchEndMotivationPanel");
 });
+
+const isSurvivalSession = computed(() => tournamentStore.mode === "survival");
 
 const isDailySession = computed(() => tournamentStore.sessionType === "daily");
 
@@ -233,6 +310,22 @@ const nextMission = computed(() => {
   );
 });
 
+const shouldHighlightStreak = computed(() => {
+  return statsStore.currentStreak >= 2;
+});
+
+const opponentsDefeatedForShare = computed(() => {
+  if (isSurvivalSession.value) {
+    return tournamentStore.survivalOpponentsDefeated;
+  }
+
+  if (tournamentStore.tournamentLost) {
+    return tournamentStore.currentRoundIndex;
+  }
+
+  return defeatedOpponentsCount.value;
+});
+
 const primaryActionKey = computed(() => {
   if (showDailyClaimButton.value) return "daily.claimReward";
   if (showAdvanceButton.value) return "match.advance";
@@ -252,6 +345,19 @@ const secondaryActionKey = computed(() => {
 });
 
 const matchStatusHint = computed(() => {
+  if (isSurvivalSession.value && tournamentStore.tournamentFinished) {
+    return t("match.survivalLossHint", {
+      score: tournamentStore.survivalScore,
+      opponents: tournamentStore.survivalOpponentsDefeated,
+    });
+  }
+
+  if (isSurvivalSession.value && showAdvanceButton.value) {
+    return t("match.survivalContinueHint", {
+      score: tournamentStore.survivalScore,
+    });
+  }
+
   if (showAdvanceButton.value && nextOpponent.value) {
     return t("match.nextOpponentHint", {
       name: nextOpponent.value.name,
@@ -286,6 +392,20 @@ const matchStatusHint = computed(() => {
 const matchPreviewItems = computed(() => {
   const items = [];
 
+  if (isSurvivalSession.value) {
+    items.push({
+      label: t("match.survivalScoreLabel"),
+      value: String(tournamentStore.survivalScore),
+    });
+
+    items.push({
+      label: t("match.survivalDefeatedLabel"),
+      value: t("match.survivalDefeatedValue", {
+        count: tournamentStore.survivalOpponentsDefeated,
+      }),
+    });
+  }
+
   if (nextOpponent.value) {
     items.push({
       label: t("match.nextOpponentLabel"),
@@ -293,13 +413,15 @@ const matchPreviewItems = computed(() => {
     });
   }
 
-  items.push({
-    label: t("match.progressLabel"),
-    value: t("match.progressValue", {
-      current: defeatedOpponentsCount.value,
-      total: tournamentStore.bracket.length,
-    }),
-  });
+  if (!isSurvivalSession.value) {
+    items.push({
+      label: t("match.progressLabel"),
+      value: t("match.progressValue", {
+        current: defeatedOpponentsCount.value,
+        total: tournamentStore.bracket.length,
+      }),
+    });
+  }
 
   if (showDailyClaimButton.value) {
     items.push({
@@ -339,6 +461,125 @@ const matchPreviewItems = computed(() => {
   return items;
 });
 
+const shareResultText = computed(() => {
+  const modeLabel =
+    tournamentStore.mode === "bo5"
+      ? t("match.firstTo5")
+      : isSurvivalSession.value
+        ? t("match.survival")
+        : t("match.firstTo3");
+
+  return buildShareResultText({
+    appTitle: t("app.title"),
+    modeLabel,
+    resultLabel: matchStatusText.value,
+    isSurvival: isSurvivalSession.value,
+    playerScore: tournamentStore.playerScore,
+    aiScore: tournamentStore.aiScore,
+    survivalScore: tournamentStore.survivalScore,
+    opponentsDefeated: opponentsDefeatedForShare.value,
+    winStreak: statsStore.currentStreak,
+    labels: {
+      mode: t("share.modeLabel"),
+      result: t("share.resultLabel"),
+      matchScore: t("share.matchScoreLabel"),
+      survivalScore: t("share.survivalScoreLabel"),
+      opponents: t("share.opponentsLabel"),
+      winStreak: t("share.winStreakLabel"),
+    },
+    hashTag: "#RPSLS",
+  });
+});
+
+function resetShareFeedback() {
+  shareFeedbackKey.value = "";
+}
+
+async function copyShareText(text) {
+  if (navigator.clipboard?.writeText) {
+    await navigator.clipboard.writeText(text);
+    return;
+  }
+
+  const textarea = document.createElement("textarea");
+  textarea.value = text;
+  textarea.setAttribute("readonly", "");
+  textarea.style.position = "fixed";
+  textarea.style.opacity = "0";
+  document.body.appendChild(textarea);
+  textarea.select();
+
+  const copied = document.execCommand("copy");
+  document.body.removeChild(textarea);
+  if (!copied) {
+    throw new Error("Copy command failed");
+  }
+}
+
+async function handleShareResult() {
+  const text = shareResultText.value;
+  let method = "clipboard";
+
+  try {
+    if (navigator.share) {
+      await navigator.share({
+        title: t("share.sheetTitle"),
+        text,
+      });
+      method = "native_share";
+      shareFeedbackKey.value = "share.nativeSuccess";
+    } else {
+      await copyShareText(text);
+      method = "clipboard";
+      shareFeedbackKey.value = "share.copySuccess";
+    }
+
+    trackEvent("share_click", {
+      source_screen: "game",
+      mode: tournamentStore.mode,
+      method,
+      tournament_finished: tournamentStore.tournamentFinished,
+      tournament_lost: tournamentStore.tournamentLost,
+      opponents_defeated: opponentsDefeatedForShare.value,
+      survival_score: tournamentStore.survivalScore,
+      win_streak: statsStore.currentStreak,
+    });
+  } catch (error) {
+    if (error?.name === "AbortError") {
+      shareFeedbackKey.value = "share.cancelled";
+      trackEvent("share_click", {
+        source_screen: "game",
+        mode: tournamentStore.mode,
+        method: "native_cancelled",
+        tournament_finished: tournamentStore.tournamentFinished,
+        tournament_lost: tournamentStore.tournamentLost,
+        opponents_defeated: opponentsDefeatedForShare.value,
+        survival_score: tournamentStore.survivalScore,
+        win_streak: statsStore.currentStreak,
+      });
+      return;
+    }
+
+    try {
+      await copyShareText(text);
+      method = "clipboard_fallback";
+      shareFeedbackKey.value = "share.copySuccess";
+      trackEvent("share_click", {
+        source_screen: "game",
+        mode: tournamentStore.mode,
+        method,
+        tournament_finished: tournamentStore.tournamentFinished,
+        tournament_lost: tournamentStore.tournamentLost,
+        opponents_defeated: opponentsDefeatedForShare.value,
+        survival_score: tournamentStore.survivalScore,
+        win_streak: statsStore.currentStreak,
+      });
+    } catch {
+      shareFeedbackKey.value = "share.error";
+    }
+  }
+}
+
 function clearRoundTimeouts() {
   if (revealTimeoutId) {
     window.clearTimeout(revealTimeoutId);
@@ -370,6 +611,7 @@ function resetLoopRuntime() {
   lastPersistedTournamentState = "";
   activeMatchKey = "";
   activeMatchStartedAt = 0;
+  trackedLeaderboardKeys = new Set();
 }
 
 function getMatchKey() {
@@ -471,6 +713,50 @@ function trackDailyCompleteIfNeeded(result) {
   });
 }
 
+function getLeaderboardRunKey() {
+  return [
+    tournamentStore.mode,
+    tournamentStore.sessionType,
+    tournamentStore.dailyChallengeId || "none",
+    tournamentStore.tournamentFinished ? "finished" : "running",
+    tournamentStore.tournamentLost ? "lost" : "won",
+    tournamentStore.survivalScore,
+    tournamentStore.currentRoundIndex,
+    tournamentStore.bracket.length,
+  ].join("|");
+}
+
+function getFinishedOpponentsDefeated() {
+  if (tournamentStore.mode === "survival") {
+    return tournamentStore.survivalOpponentsDefeated;
+  }
+
+  if (tournamentStore.tournamentLost) {
+    return tournamentStore.currentRoundIndex;
+  }
+
+  return tournamentStore.bracket.length;
+}
+
+function recordLeaderboardIfNeeded() {
+  if (!tournamentStore.tournamentFinished) return;
+
+  const runKey = getLeaderboardRunKey();
+  if (!runKey || trackedLeaderboardKeys.has(runKey)) return;
+  trackedLeaderboardKeys.add(runKey);
+
+  leaderboardStore.recordRun({
+    playerName: uiStore.playerName || t("game.player"),
+    mode: tournamentStore.mode,
+    sessionType: tournamentStore.sessionType,
+    won: !tournamentStore.tournamentLost,
+    playerScore: tournamentStore.playerScore,
+    aiScore: tournamentStore.aiScore,
+    survivalScore: tournamentStore.survivalScore,
+    opponentsDefeated: getFinishedOpponentsDefeated(),
+  });
+}
+
 function getAiDecisionContext() {
   return {
     profile: tournamentStore.currentOpponent?.aiProfile,
@@ -502,6 +788,7 @@ function startGameLoop() {
 
 function startNewTournamentFlow() {
   resumeFailed.value = false;
+  resetShareFeedback();
   tournamentStore.startNewTournament({
     cleanup: resetLoopRuntime,
   });
@@ -510,6 +797,7 @@ function startNewTournamentFlow() {
 }
 
 function resumeTournamentFlow() {
+  resetShareFeedback();
   const result = tournamentStore.resumeTournament({
     cleanup: resetLoopRuntime,
   });
@@ -519,6 +807,10 @@ function resumeTournamentFlow() {
 }
 
 const matchStatusText = computed(() => {
+  if (isSurvivalSession.value && tournamentStore.tournamentFinished) {
+    return t("match.survivalEnded");
+  }
+
   if (
     tournamentStore.tournamentFinished &&
     tournamentStore.sessionType === "daily"
@@ -605,6 +897,7 @@ function handleAdvance() {
   persistState();
 
   if (!tournamentStore.tournamentFinished) {
+    resetShareFeedback();
     startGameLoop();
   }
 }
@@ -621,6 +914,7 @@ function handleRestartTournament() {
   });
 
   startNewTournamentFlow();
+  resetShareFeedback();
 }
 
 function handleClaimReward() {
@@ -686,6 +980,7 @@ watch(
       tournamentStore.registerRoundResult(gameStore.result);
       trackMatchEndIfNeeded();
       trackTournamentEndIfNeeded();
+      recordLeaderboardIfNeeded();
 
       if (gameStore.result === "player") {
         play("win", uiStore.soundEnabled);

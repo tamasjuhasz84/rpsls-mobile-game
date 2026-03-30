@@ -2,6 +2,7 @@ const GAME_STATE_KEY = "rpsls-game-state";
 const UI_STATE_KEY = "rpsls-ui-state";
 const LANG_KEY = "rpsls-lang";
 const STATS_KEY = "rpsls-stats";
+const LEADERBOARD_STATE_KEY = "rpsls-leaderboard-state";
 const DAILY_CHALLENGE_STATE_KEY = "rpsls-daily-challenge-state";
 const MISSION_STATE_KEY = "rpsls-mission-state";
 const ONBOARDING_KEY = "rpsls-onboarding";
@@ -101,6 +102,123 @@ export function clearStats() {
   } catch (error) {
     console.error("Failed to clear stats:", error);
   }
+}
+
+function getDateKey(date = new Date()) {
+  const safeDate = date instanceof Date ? date : new Date();
+  const month = String(safeDate.getMonth() + 1).padStart(2, "0");
+  const day = String(safeDate.getDate()).padStart(2, "0");
+  return [safeDate.getFullYear(), month, day].join("-");
+}
+
+function buildDefaultLeaderboardState(date = new Date()) {
+  return {
+    version: 1,
+    allTimeEntries: [],
+    daily: {
+      dateKey: getDateKey(date),
+      entries: [],
+    },
+    migration: {
+      migratedFromStats: false,
+      migratedAt: Date.now(),
+    },
+  };
+}
+
+export function saveLeaderboardState(payload) {
+  try {
+    localStorage.setItem(LEADERBOARD_STATE_KEY, JSON.stringify(payload));
+  } catch (error) {
+    console.error("Failed to save leaderboard state:", error);
+  }
+}
+
+export function loadLeaderboardState() {
+  return parseStoredJson(LEADERBOARD_STATE_KEY, "leaderboard state");
+}
+
+export function clearLeaderboardState() {
+  try {
+    localStorage.removeItem(LEADERBOARD_STATE_KEY);
+  } catch (error) {
+    console.error("Failed to clear leaderboard state:", error);
+  }
+}
+
+export function migrateLeaderboardState(date = new Date()) {
+  const existing = loadLeaderboardState();
+  if (existing && typeof existing === "object") {
+    if (existing.version >= 1) {
+      return existing;
+    }
+
+    const upgraded = {
+      ...buildDefaultLeaderboardState(date),
+      ...existing,
+      version: 1,
+      daily:
+        existing.daily && typeof existing.daily === "object"
+          ? {
+              dateKey:
+                typeof existing.daily.dateKey === "string"
+                  ? existing.daily.dateKey
+                  : getDateKey(date),
+              entries: Array.isArray(existing.daily.entries)
+                ? existing.daily.entries
+                : [],
+            }
+          : {
+              dateKey: getDateKey(date),
+              entries: [],
+            },
+    };
+
+    saveLeaderboardState(upgraded);
+    return upgraded;
+  }
+
+  const baseline = buildDefaultLeaderboardState(date);
+  const stats = loadStats();
+
+  if (
+    !stats ||
+    !Number.isFinite(Number(stats.totalGames)) ||
+    stats.totalGames <= 0
+  ) {
+    saveLeaderboardState(baseline);
+    return baseline;
+  }
+
+  const legacyScore =
+    Math.max(Number(stats.wins) || 0, 0) * 25 +
+    Math.max(Number(stats.bestWinStreak) || 0, 0) * 15 +
+    Math.max(Number(stats.totalGames) || 0, 0);
+
+  const migrated = {
+    ...baseline,
+    allTimeEntries: [
+      {
+        id: `legacy-${Date.now()}`,
+        playerName: "Player",
+        mode: "legacy",
+        sessionType: "legacy",
+        result: "legacy",
+        score: Math.round(legacyScore),
+        opponentsDefeated: Math.max(Number(stats.wins) || 0, 0),
+        createdAt: Date.now(),
+        dateKey: baseline.daily.dateKey,
+        legacy: true,
+      },
+    ],
+    migration: {
+      migratedFromStats: true,
+      migratedAt: Date.now(),
+    },
+  };
+
+  saveLeaderboardState(migrated);
+  return migrated;
 }
 
 export function saveDailyChallengeState(payload) {
