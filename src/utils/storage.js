@@ -28,7 +28,16 @@ export function saveGameState(payload) {
 }
 
 export function loadGameState() {
-  return parseStoredJson(GAME_STATE_KEY, "game state");
+  const parsed = parseStoredJson(GAME_STATE_KEY, "game state");
+  if (!parsed) return null;
+
+  if (typeof parsed !== "object" || Array.isArray(parsed)) {
+    console.error("Invalid game state payload shape. Clearing saved state.");
+    safeRemoveItem(GAME_STATE_KEY);
+    return null;
+  }
+
+  return parsed;
 }
 
 export function clearGameState() {

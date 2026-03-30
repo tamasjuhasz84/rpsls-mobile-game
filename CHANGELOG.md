@@ -15,7 +15,9 @@ All notable changes to this project will be documented in this file.
 
 - Home and game UX polish, spacing, readability, and accessibility coverage.
 - Android release build now supports env-based signing configuration.
+- Monitoring dashboard baseline cleaned up for soft-launch readout consistency.
 
 ### Fixed
 
-- N/A
+- Store-level round result dedup guard to avoid duplicate processing in remount edge cases.
+- Game-state loader now rejects invalid non-object payloads and clears corrupted persisted state.

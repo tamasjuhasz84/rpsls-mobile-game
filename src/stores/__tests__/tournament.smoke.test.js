@@ -362,3 +362,23 @@ describe("resumeTournament", () => {
     expect(store.bracket).toHaveLength(4);
   });
 });
+
+describe("round result dedup tracking", () => {
+  it("markRoundResultProcessed után azonos kulcsra duplikátumot jelez", () => {
+    const store = useTournamentStore();
+    const key = "1|rock|paper|ai";
+
+    expect(store.isDuplicateRoundResult(key)).toBe(false);
+    store.markRoundResultProcessed(key);
+    expect(store.isDuplicateRoundResult(key)).toBe(true);
+  });
+
+  it("clearRoundResultTracking nullázza a dedup kulcsot", () => {
+    const store = useTournamentStore();
+    const key = "1|scissors|paper|player";
+
+    store.markRoundResultProcessed(key);
+    store.clearRoundResultTracking();
+    expect(store.isDuplicateRoundResult(key)).toBe(false);
+  });
+});

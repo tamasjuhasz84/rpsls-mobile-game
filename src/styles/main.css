@@ -314,6 +314,46 @@ a:focus-visible {
   gap: 6px;
 }
 
+.home-primary-actions {
+  display: grid;
+  gap: 8px;
+  margin-bottom: var(--space-sm);
+  padding: 10px;
+  border-radius: var(--radius-lg);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.home-helper-text {
+  margin: 0;
+  font-size: 12px;
+  line-height: 1.5;
+  color: var(--color-text-soft);
+}
+
+.home-helper-text--accent {
+  color: #c4ebff;
+}
+
+.home-secondary-toggle {
+  width: 100%;
+  min-height: 34px;
+  margin-bottom: var(--space-sm);
+  padding: 0 12px;
+  border-radius: var(--radius-pill);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--color-text-muted);
+  font-size: 11px;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.home-secondary-sections {
+  display: grid;
+  gap: 0;
+}
+
 .home-screen .primary-button,
 .home-screen .secondary-button,
 .home-screen .mode-button {
@@ -1245,6 +1285,20 @@ a:focus-visible {
   border-radius: var(--radius-lg);
   background: rgba(255, 255, 255, 0.03);
   border: 1px solid var(--color-border-soft);
+}
+
+.result-secondary-actions {
+  display: grid;
+  gap: var(--space-sm);
+}
+
+.result-secondary-body {
+  display: grid;
+  gap: var(--space-sm);
+}
+
+.result-more-button {
+  min-height: 40px;
 }
 
 .share-result-preview {

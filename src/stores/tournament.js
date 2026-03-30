@@ -23,6 +23,7 @@ export const useTournamentStore = defineStore("tournament", {
     matchFinished: false,
     tournamentFinished: false,
     tournamentLost: false,
+    lastProcessedRoundResultKey: "",
   }),
 
   getters: {
@@ -100,6 +101,7 @@ export const useTournamentStore = defineStore("tournament", {
       this.matchFinished = false;
       this.tournamentFinished = false;
       this.tournamentLost = false;
+      this.lastProcessedRoundResultKey = "";
 
       this.bracket.forEach((node, index) => {
         node.status = index === 0 ? "current" : "pending";
@@ -152,6 +154,10 @@ export const useTournamentStore = defineStore("tournament", {
       this.matchFinished = Boolean(payload.matchFinished);
       this.tournamentFinished = Boolean(payload.tournamentFinished);
       this.tournamentLost = Boolean(payload.tournamentLost);
+      this.lastProcessedRoundResultKey =
+        typeof payload.lastProcessedRoundResultKey === "string"
+          ? payload.lastProcessedRoundResultKey
+          : "";
       this.currentOpponent = this.bracket[this.currentRoundIndex] ?? null;
     },
 
@@ -231,7 +237,22 @@ export const useTournamentStore = defineStore("tournament", {
         matchFinished: this.matchFinished,
         tournamentFinished: this.tournamentFinished,
         tournamentLost: this.tournamentLost,
+        lastProcessedRoundResultKey: this.lastProcessedRoundResultKey,
       };
+    },
+
+    isDuplicateRoundResult(resultKey) {
+      if (typeof resultKey !== "string" || !resultKey.length) return false;
+      return this.lastProcessedRoundResultKey === resultKey;
+    },
+
+    markRoundResultProcessed(resultKey) {
+      this.lastProcessedRoundResultKey =
+        typeof resultKey === "string" ? resultKey : "";
+    },
+
+    clearRoundResultTracking() {
+      this.lastProcessedRoundResultKey = "";
     },
 
     getCurrentOpponentDifficultyTier() {
@@ -331,6 +352,7 @@ export const useTournamentStore = defineStore("tournament", {
       this.playerScore = 0;
       this.aiScore = 0;
       this.matchFinished = false;
+      this.lastProcessedRoundResultKey = "";
 
       this.bracket.forEach((node, index) => {
         if (index < nextIndex && node.status !== "lost") {
@@ -347,6 +369,7 @@ export const useTournamentStore = defineStore("tournament", {
       this.playerScore = 0;
       this.aiScore = 0;
       this.matchFinished = false;
+      this.lastProcessedRoundResultKey = "";
     },
 
     resetTournament() {
@@ -366,6 +389,7 @@ export const useTournamentStore = defineStore("tournament", {
       this.matchFinished = false;
       this.tournamentFinished = false;
       this.tournamentLost = false;
+      this.lastProcessedRoundResultKey = "";
     },
   },
 });

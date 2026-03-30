@@ -90,6 +90,12 @@ describe("korrupt localStorage adat", () => {
     loadGameState();
     expect(localStorage.getItem(GAME_KEY)).toBeNull();
   });
+
+  it("nem-objektum game state payload esetén null-t ad és törli a slotot", () => {
+    localStorage.setItem(GAME_KEY, JSON.stringify("invalid-shape"));
+    expect(loadGameState()).toBeNull();
+    expect(localStorage.getItem(GAME_KEY)).toBeNull();
+  });
 });
 
 describe("saveStats / loadStats", () => {

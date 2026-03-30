@@ -137,3 +137,25 @@ If you enjoy fast competitive runs with meaningful decisions, this is your next 
 - Keep Variant A as baseline in both locales.
 - Use Variant B for manual ASO copy experiment after baseline metrics stabilize.
 - Re-check final text lengths directly in Play Console before submission.
+
+## 4. Day 28 tuning note
+
+Retention-oriented messaging update after Day 27 friction review:
+
+- Emphasize quick first run clarity over feature density.
+- Lead with fast tournament entry and clear next-step loop.
+- Mention Daily Challenge and Survival as secondary retention hooks, not first-line complexity.
+
+Suggested HU short description refresh:
+
+- Gyors RPSLS torna AI ellen, napi kihivassal es survival futasokkal.
+
+Suggested EN short description refresh:
+
+- Fast RPSLS tournament runs with daily challenge and survival mode.
+
+Suggested long-copy emphasis shift:
+
+- first run starts fast
+- clear bracket progression
+- optional daily challenge and survival depth after the core tournament loop

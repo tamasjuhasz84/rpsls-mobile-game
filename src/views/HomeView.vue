@@ -57,253 +57,300 @@
         </button>
       </div>
 
-      <section
-        :class="['daily-challenge-panel', isDailyExpanded && 'is-expanded']"
-      >
-        <div class="daily-challenge-header">
-          <div>
-            <p class="section-label">{{ t("daily.title") }}</p>
-            <h2>{{ t("daily.headline") }}</h2>
-          </div>
+      <section class="home-primary-actions">
+        <p class="section-label">{{ t("home.quickStartLabel") }}</p>
 
-          <div class="daily-challenge-actions">
-            <span :class="['daily-status-pill', dailyStatusClass]">
-              {{ t(dailyStatusKey) }}
-            </span>
-
-            <button
-              v-if="showDailyPromoDetails"
-              class="daily-toggle-button"
-              type="button"
-              :aria-expanded="isDailyExpanded"
-              aria-controls="daily-challenge-body"
-              @click="toggleDailyExpanded"
-            >
-              {{ t(isDailyExpanded ? "daily.showLess" : "daily.showMore") }}
-            </button>
-          </div>
-        </div>
-
-        <button
-          class="primary-button full-width-button"
-          type="button"
-          :disabled="dailyStore.isCompletedToday"
-          @click="handleDailyChallenge"
-        >
-          {{ t(dailyActionKey) }}
-        </button>
-
-        <button
-          v-if="showClaimRewardButton"
-          class="secondary-button full-width-button"
-          type="button"
-          @click="handleClaimReward"
-        >
-          {{ t("daily.claimReward") }}
-        </button>
-
-        <div
-          v-if="showDailyPromoDetails && isDailyExpanded"
-          id="daily-challenge-body"
-          class="daily-challenge-body"
-        >
-          <p class="daily-challenge-copy">
-            {{ t("daily.description") }}
-          </p>
-
-          <div class="daily-challenge-meta">
-            <span>{{ t(modeLabelKey) }}</span>
-            <span>{{
-              t("daily.opponents", { count: dailyChallenge?.bracketSize || 0 })
-            }}</span>
-            <span>{{ dailyChallenge?.dateKey }}</span>
-          </div>
-        </div>
-      </section>
-
-      <section v-if="missionStore.isLoaded" class="mission-panel">
-        <p class="section-label">{{ t("mission.title") }}</p>
-        <ul class="mission-list">
-          <li
-            v-for="mission in missionStore.missions"
-            :key="mission.id"
-            :class="[
-              'mission-card',
-              mission.completed && 'is-completed',
-              mission.claimed && 'is-claimed',
-            ]"
-          >
-            <div class="mission-card-header">
-              <span class="mission-card-label">{{
-                getMissionLabel(mission)
-              }}</span>
-              <span v-if="mission.claimed" class="mission-badge is-claimed">{{
-                t("mission.claimed")
-              }}</span>
-              <span
-                v-else-if="mission.completed"
-                class="mission-badge is-completed"
-                >{{ t("mission.completed") }}</span
-              >
-            </div>
-            <div class="mission-progress-track">
-              <div
-                class="mission-progress-fill"
-                :style="{ width: getMissionPercent(mission) + '%' }"
-              ></div>
-            </div>
-            <div class="mission-progress-footer">
-              <span class="mission-progress-text">
-                {{ mission.progress }} / {{ mission.target }}
-              </span>
-              <button
-                v-if="mission.completed && !mission.claimed"
-                class="mission-claim-button"
-                type="button"
-                @click="handleClaimMission(mission.id)"
-              >
-                {{ t("mission.claim") }}
-              </button>
-            </div>
-          </li>
-        </ul>
-      </section>
-
-      <div class="button-stack">
-        <button class="primary-button" type="button" @click="startGame">
-          {{ t("menu.start") }}
-        </button>
-
-        <button
-          class="secondary-button"
-          type="button"
-          :disabled="!hasContinue"
-          @click="continueGame"
-        >
-          {{ t("menu.continue") }}
-        </button>
-
-        <RouterLink
-          class="secondary-button"
-          :to="{ path: '/rules', query: { from: 'home' } }"
-        >
-          {{ t("menu.rules") }}
-        </RouterLink>
-
-        <RouterLink
-          class="secondary-button"
-          :to="{ path: '/bracket', query: { from: 'home' } }"
-        >
-          {{ t("menu.bracket") }}
-        </RouterLink>
-      </div>
-
-      <section class="stats-panel">
-        <p class="section-label">{{ t("stats.title") }}</p>
-
-        <p v-if="!statsStore.hasGames" class="stats-empty">
-          {{ t("stats.noGames") }}
-        </p>
-
-        <template v-else>
-          <div class="stats-grid">
-            <div class="stats-cell">
-              <span class="stats-value">{{ statsStore.totalGames }}</span>
-              <span class="stats-label">{{ t("stats.totalGames") }}</span>
-            </div>
-            <div class="stats-cell">
-              <span class="stats-value stats-value--win">{{
-                statsStore.wins
-              }}</span>
-              <span class="stats-label">{{ t("stats.wins") }}</span>
-            </div>
-            <div class="stats-cell">
-              <span class="stats-value stats-value--lose">{{
-                statsStore.losses
-              }}</span>
-              <span class="stats-label">{{ t("stats.losses") }}</span>
-            </div>
-            <div class="stats-cell">
-              <span class="stats-value">{{ statsStore.draws }}</span>
-              <span class="stats-label">{{ t("stats.draws") }}</span>
-            </div>
-            <div class="stats-cell">
-              <span class="stats-value">{{ statsStore.winrate }}%</span>
-              <span class="stats-label">{{ t("stats.winrate") }}</span>
-            </div>
-            <div class="stats-cell">
-              <span class="stats-value">{{ statsStore.currentStreak }}</span>
-              <span class="stats-label">{{ t("stats.currentStreak") }}</span>
-            </div>
-            <div class="stats-cell">
-              <span class="stats-value">{{ statsStore.bestWinStreak }}</span>
-              <span class="stats-label">{{ t("stats.bestStreak") }}</span>
-            </div>
-          </div>
+        <div class="button-stack">
+          <button class="primary-button" type="button" @click="startGame">
+            {{ t("menu.start") }}
+          </button>
 
           <button
-            class="stats-reset-button"
+            class="secondary-button"
             type="button"
-            @click="statsStore.resetStats()"
+            :disabled="!hasContinue"
+            @click="continueGame"
           >
-            {{ t("stats.reset") }}
+            {{ t("menu.continue") }}
           </button>
-        </template>
-      </section>
 
-      <section class="leaderboard-panel">
-        <p class="section-label">{{ t("leaderboard.title") }}</p>
+          <RouterLink
+            class="secondary-button"
+            :to="{ path: '/rules', query: { from: 'home' } }"
+          >
+            {{ t("menu.rules") }}
+          </RouterLink>
 
-        <div class="leaderboard-columns">
-          <article class="leaderboard-column">
-            <h3 class="leaderboard-heading">{{ t("leaderboard.daily") }}</h3>
-            <p v-if="!topDailyEntries.length" class="leaderboard-empty">
-              {{ t("leaderboard.emptyDaily") }}
-            </p>
-            <ol v-else class="leaderboard-list">
-              <li
-                v-for="(entry, index) in topDailyEntries"
-                :key="entry.id"
-                class="leaderboard-item"
-                :aria-label="getLeaderboardEntryA11yText(entry, index + 1)"
-              >
-                <span class="leaderboard-rank">{{ index + 1 }}</span>
-                <div class="leaderboard-main">
-                  <p class="leaderboard-name">{{ entry.playerName }}</p>
-                  <p class="leaderboard-meta">
-                    {{ getLeaderboardModeLabel(entry) }}
-                  </p>
-                </div>
-                <span class="leaderboard-score">{{ entry.score }}</span>
-              </li>
-            </ol>
-          </article>
-
-          <article class="leaderboard-column">
-            <h3 class="leaderboard-heading">{{ t("leaderboard.allTime") }}</h3>
-            <p v-if="!topAllTimeEntries.length" class="leaderboard-empty">
-              {{ t("leaderboard.emptyAllTime") }}
-            </p>
-            <ol v-else class="leaderboard-list">
-              <li
-                v-for="(entry, index) in topAllTimeEntries"
-                :key="entry.id"
-                class="leaderboard-item"
-                :aria-label="getLeaderboardEntryA11yText(entry, index + 1)"
-              >
-                <span class="leaderboard-rank">{{ index + 1 }}</span>
-                <div class="leaderboard-main">
-                  <p class="leaderboard-name">{{ entry.playerName }}</p>
-                  <p class="leaderboard-meta">
-                    {{ getLeaderboardModeLabel(entry) }}
-                  </p>
-                </div>
-                <span class="leaderboard-score">{{ entry.score }}</span>
-              </li>
-            </ol>
-          </article>
+          <RouterLink
+            class="secondary-button"
+            :to="{ path: '/bracket', query: { from: 'home' } }"
+          >
+            {{ t("menu.bracket") }}
+          </RouterLink>
         </div>
+
+        <p class="home-helper-text">
+          {{ t(startHintKey) }}
+        </p>
+
+        <p
+          v-if="continueHintKey"
+          class="home-helper-text home-helper-text--accent"
+        >
+          {{ t(continueHintKey, continueHintParams) }}
+        </p>
       </section>
+
+      <button
+        v-if="showHomeExtrasToggle"
+        class="home-secondary-toggle"
+        type="button"
+        :aria-expanded="showHomeExtras"
+        aria-controls="home-secondary-sections"
+        @click="toggleHomeExtras"
+      >
+        {{ t(showHomeExtras ? "home.hideExtras" : "home.showExtras") }}
+      </button>
+
+      <div
+        v-if="showHomeExtras"
+        id="home-secondary-sections"
+        class="home-secondary-sections"
+      >
+        <section
+          :class="['daily-challenge-panel', isDailyExpanded && 'is-expanded']"
+        >
+          <div class="daily-challenge-header">
+            <div>
+              <p class="section-label">{{ t("daily.title") }}</p>
+              <h2>{{ t("daily.headline") }}</h2>
+            </div>
+
+            <div class="daily-challenge-actions">
+              <span :class="['daily-status-pill', dailyStatusClass]">
+                {{ t(dailyStatusKey) }}
+              </span>
+
+              <button
+                v-if="showDailyPromoDetails"
+                class="daily-toggle-button"
+                type="button"
+                :aria-expanded="isDailyExpanded"
+                aria-controls="daily-challenge-body"
+                @click="toggleDailyExpanded"
+              >
+                {{ t(isDailyExpanded ? "daily.showLess" : "daily.showMore") }}
+              </button>
+            </div>
+          </div>
+
+          <div
+            v-if="showDailyPromoDetails && isDailyExpanded"
+            id="daily-challenge-body"
+            class="daily-challenge-body"
+          >
+            <p class="daily-challenge-copy">
+              {{ t("daily.description") }}
+            </p>
+
+            <div class="daily-challenge-meta">
+              <span>{{ t(modeLabelKey) }}</span>
+              <span>{{
+                t("daily.opponents", {
+                  count: dailyChallenge?.bracketSize || 0,
+                })
+              }}</span>
+              <span>{{ dailyChallenge?.dateKey }}</span>
+            </div>
+          </div>
+        </section>
+
+        <section v-if="missionStore.isLoaded" class="mission-panel">
+          <p class="section-label">{{ t("mission.title") }}</p>
+          <ul class="mission-list">
+            <li
+              v-for="mission in missionStore.missions"
+              :key="mission.id"
+              :class="[
+                'mission-card',
+                mission.completed && 'is-completed',
+                mission.claimed && 'is-claimed',
+              ]"
+            >
+              <div class="mission-card-header">
+                <span class="mission-card-label">{{
+                  getMissionLabel(mission)
+                }}</span>
+                <span v-if="mission.claimed" class="mission-badge is-claimed">{{
+                  t("mission.claimed")
+                }}</span>
+                <span
+                  v-else-if="mission.completed"
+                  class="mission-badge is-completed"
+                  >{{ t("mission.completed") }}</span
+                >
+              </div>
+              <div class="mission-progress-track">
+                <div
+                  class="mission-progress-fill"
+                  :style="{ width: getMissionPercent(mission) + '%' }"
+                ></div>
+              </div>
+              <div class="mission-progress-footer">
+                <span class="mission-progress-text">
+                  {{ mission.progress }} / {{ mission.target }}
+                </span>
+                <button
+                  v-if="mission.completed && !mission.claimed"
+                  class="mission-claim-button"
+                  type="button"
+                  @click="handleClaimMission(mission.id)"
+                >
+                  {{ t("mission.claim") }}
+                </button>
+              </div>
+            </li>
+          </ul>
+        </section>
+
+        <div class="button-stack">
+          <button class="primary-button" type="button" @click="startGame">
+            {{ t("menu.start") }}
+          </button>
+
+          <button
+            class="secondary-button"
+            type="button"
+            :disabled="!hasContinue"
+            @click="continueGame"
+          >
+            {{ t("menu.continue") }}
+          </button>
+
+          <RouterLink
+            class="secondary-button"
+            :to="{ path: '/rules', query: { from: 'home' } }"
+          >
+            {{ t("menu.rules") }}
+          </RouterLink>
+
+          <RouterLink
+            class="secondary-button"
+            :to="{ path: '/bracket', query: { from: 'home' } }"
+          >
+            {{ t("menu.bracket") }}
+          </RouterLink>
+        </div>
+
+        <section class="stats-panel">
+          <p class="section-label">{{ t("stats.title") }}</p>
+
+          <p v-if="!statsStore.hasGames" class="stats-empty">
+            {{ t("stats.noGames") }}
+          </p>
+
+          <template v-else>
+            <div class="stats-grid">
+              <div class="stats-cell">
+                <span class="stats-value">{{ statsStore.totalGames }}</span>
+                <span class="stats-label">{{ t("stats.totalGames") }}</span>
+              </div>
+              <div class="stats-cell">
+                <span class="stats-value stats-value--win">{{
+                  statsStore.wins
+                }}</span>
+                <span class="stats-label">{{ t("stats.wins") }}</span>
+              </div>
+              <div class="stats-cell">
+                <span class="stats-value stats-value--lose">{{
+                  statsStore.losses
+                }}</span>
+                <span class="stats-label">{{ t("stats.losses") }}</span>
+              </div>
+              <div class="stats-cell">
+                <span class="stats-value">{{ statsStore.draws }}</span>
+                <span class="stats-label">{{ t("stats.draws") }}</span>
+              </div>
+              <div class="stats-cell">
+                <span class="stats-value">{{ statsStore.winrate }}%</span>
+                <span class="stats-label">{{ t("stats.winrate") }}</span>
+              </div>
+              <div class="stats-cell">
+                <span class="stats-value">{{ statsStore.currentStreak }}</span>
+                <span class="stats-label">{{ t("stats.currentStreak") }}</span>
+              </div>
+              <div class="stats-cell">
+                <span class="stats-value">{{ statsStore.bestWinStreak }}</span>
+                <span class="stats-label">{{ t("stats.bestStreak") }}</span>
+              </div>
+            </div>
+
+            <button
+              class="stats-reset-button"
+              type="button"
+              @click="statsStore.resetStats()"
+            >
+              {{ t("stats.reset") }}
+            </button>
+          </template>
+        </section>
+
+        <section class="leaderboard-panel">
+          <p class="section-label">{{ t("leaderboard.title") }}</p>
+
+          <div class="leaderboard-columns">
+            <article class="leaderboard-column">
+              <h3 class="leaderboard-heading">{{ t("leaderboard.daily") }}</h3>
+              <p v-if="!topDailyEntries.length" class="leaderboard-empty">
+                {{ t("leaderboard.emptyDaily") }}
+              </p>
+              <ol v-else class="leaderboard-list">
+                <li
+                  v-for="(entry, index) in topDailyEntries"
+                  :key="entry.id"
+                  class="leaderboard-item"
+                  :aria-label="getLeaderboardEntryA11yText(entry, index + 1)"
+                >
+                  <span class="leaderboard-rank">{{ index + 1 }}</span>
+                  <div class="leaderboard-main">
+                    <p class="leaderboard-name">{{ entry.playerName }}</p>
+                    <p class="leaderboard-meta">
+                      {{ getLeaderboardModeLabel(entry) }}
+                    </p>
+                  </div>
+                  <span class="leaderboard-score">{{ entry.score }}</span>
+                </li>
+              </ol>
+            </article>
+
+            <article class="leaderboard-column">
+              <h3 class="leaderboard-heading">
+                {{ t("leaderboard.allTime") }}
+              </h3>
+              <p v-if="!topAllTimeEntries.length" class="leaderboard-empty">
+                {{ t("leaderboard.emptyAllTime") }}
+              </p>
+              <ol v-else class="leaderboard-list">
+                <li
+                  v-for="(entry, index) in topAllTimeEntries"
+                  :key="entry.id"
+                  class="leaderboard-item"
+                  :aria-label="getLeaderboardEntryA11yText(entry, index + 1)"
+                >
+                  <span class="leaderboard-rank">{{ index + 1 }}</span>
+                  <div class="leaderboard-main">
+                    <p class="leaderboard-name">{{ entry.playerName }}</p>
+                    <p class="leaderboard-meta">
+                      {{ getLeaderboardModeLabel(entry) }}
+                    </p>
+                  </div>
+                  <span class="leaderboard-score">{{ entry.score }}</span>
+                </li>
+              </ol>
+            </article>
+          </div>
+        </section>
+      </div>
 
       <div class="lang-switch">
         <button
@@ -343,6 +390,7 @@ const missionStore = useMissionStore();
 const leaderboardStore = useLeaderboardStore();
 const { t, locale } = useI18n();
 const isDailyExpanded = ref(false);
+const isHomeExtrasExpanded = ref(false);
 
 dailyStore.hydrateToday();
 missionStore.hydrateToday();
@@ -414,13 +462,38 @@ const topDailyEntries = computed(() =>
 const topAllTimeEntries = computed(() =>
   leaderboardStore.allTimeEntries.slice(0, 5),
 );
+const isFirstSessionFocus = computed(
+  () => !statsStore.hasGames && !hasContinue.value,
+);
+const showHomeExtrasToggle = computed(() => isFirstSessionFocus.value);
+const showHomeExtras = computed(
+  () => !showHomeExtrasToggle.value || isHomeExtrasExpanded.value,
+);
+const continueHintKey = computed(() => {
+  if (!hasContinue.value) return "";
+  if (savedTournament.value?.sessionType === "daily") {
+    return "home.continueHintDaily";
+  }
+  return "home.continueHint";
+});
+const continueHintParams = computed(() => ({
+  mode: getModeLabel(savedTournament.value?.mode),
+  round: (savedTournament.value?.currentRoundIndex ?? 0) + 1,
+}));
+const startHintKey = computed(() =>
+  isFirstSessionFocus.value ? "home.startHintFresh" : "home.startHint",
+);
+
+function getModeLabel(modeValue) {
+  if (modeValue === "bo5") return t("match.firstTo5");
+  if (modeValue === "survival") return t("match.survival");
+  if (modeValue === "legacy") return t("leaderboard.modeLegacy");
+  return t("match.firstTo3");
+}
 
 function getLeaderboardModeLabel(entry) {
   if (!entry || typeof entry !== "object") return t("match.firstTo3");
-  if (entry.mode === "bo5") return t("match.firstTo5");
-  if (entry.mode === "survival") return t("match.survival");
-  if (entry.mode === "legacy") return t("leaderboard.modeLegacy");
-  return t("match.firstTo3");
+  return getModeLabel(entry.mode);
 }
 
 function getLeaderboardEntryA11yText(entry, rank) {
@@ -455,6 +528,10 @@ function startGame() {
 
 function toggleDailyExpanded() {
   isDailyExpanded.value = !isDailyExpanded.value;
+}
+
+function toggleHomeExtras() {
+  isHomeExtrasExpanded.value = !isHomeExtrasExpanded.value;
 }
 
 function handleDailyChallenge() {

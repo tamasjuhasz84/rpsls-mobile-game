@@ -68,48 +68,74 @@
               {{ t(primaryActionKey) }}
             </button>
 
-            <button
-              v-if="secondaryActionKey"
-              class="secondary-button full-width-button"
-              type="button"
-              @click="handleSecondaryAction"
-            >
-              {{ t(secondaryActionKey) }}
-            </button>
-
-            <section class="share-result-card">
-              <p class="section-label">{{ t("share.cardTitle") }}</p>
-              <p class="share-result-preview">{{ shareResultText }}</p>
-
-              <p
-                v-if="shouldHighlightStreak"
-                class="win-streak-highlight"
-                role="status"
-                aria-live="polite"
-              >
-                {{
-                  t("share.winStreakHighlight", {
-                    count: statsStore.currentStreak,
-                  })
-                }}
-              </p>
+            <section v-if="hasResultExtras" class="result-secondary-actions">
+              <p class="section-label">{{ t("match.optionalActionsLabel") }}</p>
 
               <button
-                class="secondary-button full-width-button"
+                class="secondary-button full-width-button result-more-button"
                 type="button"
-                @click="handleShareResult"
+                :aria-expanded="isResultExtrasExpanded"
+                aria-controls="result-secondary-body"
+                @click="toggleResultExtras"
               >
-                {{ t("share.cta") }}
+                {{
+                  t(
+                    isResultExtrasExpanded
+                      ? "match.hideOptions"
+                      : "match.moreOptions",
+                  )
+                }}
               </button>
 
-              <p
-                v-if="shareFeedbackKey"
-                class="share-feedback"
-                role="status"
-                aria-live="polite"
+              <div
+                v-if="isResultExtrasExpanded"
+                id="result-secondary-body"
+                class="result-secondary-body"
               >
-                {{ t(shareFeedbackKey) }}
-              </p>
+                <button
+                  v-if="secondaryActionKey"
+                  class="secondary-button full-width-button"
+                  type="button"
+                  @click="handleSecondaryAction"
+                >
+                  {{ t(secondaryActionKey) }}
+                </button>
+
+                <section class="share-result-card">
+                  <p class="section-label">{{ t("share.cardTitle") }}</p>
+                  <p class="share-result-preview">{{ shareResultText }}</p>
+
+                  <p
+                    v-if="shouldHighlightStreak"
+                    class="win-streak-highlight"
+                    role="status"
+                    aria-live="polite"
+                  >
+                    {{
+                      t("share.winStreakHighlight", {
+                        count: statsStore.currentStreak,
+                      })
+                    }}
+                  </p>
+
+                  <button
+                    class="secondary-button full-width-button"
+                    type="button"
+                    @click="handleShareResult"
+                  >
+                    {{ t("share.cta") }}
+                  </button>
+
+                  <p
+                    v-if="shareFeedbackKey"
+                    class="share-feedback"
+                    role="status"
+                    aria-live="polite"
+                  >
+                    {{ t(shareFeedbackKey) }}
+                  </p>
+                </section>
+              </div>
             </section>
           </template>
 
@@ -145,39 +171,65 @@
               {{ t("daily.claimReward") }}
             </button>
 
-            <section class="share-result-card">
-              <p class="section-label">{{ t("share.cardTitle") }}</p>
-              <p class="share-result-preview">{{ shareResultText }}</p>
-
-              <p
-                v-if="shouldHighlightStreak"
-                class="win-streak-highlight"
-                role="status"
-                aria-live="polite"
-              >
-                {{
-                  t("share.winStreakHighlight", {
-                    count: statsStore.currentStreak,
-                  })
-                }}
-              </p>
+            <section v-if="hasResultExtras" class="result-secondary-actions">
+              <p class="section-label">{{ t("match.optionalActionsLabel") }}</p>
 
               <button
-                class="secondary-button full-width-button"
+                class="secondary-button full-width-button result-more-button"
                 type="button"
-                @click="handleShareResult"
+                :aria-expanded="isResultExtrasExpanded"
+                aria-controls="result-secondary-body-plain"
+                @click="toggleResultExtras"
               >
-                {{ t("share.cta") }}
+                {{
+                  t(
+                    isResultExtrasExpanded
+                      ? "match.hideOptions"
+                      : "match.moreOptions",
+                  )
+                }}
               </button>
 
-              <p
-                v-if="shareFeedbackKey"
-                class="share-feedback"
-                role="status"
-                aria-live="polite"
+              <div
+                v-if="isResultExtrasExpanded"
+                id="result-secondary-body-plain"
+                class="result-secondary-body"
               >
-                {{ t(shareFeedbackKey) }}
-              </p>
+                <section class="share-result-card">
+                  <p class="section-label">{{ t("share.cardTitle") }}</p>
+                  <p class="share-result-preview">{{ shareResultText }}</p>
+
+                  <p
+                    v-if="shouldHighlightStreak"
+                    class="win-streak-highlight"
+                    role="status"
+                    aria-live="polite"
+                  >
+                    {{
+                      t("share.winStreakHighlight", {
+                        count: statsStore.currentStreak,
+                      })
+                    }}
+                  </p>
+
+                  <button
+                    class="secondary-button full-width-button"
+                    type="button"
+                    @click="handleShareResult"
+                  >
+                    {{ t("share.cta") }}
+                  </button>
+
+                  <p
+                    v-if="shareFeedbackKey"
+                    class="share-feedback"
+                    role="status"
+                    aria-live="polite"
+                  >
+                    {{ t(shareFeedbackKey) }}
+                  </p>
+                </section>
+              </div>
             </section>
           </template>
         </section>
@@ -232,7 +284,6 @@ let revealTimeoutId = null;
 let nextRoundTimeoutId = null;
 let lastUrgencyCountdown = null;
 let plannedAiMove = null;
-let lastProcessedResultKey = null;
 let lastPersistedTournamentState = "";
 let activeMatchKey = "";
 let activeMatchStartedAt = 0;
@@ -244,6 +295,7 @@ let trackedLeaderboardKeys = new Set();
 
 const resumeFailed = ref(false);
 const shareFeedbackKey = ref("");
+const isResultExtrasExpanded = ref(false);
 const showMotivationPanel = computed(() => {
   return uiStore.isFeatureEnabled("matchEndMotivationPanel");
 });
@@ -342,6 +394,13 @@ const primaryActionKey = computed(() => {
 const secondaryActionKey = computed(() => {
   if (showDailyClaimButton.value) return "match.standardRunCta";
   return "";
+});
+const hasResultExtras = computed(() => {
+  return (
+    Boolean(secondaryActionKey.value) ||
+    tournamentStore.matchFinished ||
+    tournamentStore.tournamentFinished
+  );
 });
 
 const matchStatusHint = computed(() => {
@@ -495,6 +554,10 @@ function resetShareFeedback() {
   shareFeedbackKey.value = "";
 }
 
+function toggleResultExtras() {
+  isResultExtrasExpanded.value = !isResultExtrasExpanded.value;
+}
+
 async function copyShareText(text) {
   if (navigator.clipboard?.writeText) {
     await navigator.clipboard.writeText(text);
@@ -607,11 +670,12 @@ function resetLoopRuntime() {
   gameStore.resetGame();
   lastUrgencyCountdown = null;
   plannedAiMove = null;
-  lastProcessedResultKey = null;
+  tournamentStore.clearRoundResultTracking();
   lastPersistedTournamentState = "";
   activeMatchKey = "";
   activeMatchStartedAt = 0;
   trackedLeaderboardKeys = new Set();
+  isResultExtrasExpanded.value = false;
 }
 
 function getMatchKey() {
@@ -962,8 +1026,8 @@ watch(
         gameStore.result,
       ].join("|");
 
-      if (resultKey === lastProcessedResultKey) return;
-      lastProcessedResultKey = resultKey;
+      if (tournamentStore.isDuplicateRoundResult(resultKey)) return;
+      tournamentStore.markRoundResultProcessed(resultKey);
 
       registerRound({
         playerMove: gameStore.lockedMove,
@@ -1029,6 +1093,15 @@ watch(
         startGameLoop();
         nextRoundTimeoutId = null;
       }, 1600);
+    }
+  },
+);
+
+watch(
+  () => [tournamentStore.matchFinished, tournamentStore.tournamentFinished],
+  ([matchFinished, tournamentFinished]) => {
+    if (!matchFinished && !tournamentFinished) {
+      isResultExtrasExpanded.value = false;
     }
   },
 );
