@@ -97,5 +97,8 @@
   "stats.bestStreak": "Legjobb",
   "stats.reset": "Statisztika törlése",
   "stats.noGames": "Még nincs lejátszott meccs.",
-  "game.resumeFailed": "A mentett állapot nem állítható vissza. Új torna indult."
+  "game.resumeFailed": "A mentett állapot nem állítható vissza. Új torna indult.",
+  "error.fallbackTitle": "Váratlan hiba történt",
+  "error.fallbackMessage": "A játék futása megszakadt egy hibával. Biztonságosan újraindíthatod.",
+  "error.reload": "Alkalmazás újraindítása"
 }

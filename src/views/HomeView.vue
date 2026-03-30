@@ -144,6 +144,7 @@ import { useGameStore } from "@/stores/game";
 import { useStatsStore } from "@/stores/stats";
 import { useI18n } from "vue-i18n";
 import { loadGameState, saveLanguage } from "@/utils/storage";
+import { trackEvent } from "@/services/analytics";
 
 const router = useRouter();
 const uiStore = useUiStore();
@@ -185,6 +186,13 @@ function startGame() {
 }
 
 function continueGame() {
+  trackEvent("continue_click", {
+    source_screen: "home",
+    has_saved_tournament: hasContinue.value,
+    mode: tournamentStore.mode,
+    action: "resume",
+  });
+
   router.push("/game?resume=1");
 }
 </script>

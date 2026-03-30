@@ -97,5 +97,8 @@
   "stats.bestStreak": "Best",
   "stats.reset": "Reset stats",
   "stats.noGames": "No games played yet.",
-  "game.resumeFailed": "Saved progress could not be restored. A new tournament has been started."
+  "game.resumeFailed": "Saved progress could not be restored. A new tournament has been started.",
+  "error.fallbackTitle": "Something went wrong",
+  "error.fallbackMessage": "The game hit an unexpected error. You can restart safely.",
+  "error.reload": "Restart app"
 }

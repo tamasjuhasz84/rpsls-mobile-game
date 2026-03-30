@@ -74,6 +74,7 @@ import { useTournamentStore } from "@/stores/tournament";
 import { useUiStore } from "@/stores/ui";
 import { useStatsStore } from "@/stores/stats";
 import { saveGameState, clearGameState } from "@/utils/storage";
+import { trackEvent } from "@/services/analytics";
 
 const route = useRoute();
 const { t } = useI18n();
@@ -92,6 +93,11 @@ let lastUrgencyCountdown = null;
 let plannedAiMove = null;
 let lastProcessedResultKey = null;
 let lastPersistedTournamentState = "";
+let activeMatchKey = "";
+let activeMatchStartedAt = 0;
+let trackedMatchStartKeys = new Set();
+let trackedMatchEndKeys = new Set();
+let trackedTournamentEndKeys = new Set();
 
 const resumeFailed = ref(false);
 
@@ -124,6 +130,84 @@ function resetLoopRuntime() {
   plannedAiMove = null;
   lastProcessedResultKey = null;
   lastPersistedTournamentState = "";
+  activeMatchKey = "";
+  activeMatchStartedAt = 0;
+}
+
+function getMatchKey() {
+  const opponentId = tournamentStore.currentOpponent?.id ?? "none";
+  return [
+    tournamentStore.mode,
+    tournamentStore.currentRoundIndex,
+    opponentId,
+  ].join("|");
+}
+
+function getDurationSeconds(startedAt) {
+  if (!startedAt) return 0;
+  const elapsed = Math.floor((Date.now() - startedAt) / 1000);
+  return Math.max(elapsed, 0);
+}
+
+function trackMatchStartIfNeeded(source = "unknown") {
+  const matchKey = getMatchKey();
+  if (!matchKey || trackedMatchStartKeys.has(matchKey)) return;
+
+  activeMatchKey = matchKey;
+  activeMatchStartedAt = Date.now();
+  trackedMatchStartKeys.add(matchKey);
+
+  trackEvent("match_start", {
+    mode: tournamentStore.mode,
+    opponent_id: tournamentStore.currentOpponent?.id ?? null,
+    opponent_profile: tournamentStore.currentOpponent?.aiProfile ?? null,
+    round_number: gameStore.roundNumber,
+    source,
+    current_round_index: tournamentStore.currentRoundIndex,
+  });
+}
+
+function trackMatchEndIfNeeded() {
+  if (!tournamentStore.matchFinished) return;
+
+  const matchKey = activeMatchKey || getMatchKey();
+  if (!matchKey || trackedMatchEndKeys.has(matchKey)) return;
+
+  trackedMatchEndKeys.add(matchKey);
+
+  trackEvent("match_end", {
+    mode: tournamentStore.mode,
+    opponent_id: tournamentStore.currentOpponent?.id ?? null,
+    result: tournamentStore.tournamentLost ? "ai" : "player",
+    player_score: tournamentStore.playerScore,
+    ai_score: tournamentStore.aiScore,
+    rounds_played: gameStore.roundNumber,
+    duration_sec: getDurationSeconds(activeMatchStartedAt),
+    current_round_index: tournamentStore.currentRoundIndex,
+  });
+}
+
+function trackTournamentEndIfNeeded() {
+  if (!tournamentStore.tournamentFinished) return;
+
+  const tournamentKey = [
+    tournamentStore.mode,
+    tournamentStore.bracket.length,
+    tournamentStore.tournamentLost ? "lost" : "won",
+  ].join("|");
+
+  if (trackedTournamentEndKeys.has(tournamentKey)) return;
+  trackedTournamentEndKeys.add(tournamentKey);
+
+  trackEvent("tournament_end", {
+    mode: tournamentStore.mode,
+    tournament_result: tournamentStore.tournamentLost ? "loss" : "win",
+    opponents_beaten: tournamentStore.tournamentLost
+      ? tournamentStore.currentRoundIndex
+      : tournamentStore.bracket.length,
+    total_rounds_played: gameStore.roundNumber,
+    total_duration_sec: getDurationSeconds(activeMatchStartedAt),
+  });
 }
 
 function getAiDecisionContext() {
@@ -144,6 +228,8 @@ function startGameLoop() {
   if (tournamentStore.matchFinished || tournamentStore.tournamentFinished)
     return;
   if (!tournamentStore.currentOpponent) return;
+
+  trackMatchStartIfNeeded("game_loop_start");
 
   gameStore.startRound();
   plannedAiMove = getAiMove(getAiDecisionContext());
@@ -198,6 +284,13 @@ const showRestartButton = computed(() => {
 function handleAdvance() {
   clearRoundTimeouts();
   stop();
+
+  trackEvent("continue_click", {
+    source_screen: "game",
+    has_saved_tournament: true,
+    mode: tournamentStore.mode,
+    action: "advance",
+  });
 
   tournamentStore.advanceOpponent();
   gameStore.resetGame();
@@ -255,6 +348,8 @@ watch(
 
       statsStore.updateStats(gameStore.result);
       tournamentStore.registerRoundResult(gameStore.result);
+      trackMatchEndIfNeeded();
+      trackTournamentEndIfNeeded();
 
       if (gameStore.result === "player") {
         play("win", uiStore.soundEnabled);
@@ -335,6 +430,12 @@ onMounted(() => {
   const wantsResume = resumeParam === "1";
 
   if (wantsResume) {
+    trackEvent("continue_click", {
+      source_screen: "game",
+      has_saved_tournament: true,
+      mode: tournamentStore.mode,
+      action: "resume_query_param",
+    });
     resumeTournamentFlow();
     return;
   }

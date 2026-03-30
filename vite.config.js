@@ -91,4 +91,19 @@ export default defineConfig({
       "@": path.resolve(__dirname, "./src"),
     },
   },
+  test: {
+    environment: "jsdom",
+    include: ["src/**/*.smoke.test.js"],
+    setupFiles: ["./src/test/setup.js"],
+    plugins: [
+      {
+        name: "svg-mock",
+        transform(_code, id) {
+          if (id.endsWith(".svg")) {
+            return { code: "export default ''" };
+          }
+        },
+      },
+    ],
+  },
 });

@@ -7,11 +7,13 @@ export const useUiStore = defineStore("ui", {
     soundEnabled: false,
     hapticsEnabled: false,
     playerName: "",
+    fatalError: null,
   }),
 
   getters: {
     isHungarian: (state) => state.locale === "hu",
     isEnglish: (state) => state.locale === "en",
+    hasFatalError: (state) => Boolean(state.fatalError),
   },
 
   actions: {
@@ -59,6 +61,22 @@ export const useUiStore = defineStore("ui", {
     toggleHaptics() {
       this.hapticsEnabled = !this.hapticsEnabled;
       this.persistUiState();
+    },
+
+    setFatalError(payload = {}) {
+      const source =
+        typeof payload.source === "string" && payload.source.length > 0
+          ? payload.source
+          : "runtime";
+
+      this.fatalError = {
+        source,
+        at: Date.now(),
+      };
+    },
+
+    clearFatalError() {
+      this.fatalError = null;
     },
   },
 });
