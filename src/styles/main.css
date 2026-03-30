@@ -254,7 +254,7 @@ a:focus-visible {
 
 .home-screen {
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   justify-content: center;
 }
 
@@ -338,6 +338,238 @@ a:focus-visible {
   background: var(--color-button-primary-bg);
   color: var(--color-button-primary-text);
   font-weight: 700;
+}
+
+.daily-challenge-panel {
+  display: grid;
+  gap: 8px;
+  margin-bottom: var(--space-sm);
+  padding: 10px;
+  min-width: 0;
+  border-radius: var(--radius-lg);
+  border: 1px solid rgba(140, 220, 255, 0.24);
+  background:
+    linear-gradient(
+      180deg,
+      rgba(75, 145, 255, 0.14),
+      rgba(255, 255, 255, 0.04)
+    ),
+    var(--color-surface);
+  box-shadow: 0 14px 28px rgba(6, 14, 30, 0.24);
+}
+
+.daily-challenge-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--space-sm);
+}
+
+.daily-challenge-header > div {
+  min-width: 0;
+}
+
+.daily-challenge-header h2 {
+  margin: 0;
+  font-size: 18px;
+  line-height: 1.15;
+  overflow-wrap: anywhere;
+}
+
+.daily-challenge-actions {
+  display: grid;
+  gap: 6px;
+  justify-items: end;
+  flex-shrink: 0;
+}
+
+.daily-toggle-button {
+  min-height: 30px;
+  padding: 0 10px;
+  border-radius: var(--radius-pill);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--color-text-muted);
+  font-size: 11px;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.daily-challenge-body {
+  display: grid;
+  gap: 8px;
+  padding-top: 2px;
+}
+
+.daily-challenge-copy {
+  margin: 0;
+  color: var(--color-text-muted);
+  font-size: 13px;
+  line-height: 1.45;
+  overflow-wrap: anywhere;
+}
+
+.daily-challenge-meta {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 6px;
+}
+
+.daily-challenge-meta span,
+.daily-status-pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 28px;
+  padding: 0 10px;
+  min-width: 0;
+  border-radius: var(--radius-pill);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.07);
+  font-size: 11px;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  text-align: center;
+  overflow-wrap: anywhere;
+}
+
+.daily-status-pill {
+  flex-shrink: 0;
+}
+
+.daily-status-pill.is-ready {
+  color: #dbeafe;
+}
+
+.daily-status-pill.is-active {
+  color: #93c5fd;
+}
+
+.daily-status-pill.is-won {
+  color: #86efac;
+}
+
+.daily-status-pill.is-claimed {
+  color: #a5f3fc;
+}
+
+.daily-status-pill.is-lost {
+  color: #fca5a5;
+}
+
+/* ---------- Mission panel ---------- */
+
+.mission-panel {
+  margin-bottom: var(--space-sm);
+}
+
+.mission-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 8px;
+}
+
+.mission-card {
+  display: grid;
+  gap: 6px;
+  padding: 10px;
+  border-radius: var(--radius-lg);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.mission-card.is-completed {
+  border-color: rgba(134, 239, 172, 0.3);
+  background: rgba(134, 239, 172, 0.05);
+}
+
+.mission-card.is-claimed {
+  border-color: rgba(255, 255, 255, 0.06);
+  opacity: 0.6;
+}
+
+.mission-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-sm);
+  min-width: 0;
+}
+
+.mission-card-label {
+  flex: 1;
+  min-width: 0;
+  font-size: 13px;
+  line-height: 1.3;
+  overflow-wrap: anywhere;
+}
+
+.mission-badge {
+  display: inline-flex;
+  align-items: center;
+  flex-shrink: 0;
+  min-height: 22px;
+  padding: 0 8px;
+  border-radius: var(--radius-pill);
+  border: 1px solid transparent;
+  font-size: 10px;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.mission-badge.is-completed {
+  border-color: rgba(134, 239, 172, 0.4);
+  color: #86efac;
+}
+
+.mission-badge.is-claimed {
+  border-color: rgba(165, 243, 252, 0.3);
+  color: #a5f3fc;
+}
+
+.mission-progress-track {
+  height: 5px;
+  border-radius: 3px;
+  background: rgba(255, 255, 255, 0.1);
+  overflow: hidden;
+}
+
+.mission-progress-fill {
+  height: 100%;
+  border-radius: 3px;
+  background: linear-gradient(90deg, #60a5fa, #a78bfa);
+  transition: width 0.3s ease;
+}
+
+.mission-card.is-completed .mission-progress-fill {
+  background: linear-gradient(90deg, #4ade80, #86efac);
+}
+
+.mission-progress-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-sm);
+}
+
+.mission-progress-text {
+  font-size: 11px;
+  color: var(--color-text-muted);
+  letter-spacing: 0.03em;
+}
+
+.mission-claim-button {
+  min-height: 26px;
+  padding: 0 10px;
+  border-radius: var(--radius-pill);
+  border: 1px solid rgba(134, 239, 172, 0.4);
+  background: rgba(134, 239, 172, 0.12);
+  color: #86efac;
+  font-size: 11px;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
 }
 
 .lang-switch {
@@ -813,6 +1045,31 @@ a:focus-visible {
   margin: 0;
 }
 
+.daily-game-status-panel {
+  display: grid;
+  gap: 4px;
+}
+
+.daily-game-status-label {
+  margin: 0;
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-text-soft);
+}
+
+.daily-game-status-text {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.daily-game-status-meta {
+  margin: 0;
+  font-size: 12px;
+  color: var(--color-text-soft);
+}
+
 .match-status-panel {
   display: grid;
   gap: var(--space-md);
@@ -1257,6 +1514,25 @@ a:focus-visible {
     margin-top: 6px;
   }
 
+  .daily-challenge-header {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .daily-challenge-actions {
+    grid-template-columns: 1fr;
+    justify-items: stretch;
+  }
+
+  .daily-status-pill,
+  .daily-toggle-button {
+    width: 100%;
+  }
+
+  .daily-challenge-meta {
+    grid-template-columns: 1fr;
+  }
+
   .game-screen {
     gap: var(--space-md);
   }
@@ -1579,6 +1855,22 @@ a:focus-visible {
 
   .hero-card h1 {
     font-size: 30px;
+  }
+}
+
+@media (min-width: 768px) and (max-height: 920px) {
+  .daily-challenge-panel {
+    gap: 6px;
+    padding: 9px;
+  }
+
+  .daily-challenge-header h2 {
+    font-size: 16px;
+  }
+
+  .daily-challenge-copy {
+    font-size: 12px;
+    line-height: 1.35;
   }
 }
 

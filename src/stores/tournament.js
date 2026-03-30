@@ -6,6 +6,8 @@ export const useTournamentStore = defineStore("tournament", {
   state: () => ({
     mode: "bo3",
     targetWins: 3,
+    sessionType: "tournament",
+    dailyChallengeId: "",
     playerScore: 0,
     aiScore: 0,
     currentOpponent: null,
@@ -83,6 +85,12 @@ export const useTournamentStore = defineStore("tournament", {
     hydrateFromStorage(payload = {}) {
       this.mode = payload.mode === "bo5" ? "bo5" : "bo3";
       this.targetWins = this.mode === "bo5" ? 5 : 3;
+      this.sessionType =
+        payload.sessionType === "daily" ? "daily" : "tournament";
+      this.dailyChallengeId =
+        typeof payload.dailyChallengeId === "string"
+          ? payload.dailyChallengeId
+          : "";
       this.playerScore = this.normalizeNonNegativeNumber(
         payload.playerScore,
         0,
@@ -106,6 +114,9 @@ export const useTournamentStore = defineStore("tournament", {
       const cleanup =
         typeof options.cleanup === "function" ? options.cleanup : null;
       const size = Number.isInteger(options.size) ? options.size : 4;
+      const customBracket = Array.isArray(options.bracket)
+        ? options.bracket
+        : null;
       const selectedMode =
         options.mode === "bo5" || options.mode === "bo3"
           ? options.mode
@@ -115,9 +126,17 @@ export const useTournamentStore = defineStore("tournament", {
 
       this.resetTournament();
       this.setMode(selectedMode);
+      this.sessionType =
+        options.sessionType === "daily" ? "daily" : "tournament";
+      this.dailyChallengeId =
+        typeof options.dailyChallengeId === "string"
+          ? options.dailyChallengeId
+          : "";
       clearGameState();
 
-      const bracket = buildTournament(size);
+      const bracket = customBracket?.length
+        ? customBracket
+        : buildTournament(size);
       this.setBracket(bracket);
 
       saveGameState({
@@ -150,6 +169,8 @@ export const useTournamentStore = defineStore("tournament", {
     getPersistedState() {
       return {
         mode: this.mode,
+        sessionType: this.sessionType,
+        dailyChallengeId: this.dailyChallengeId,
         playerScore: this.playerScore,
         aiScore: this.aiScore,
         bracket: this.bracket,
@@ -246,6 +267,8 @@ export const useTournamentStore = defineStore("tournament", {
     resetTournament() {
       this.mode = "bo3";
       this.targetWins = 3;
+      this.sessionType = "tournament";
+      this.dailyChallengeId = "";
       this.playerScore = 0;
       this.aiScore = 0;
       this.currentOpponent = null;

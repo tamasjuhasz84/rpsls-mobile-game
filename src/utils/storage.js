@@ -2,6 +2,8 @@ const GAME_STATE_KEY = "rpsls-game-state";
 const UI_STATE_KEY = "rpsls-ui-state";
 const LANG_KEY = "rpsls-lang";
 const STATS_KEY = "rpsls-stats";
+const DAILY_CHALLENGE_STATE_KEY = "rpsls-daily-challenge-state";
+const MISSION_STATE_KEY = "rpsls-mission-state";
 
 function parseStoredJson(key, label) {
   try {
@@ -97,5 +99,45 @@ export function clearStats() {
     localStorage.removeItem(STATS_KEY);
   } catch (error) {
     console.error("Failed to clear stats:", error);
+  }
+}
+
+export function saveDailyChallengeState(payload) {
+  try {
+    localStorage.setItem(DAILY_CHALLENGE_STATE_KEY, JSON.stringify(payload));
+  } catch (error) {
+    console.error("Failed to save daily challenge state:", error);
+  }
+}
+
+export function loadDailyChallengeState() {
+  return parseStoredJson(DAILY_CHALLENGE_STATE_KEY, "daily challenge state");
+}
+
+export function clearDailyChallengeState() {
+  try {
+    localStorage.removeItem(DAILY_CHALLENGE_STATE_KEY);
+  } catch (error) {
+    console.error("Failed to clear daily challenge state:", error);
+  }
+}
+
+export function saveMissionState(payload) {
+  try {
+    localStorage.setItem(MISSION_STATE_KEY, JSON.stringify(payload));
+  } catch (error) {
+    console.error("Failed to save mission state:", error);
+  }
+}
+
+export function loadMissionState() {
+  return parseStoredJson(MISSION_STATE_KEY, "mission state");
+}
+
+export function clearMissionState() {
+  try {
+    localStorage.removeItem(MISSION_STATE_KEY);
+  } catch (error) {
+    console.error("Failed to clear mission state:", error);
   }
 }

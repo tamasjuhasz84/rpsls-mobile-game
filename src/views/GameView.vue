@@ -12,6 +12,18 @@
           <p>{{ t("game.resumeFailed") }}</p>
         </section>
 
+        <section
+          v-if="isDailySession"
+          class="panel daily-game-status-panel"
+          aria-live="polite"
+        >
+          <p class="daily-game-status-label">{{ t("daily.title") }}</p>
+          <p class="daily-game-status-text">{{ t(dailyGameStatusKey) }}</p>
+          <p class="daily-game-status-meta">
+            {{ dailyStore.challenge?.dateKey }}
+          </p>
+        </section>
+
         <section class="game-summary-row">
           <OpponentBadge />
           <ScoreBoard />
@@ -46,6 +58,15 @@
           >
             {{ t("match.restartTournament") }}
           </button>
+
+          <button
+            v-if="showDailyClaimButton"
+            class="secondary-button full-width-button"
+            type="button"
+            @click="handleClaimReward"
+          >
+            {{ t("daily.claimReward") }}
+          </button>
         </section>
       </section>
 
@@ -73,6 +94,8 @@ import { useGameStore } from "@/stores/game";
 import { useTournamentStore } from "@/stores/tournament";
 import { useUiStore } from "@/stores/ui";
 import { useStatsStore } from "@/stores/stats";
+import { useDailyChallengeStore } from "@/stores/dailyChallenge";
+import { useMissionStore } from "@/stores/mission";
 import { saveGameState, clearGameState } from "@/utils/storage";
 import { trackEvent } from "@/services/analytics";
 
@@ -82,6 +105,8 @@ const gameStore = useGameStore();
 const tournamentStore = useTournamentStore();
 const uiStore = useUiStore();
 const statsStore = useStatsStore();
+const dailyStore = useDailyChallengeStore();
+const missionStore = useMissionStore();
 const { start, stop } = useCountdown();
 const { getAiMove, registerRound, resetHistory } = useAiOpponent();
 const { play } = useFeedbackAudio();
@@ -98,8 +123,32 @@ let activeMatchStartedAt = 0;
 let trackedMatchStartKeys = new Set();
 let trackedMatchEndKeys = new Set();
 let trackedTournamentEndKeys = new Set();
+let trackedDailyCompleteKeys = new Set();
 
 const resumeFailed = ref(false);
+
+const isDailySession = computed(() => tournamentStore.sessionType === "daily");
+
+const dailyGameStatusKey = computed(() => {
+  if (!isDailySession.value) return "daily.statusReady";
+  if (dailyStore.hasWonToday && dailyStore.isClaimedToday)
+    return "daily.statusClaimed";
+  if (tournamentStore.tournamentFinished && tournamentStore.tournamentLost)
+    return "daily.resultLost";
+  if (tournamentStore.tournamentFinished && !tournamentStore.tournamentLost)
+    return "daily.resultWon";
+  return "daily.statusInProgress";
+});
+
+const showDailyClaimButton = computed(() => {
+  return (
+    isDailySession.value &&
+    tournamentStore.tournamentFinished &&
+    !tournamentStore.tournamentLost &&
+    dailyStore.hasWonToday &&
+    !dailyStore.isClaimedToday
+  );
+});
 
 function clearRoundTimeouts() {
   if (revealTimeoutId) {
@@ -210,6 +259,29 @@ function trackTournamentEndIfNeeded() {
   });
 }
 
+function trackDailyCompleteIfNeeded(result) {
+  if (!isDailySession.value) return;
+  if (result !== "won" && result !== "lost") return;
+
+  const challengeId =
+    tournamentStore.dailyChallengeId ||
+    dailyStore.challengeId ||
+    dailyStore.progress?.dateKey;
+  if (!challengeId) return;
+
+  const completionKey = `${challengeId}|${result}`;
+  if (trackedDailyCompleteKeys.has(completionKey)) return;
+  trackedDailyCompleteKeys.add(completionKey);
+
+  trackEvent("daily_complete", {
+    daily_challenge_id: challengeId,
+    result,
+    mode: tournamentStore.mode,
+    bracket_size: tournamentStore.bracket.length,
+    source_screen: "game",
+  });
+}
+
 function getAiDecisionContext() {
   return {
     profile: tournamentStore.currentOpponent?.aiProfile,
@@ -258,6 +330,15 @@ function resumeTournamentFlow() {
 }
 
 const matchStatusText = computed(() => {
+  if (
+    tournamentStore.tournamentFinished &&
+    tournamentStore.sessionType === "daily"
+  ) {
+    return tournamentStore.tournamentLost
+      ? t("daily.resultLost")
+      : t("daily.resultWon");
+  }
+
   if (tournamentStore.tournamentFinished && tournamentStore.tournamentLost) {
     return t("match.tournamentLost");
   }
@@ -278,7 +359,10 @@ const showAdvanceButton = computed(() => {
 });
 
 const showRestartButton = computed(() => {
-  return tournamentStore.tournamentFinished;
+  return (
+    tournamentStore.tournamentFinished &&
+    tournamentStore.sessionType !== "daily"
+  );
 });
 
 function handleAdvance() {
@@ -304,6 +388,20 @@ function handleAdvance() {
 
 function handleRestartTournament() {
   startNewTournamentFlow();
+}
+
+function handleClaimReward() {
+  const claimed = dailyStore.claimReward();
+  if (!claimed) return;
+
+  trackEvent("daily_claim", {
+    daily_challenge_id:
+      tournamentStore.dailyChallengeId ||
+      dailyStore.challengeId ||
+      dailyStore.progress?.dateKey,
+    result: dailyStore.progress?.result,
+    source_screen: "game",
+  });
 }
 
 watch(
@@ -346,6 +444,11 @@ watch(
         result: gameStore.result,
       });
 
+      missionStore.registerRound({
+        result: gameStore.result,
+        playerMove: gameStore.lockedMove,
+        aiMove: gameStore.aiMove,
+      });
       statsStore.updateStats(gameStore.result);
       tournamentStore.registerRoundResult(gameStore.result);
       trackMatchEndIfNeeded();
@@ -366,8 +469,22 @@ watch(
         tournamentStore.tournamentFinished &&
         tournamentStore.tournamentLost
       ) {
+        if (tournamentStore.sessionType === "daily") {
+          dailyStore.markFinished("lost");
+          trackDailyCompleteIfNeeded("lost");
+        }
         clearGameState();
       } else {
+        if (
+          tournamentStore.tournamentFinished &&
+          tournamentStore.sessionType === "daily"
+        ) {
+          dailyStore.markFinished("won");
+          trackDailyCompleteIfNeeded("won");
+          clearGameState();
+          return;
+        }
+
         persistState();
       }
 
@@ -424,6 +541,9 @@ watch(
 );
 
 onMounted(() => {
+  dailyStore.hydrateToday();
+  missionStore.hydrateToday();
+
   const resumeParam = Array.isArray(route.query.resume)
     ? route.query.resume[0]
     : route.query.resume;
