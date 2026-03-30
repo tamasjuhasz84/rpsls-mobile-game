@@ -1,4 +1,3 @@
-import { getMoveAsset } from "@/utils/moveAssets";
 export const MOVES = ["rock", "paper", "scissors", "lizard", "spock"];
 
 export const WIN_RULES = {
@@ -129,7 +128,6 @@ export function getMoveOptions(locale = "hu") {
     value: move,
     label: getMoveLabel(move, locale),
     icon: getMoveIcon(move),
-    asset: getMoveAsset(move),
   }));
 }
 

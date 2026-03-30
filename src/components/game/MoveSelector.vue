@@ -31,6 +31,7 @@ import { useUiStore } from "@/stores/ui";
 import { useFeedbackAudio } from "@/composables/useFeedbackAudio";
 import { useHaptics } from "@/composables/useHaptics";
 import { getMoveOptions } from "@/utils/gameRules";
+import { getMoveAsset } from "@/utils/moveAssets";
 import MoveButton from "@/components/game/MoveButton.vue";
 
 const { t } = useI18n();
@@ -40,7 +41,10 @@ const { play } = useFeedbackAudio();
 const { tap } = useHaptics();
 
 const moveOptions = computed(() => {
-  return getMoveOptions(uiStore.locale);
+  return getMoveOptions(uiStore.locale).map((move) => ({
+    ...move,
+    asset: getMoveAsset(move.value),
+  }));
 });
 
 const statusText = computed(() => {

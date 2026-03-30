@@ -1,4 +1,4 @@
-import { MOVES } from "@/utils/gameRules";
+import { MOVES } from "./gameRules.js";
 
 const BASE_PROFILE = {
   strategyType: "random",
@@ -93,31 +93,35 @@ export function getAiProfileForOpponent(opponentIndex, totalOpponents) {
   if (safeIndex === safeTotal - 1) {
     return createProfile(AI_PROFILES.boss, {
       favoriteMoves: pickFavoriteMoves(safeIndex + 1, 2),
-      adaptationChance: 0.5 + Math.min(safeTotal, 8) * 0.01,
+      adaptationChance: 0.46 + Math.min(safeTotal, 8) * 0.01,
       chaosFactor: 0.18,
     });
   }
 
   const progress = safeTotal > 1 ? safeIndex / (safeTotal - 1) : 0;
 
-  if (progress < 0.2) {
+  // Day 13 balancing: soften opening opponents so early rounds remain welcoming.
+  if (progress < 0.28) {
     return createProfile(AI_PROFILES.random, {
+      adaptationChance: 0,
+      chaosFactor: 0.03,
       difficultyTier: 1,
     });
   }
 
-  if (progress < 0.45) {
+  if (progress < 0.5) {
     return createProfile(AI_PROFILES.favorite, {
       favoriteMoves: pickFavoriteMoves(safeIndex, 1),
-      adaptationChance: 0.1 + progress * 0.08,
+      adaptationChance: 0.06 + progress * 0.06,
+      chaosFactor: 0.04,
       difficultyTier: 2,
     });
   }
 
-  if (progress < 0.7) {
+  if (progress < 0.74) {
     return createProfile(AI_PROFILES.counterBiased, {
       favoriteMoves: pickFavoriteMoves(safeIndex, 1),
-      adaptationChance: 0.26 + progress * 0.12,
+      adaptationChance: 0.22 + progress * 0.11,
       difficultyTier: 3,
     });
   }

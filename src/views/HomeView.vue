@@ -54,6 +54,7 @@
             </span>
 
             <button
+              v-if="showDailyPromoDetails"
               class="daily-toggle-button"
               type="button"
               :aria-expanded="isDailyExpanded"
@@ -84,7 +85,7 @@
         </button>
 
         <div
-          v-if="isDailyExpanded"
+          v-if="showDailyPromoDetails && isDailyExpanded"
           id="daily-challenge-body"
           class="daily-challenge-body"
         >
@@ -320,6 +321,10 @@ const dailyActionKey = computed(() => {
   if (hasDailyResume.value) return "daily.resume";
   if (dailyStore.isCompletedToday) return "daily.completed";
   return "daily.start";
+});
+
+const showDailyPromoDetails = computed(() => {
+  return uiStore.isFeatureEnabled("dailyChallengePromo");
 });
 
 const modeLabelKey = computed(() => {

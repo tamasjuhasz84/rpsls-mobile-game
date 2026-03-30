@@ -5,6 +5,10 @@ import App from "./App.vue";
 import router from "./router";
 import i18n from "./i18n";
 import { loadLanguage, loadUiState, loadStats } from "./utils/storage";
+import {
+  parseFeatureFlagOverridesFromSearch,
+  summarizeFeatureFlags,
+} from "./utils/featureFlags";
 import { useUiStore } from "./stores/ui";
 import { useStatsStore } from "./stores/stats";
 import { initAnalytics, trackEvent, trackScreen } from "./services/analytics";
@@ -20,6 +24,13 @@ app.use(i18n);
 
 const uiStore = useUiStore();
 uiStore.hydrateFromStorage(loadUiState() || {});
+
+const runtimeFeatureFlagOverrides =
+  typeof window !== "undefined" && import.meta.env.DEV
+    ? parseFeatureFlagOverridesFromSearch(window.location.search)
+    : {};
+
+uiStore.applyRuntimeFeatureFlagOverrides(runtimeFeatureFlagOverrides);
 
 const statsStore = useStatsStore();
 statsStore.hydrateFromStorage(loadStats() || {});
@@ -40,7 +51,16 @@ trackEvent("app_start", {
   provider: analyticsRuntime.providerName,
   monitoring_backend: monitoringRuntime.backend,
   platform: monitoringRuntime.platform,
+  feature_flags: summarizeFeatureFlags(uiStore.activeFeatureFlags),
 });
+
+if (Object.keys(runtimeFeatureFlagOverrides).length > 0) {
+  trackEvent("feature_flags_override_applied", {
+    source: "query_param",
+    override_keys: Object.keys(runtimeFeatureFlagOverrides).join(","),
+    feature_flags: summarizeFeatureFlags(uiStore.activeFeatureFlags),
+  });
+}
 
 function reportFatalError(errorLike, source, extra = {}) {
   const normalizedError = captureException(errorLike, {

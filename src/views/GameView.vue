@@ -37,36 +37,79 @@
           "
           class="panel match-status-panel"
         >
-          <p class="match-status-text">
-            {{ matchStatusText }}
-          </p>
+          <template v-if="showMotivationPanel">
+            <p class="section-label">{{ t("match.nextGoalLabel") }}</p>
 
-          <button
-            v-if="showAdvanceButton"
-            class="primary-button full-width-button"
-            type="button"
-            @click="handleAdvance"
-          >
-            {{ t("match.advance") }}
-          </button>
+            <p class="match-status-text">
+              {{ matchStatusText }}
+            </p>
 
-          <button
-            v-if="showRestartButton"
-            class="secondary-button full-width-button"
-            type="button"
-            @click="handleRestartTournament"
-          >
-            {{ t("match.restartTournament") }}
-          </button>
+            <p class="match-status-hint">
+              {{ matchStatusHint }}
+            </p>
 
-          <button
-            v-if="showDailyClaimButton"
-            class="secondary-button full-width-button"
-            type="button"
-            @click="handleClaimReward"
-          >
-            {{ t("daily.claimReward") }}
-          </button>
+            <div v-if="matchPreviewItems.length" class="match-preview-grid">
+              <article
+                v-for="item in matchPreviewItems"
+                :key="item.label"
+                class="match-preview-card"
+              >
+                <p class="match-preview-label">{{ item.label }}</p>
+                <p class="match-preview-value">{{ item.value }}</p>
+              </article>
+            </div>
+
+            <button
+              v-if="primaryActionKey"
+              class="primary-button full-width-button"
+              type="button"
+              @click="handlePrimaryAction"
+            >
+              {{ t(primaryActionKey) }}
+            </button>
+
+            <button
+              v-if="secondaryActionKey"
+              class="secondary-button full-width-button"
+              type="button"
+              @click="handleSecondaryAction"
+            >
+              {{ t(secondaryActionKey) }}
+            </button>
+          </template>
+
+          <template v-else>
+            <p class="match-status-text">
+              {{ matchStatusText }}
+            </p>
+
+            <button
+              v-if="showAdvanceButton"
+              class="primary-button full-width-button"
+              type="button"
+              @click="handleAdvance"
+            >
+              {{ t("match.advance") }}
+            </button>
+
+            <button
+              v-if="showRestartButton"
+              class="secondary-button full-width-button"
+              type="button"
+              @click="handleRestartTournament"
+            >
+              {{ t("match.restartTournament") }}
+            </button>
+
+            <button
+              v-if="showDailyClaimButton"
+              class="secondary-button full-width-button"
+              type="button"
+              @click="handleClaimReward"
+            >
+              {{ t("daily.claimReward") }}
+            </button>
+          </template>
         </section>
       </section>
 
@@ -126,6 +169,9 @@ let trackedTournamentEndKeys = new Set();
 let trackedDailyCompleteKeys = new Set();
 
 const resumeFailed = ref(false);
+const showMotivationPanel = computed(() => {
+  return uiStore.isFeatureEnabled("matchEndMotivationPanel");
+});
 
 const isDailySession = computed(() => tournamentStore.sessionType === "daily");
 
@@ -148,6 +194,149 @@ const showDailyClaimButton = computed(() => {
     dailyStore.hasWonToday &&
     !dailyStore.isClaimedToday
   );
+});
+
+const nextOpponent = computed(() => {
+  if (!showAdvanceButton.value) return null;
+  return tournamentStore.bracket[tournamentStore.currentRoundIndex + 1] ?? null;
+});
+
+const defeatedOpponentsCount = computed(() => {
+  if (tournamentStore.tournamentLost) {
+    return tournamentStore.currentRoundIndex;
+  }
+
+  if (tournamentStore.matchFinished || tournamentStore.tournamentFinished) {
+    return Math.min(
+      tournamentStore.currentRoundIndex + 1,
+      tournamentStore.bracket.length,
+    );
+  }
+
+  return Math.min(
+    tournamentStore.currentRoundIndex,
+    tournamentStore.bracket.length,
+  );
+});
+
+const claimableMissionCount = computed(() => {
+  return missionStore.missions.filter(
+    (mission) => mission.completed && !mission.claimed,
+  ).length;
+});
+
+const nextMission = computed(() => {
+  return (
+    missionStore.missions.find(
+      (mission) => !mission.completed && !mission.claimed,
+    ) || null
+  );
+});
+
+const primaryActionKey = computed(() => {
+  if (showDailyClaimButton.value) return "daily.claimReward";
+  if (showAdvanceButton.value) return "match.advance";
+  if (
+    tournamentStore.tournamentFinished &&
+    tournamentStore.sessionType === "daily"
+  ) {
+    return "match.standardRunCta";
+  }
+  if (showRestartButton.value) return "match.restartTournament";
+  return "";
+});
+
+const secondaryActionKey = computed(() => {
+  if (showDailyClaimButton.value) return "match.standardRunCta";
+  return "";
+});
+
+const matchStatusHint = computed(() => {
+  if (showAdvanceButton.value && nextOpponent.value) {
+    return t("match.nextOpponentHint", {
+      name: nextOpponent.value.name,
+      wins: tournamentStore.targetWins,
+    });
+  }
+
+  if (showDailyClaimButton.value) {
+    return t("match.dailyRewardReadyHint");
+  }
+
+  if (
+    tournamentStore.tournamentFinished &&
+    tournamentStore.sessionType === "daily"
+  ) {
+    return tournamentStore.tournamentLost
+      ? t("match.dailyTryTomorrowHint")
+      : t("match.dailyCompletedHint");
+  }
+
+  if (tournamentStore.tournamentFinished && tournamentStore.tournamentLost) {
+    return t("match.tournamentLossHint");
+  }
+
+  if (tournamentStore.tournamentFinished) {
+    return t("match.tournamentWinHint");
+  }
+
+  return "";
+});
+
+const matchPreviewItems = computed(() => {
+  const items = [];
+
+  if (nextOpponent.value) {
+    items.push({
+      label: t("match.nextOpponentLabel"),
+      value: nextOpponent.value.name,
+    });
+  }
+
+  items.push({
+    label: t("match.progressLabel"),
+    value: t("match.progressValue", {
+      current: defeatedOpponentsCount.value,
+      total: tournamentStore.bracket.length,
+    }),
+  });
+
+  if (showDailyClaimButton.value) {
+    items.push({
+      label: t("match.rewardPreviewLabel"),
+      value: t("match.dailyRewardCard"),
+    });
+  } else if (
+    tournamentStore.sessionType === "daily" &&
+    tournamentStore.tournamentFinished
+  ) {
+    items.push({
+      label: t("match.rewardPreviewLabel"),
+      value: dailyStore.isClaimedToday
+        ? t("match.dailyRewardClaimedCard")
+        : t("match.dailyCompletedCard"),
+    });
+  }
+
+  if (claimableMissionCount.value > 0) {
+    items.push({
+      label: t("mission.title"),
+      value: t("match.missionReadyCard", {
+        count: claimableMissionCount.value,
+      }),
+    });
+  } else if (nextMission.value) {
+    items.push({
+      label: t("mission.title"),
+      value: t("match.missionProgressCard", {
+        label: getMissionLabel(nextMission.value),
+        progress: nextMission.value.progress,
+        target: nextMission.value.target,
+      }),
+    });
+  }
+
+  return items;
 });
 
 function clearRoundTimeouts() {
@@ -365,6 +554,40 @@ const showRestartButton = computed(() => {
   );
 });
 
+function getMissionLabel(mission) {
+  if (mission.type === "round_wins") {
+    return t("mission.roundWins", { target: mission.target });
+  }
+  if (mission.type === "win_streak") {
+    return t("mission.winStreak", { target: mission.target });
+  }
+  if (mission.type === "move_wins") {
+    return t("mission.moveWins", {
+      target: mission.target,
+      move: t(`move.${mission.meta?.move}`, mission.meta?.move ?? ""),
+    });
+  }
+  return mission.type;
+}
+
+function handlePrimaryAction() {
+  if (showDailyClaimButton.value) {
+    handleClaimReward();
+    return;
+  }
+
+  if (showAdvanceButton.value) {
+    handleAdvance();
+    return;
+  }
+
+  handleRestartTournament();
+}
+
+function handleSecondaryAction() {
+  handleRestartTournament();
+}
+
 function handleAdvance() {
   clearRoundTimeouts();
   stop();
@@ -387,6 +610,16 @@ function handleAdvance() {
 }
 
 function handleRestartTournament() {
+  trackEvent("continue_click", {
+    source_screen: "game",
+    has_saved_tournament: false,
+    mode: tournamentStore.mode,
+    action:
+      tournamentStore.sessionType === "daily"
+        ? "start_standard_from_daily_end"
+        : "restart_tournament",
+  });
+
   startNewTournamentFlow();
 }
 

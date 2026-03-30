@@ -1,0 +1,5 @@
+segment,opponent_range,target_player_winrate_percent_min,target_player_winrate_percent_max,notes
+opening_easy,1-2,58,68,Kezdőbarát opening; gyors sikerélmény
+mid_transition,3-5,48,58,Fokozatos nehezedés; még visszafordítható meccsek
+late_challenge,6-7,38,48,Tapasztaltabb játékosokra hangolt nyomás
+boss,8,30,42,Nehezebb finálé, de nem unfair

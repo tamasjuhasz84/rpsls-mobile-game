@@ -11,16 +11,33 @@
       </section>
     </main>
 
-    <router-view v-else />
+    <template v-else>
+      <router-view />
+      <TutorialOverlay
+        v-if="
+          uiStore.isFeatureEnabled('tutorialOverlay') && tutorialStore.isActive
+        "
+      />
+    </template>
   </div>
 </template>
 
 <script setup>
+import { onMounted } from "vue";
 import { useI18n } from "vue-i18n";
 import { useUiStore } from "@/stores/ui";
+import { useTutorialStore } from "@/stores/tutorial";
+import TutorialOverlay from "@/components/ui/TutorialOverlay.vue";
 
 const uiStore = useUiStore();
+const tutorialStore = useTutorialStore();
 const { t } = useI18n();
+
+onMounted(() => {
+  if (uiStore.isFeatureEnabled("tutorialOverlay")) {
+    tutorialStore.init();
+  }
+});
 
 function reloadApp() {
   uiStore.clearFatalError();

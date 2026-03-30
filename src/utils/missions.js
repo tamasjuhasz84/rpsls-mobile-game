@@ -1,9 +1,9 @@
-import { MOVES } from "@/utils/gameRules";
+import { MOVES } from "./gameRules.js";
 import {
   createSeededRandom,
   getDailyChallengeDateKey,
   hashStringToSeed,
-} from "@/utils/dailyChallenge";
+} from "./dailyChallenge.js";
 
 function pickRoundWinsTarget(random) {
   return random() > 0.55 ? 5 : 3;

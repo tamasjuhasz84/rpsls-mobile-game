@@ -1,5 +1,5 @@
-import { generateOpponentName } from "@/utils/opponentNameGenerator";
-import { getAiProfileForOpponent } from "@/utils/aiProfiles";
+import { generateOpponentName } from "./opponentNameGenerator.js";
+import { getAiProfileForOpponent } from "./aiProfiles.js";
 
 export function buildTournament(size = 4) {
   const safeSize = Number.isInteger(size) && size > 0 ? size : 4;

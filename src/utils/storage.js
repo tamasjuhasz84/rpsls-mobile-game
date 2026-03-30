@@ -4,6 +4,7 @@ const LANG_KEY = "rpsls-lang";
 const STATS_KEY = "rpsls-stats";
 const DAILY_CHALLENGE_STATE_KEY = "rpsls-daily-challenge-state";
 const MISSION_STATE_KEY = "rpsls-mission-state";
+const ONBOARDING_KEY = "rpsls-onboarding";
 
 function parseStoredJson(key, label) {
   try {
@@ -139,5 +140,25 @@ export function clearMissionState() {
     localStorage.removeItem(MISSION_STATE_KEY);
   } catch (error) {
     console.error("Failed to clear mission state:", error);
+  }
+}
+
+export function saveOnboardingState(payload) {
+  try {
+    localStorage.setItem(ONBOARDING_KEY, JSON.stringify(payload));
+  } catch (error) {
+    console.error("Failed to save onboarding state:", error);
+  }
+}
+
+export function loadOnboardingState() {
+  return parseStoredJson(ONBOARDING_KEY, "onboarding state");
+}
+
+export function clearOnboardingState() {
+  try {
+    localStorage.removeItem(ONBOARDING_KEY);
+  } catch (error) {
+    console.error("Failed to clear onboarding state:", error);
   }
 }

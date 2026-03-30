@@ -1079,6 +1079,42 @@ a:focus-visible {
   margin: 0;
   text-align: center;
   font-weight: 700;
+  font-size: 20px;
+}
+
+.match-status-hint {
+  margin: 0;
+  text-align: center;
+  color: var(--color-text-soft);
+  line-height: 1.55;
+}
+
+.match-preview-grid {
+  display: grid;
+  gap: var(--space-sm);
+}
+
+.match-preview-card {
+  display: grid;
+  gap: 6px;
+  padding: var(--space-md);
+  border-radius: var(--radius-lg);
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--color-border-soft);
+}
+
+.match-preview-label {
+  margin: 0;
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-text-soft);
+}
+
+.match-preview-value {
+  margin: 0;
+  font-weight: 700;
+  line-height: 1.45;
 }
 
 .result-state.is-reveal .result-cards {
@@ -1909,7 +1945,11 @@ a:focus-visible {
   .bracket-node,
   .bracket-node::after,
   .bracket-node.is-just-current,
-  .bracket-node.is-current::after {
+  .bracket-node.is-current::after,
+  .tutorial-dot,
+  .tutorial-progress-fill,
+  .tutorial-step-enter-active,
+  .tutorial-step-leave-active {
     animation: none !important;
     transition-duration: 0.01ms !important;
   }
@@ -1919,4 +1959,129 @@ a:focus-visible {
   .bracket-node.is-lost {
     transform: none;
   }
+}
+
+/* ---------- Tutorial overlay ---------- */
+
+.tutorial-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 900;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-md);
+  background: rgba(6, 14, 30, 0.82);
+  backdrop-filter: blur(6px);
+}
+
+.tutorial-card {
+  display: grid;
+  gap: var(--space-md);
+  width: 100%;
+  max-width: 380px;
+  padding: var(--space-lg);
+  border-radius: var(--radius-lg);
+  border: 1px solid rgba(140, 220, 255, 0.2);
+  background:
+    linear-gradient(
+      180deg,
+      rgba(75, 145, 255, 0.16),
+      rgba(255, 255, 255, 0.04)
+    ),
+    var(--color-surface);
+  box-shadow: 0 24px 48px rgba(6, 14, 30, 0.5);
+}
+
+.tutorial-dots {
+  display: flex;
+  gap: 6px;
+  justify-content: center;
+}
+
+.tutorial-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.2);
+  transition:
+    background 0.2s,
+    transform 0.2s;
+}
+
+.tutorial-dot.is-active {
+  background: #60a5fa;
+  transform: scale(1.25);
+}
+
+.tutorial-dot.is-done {
+  background: rgba(96, 165, 250, 0.45);
+}
+
+.tutorial-progress {
+  height: 6px;
+  border-radius: var(--radius-pill);
+  background: rgba(255, 255, 255, 0.12);
+  overflow: hidden;
+}
+
+.tutorial-progress-fill {
+  height: 100%;
+  border-radius: var(--radius-pill);
+  background: linear-gradient(90deg, #60a5fa, #a5f3fc);
+  transition: width 0.25s ease;
+}
+
+.tutorial-step-content {
+  display: grid;
+  gap: 10px;
+  min-height: 110px;
+}
+
+.tutorial-step-number {
+  margin: 0;
+  font-size: 11px;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+}
+
+.tutorial-step-title {
+  margin: 0;
+  font-size: 22px;
+  line-height: 1.2;
+}
+
+.tutorial-step-body {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.55;
+  color: var(--color-text-muted);
+}
+
+.tutorial-actions {
+  display: grid;
+  gap: 8px;
+}
+
+.tutorial-skip-button {
+  opacity: 0.7;
+}
+
+/* Tutorial step transition */
+.tutorial-step-enter-active,
+.tutorial-step-leave-active {
+  transition:
+    opacity 0.18s ease,
+    transform 0.18s ease;
+}
+
+.tutorial-step-enter-from {
+  opacity: 0;
+  transform: translateX(14px);
+}
+
+.tutorial-step-leave-to {
+  opacity: 0;
+  transform: translateX(-14px);
 }

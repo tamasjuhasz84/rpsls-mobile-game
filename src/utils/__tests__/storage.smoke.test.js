@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeEach } from "vitest";
+import { describe, it, expect, beforeEach, afterEach, vi } from "vitest";
 import {
   saveGameState,
   loadGameState,
@@ -10,12 +10,27 @@ import {
   saveMissionState,
   loadMissionState,
   clearMissionState,
+  saveOnboardingState,
+  loadOnboardingState,
+  clearOnboardingState,
 } from "@/utils/storage";
 
 const GAME_KEY = "rpsls-game-state";
 const STATS_KEY = "rpsls-stats";
 const LANG_KEY = "rpsls-lang";
 const MISSION_KEY = "rpsls-mission-state";
+const ONBOARDING_KEY = "rpsls-onboarding";
+
+let consoleErrorSpy;
+
+beforeEach(() => {
+  localStorage.clear();
+  consoleErrorSpy = vi.spyOn(console, "error").mockImplementation(() => {});
+});
+
+afterEach(() => {
+  consoleErrorSpy.mockRestore();
+});
 
 describe("saveGameState / loadGameState", () => {
   it("mentés után visszaolvasható ugyanaz az objektum", () => {
@@ -135,5 +150,28 @@ describe("saveMissionState / loadMissionState", () => {
     saveMissionState({ dateKey: "2026-03-30", missions: [] });
     clearMissionState();
     expect(loadMissionState()).toBeNull();
+  });
+});
+
+describe("saveOnboardingState / loadOnboardingState", () => {
+  it("mentés + visszaolvasás roundtrip", () => {
+    const payload = { completed: true, completedAt: 1743000000000 };
+    saveOnboardingState(payload);
+    expect(loadOnboardingState()).toEqual(payload);
+  });
+
+  it("üres localStorage esetén null-t ad vissza", () => {
+    expect(loadOnboardingState()).toBeNull();
+  });
+
+  it("korrupt onboarding JSON esetén null-t ad vissza", () => {
+    localStorage.setItem(ONBOARDING_KEY, "{bad");
+    expect(loadOnboardingState()).toBeNull();
+  });
+
+  it("clearOnboardingState törli a mentést", () => {
+    saveOnboardingState({ completed: true, completedAt: 0 });
+    clearOnboardingState();
+    expect(loadOnboardingState()).toBeNull();
   });
 });

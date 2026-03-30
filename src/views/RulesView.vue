@@ -125,7 +125,10 @@ const backLabel = computed(() => {
 });
 
 const moveOptions = computed(() => {
-  return getMoveOptions(uiStore.locale);
+  return getMoveOptions(uiStore.locale).map((move) => ({
+    ...move,
+    asset: getMoveAsset(move.value),
+  }));
 });
 
 const localizedRules = computed(() => {

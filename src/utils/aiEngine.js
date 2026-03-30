@@ -1,5 +1,5 @@
-import { MOVES, WIN_RULES } from "@/utils/gameRules";
-import { normalizeAiProfile } from "@/utils/aiProfiles";
+import { MOVES, WIN_RULES } from "./gameRules.js";
+import { normalizeAiProfile } from "./aiProfiles.js";
 
 function getRandomMove() {
   return MOVES[Math.floor(Math.random() * MOVES.length)];

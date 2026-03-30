@@ -1,5 +1,5 @@
-import { getAiProfileForOpponent } from "@/utils/aiProfiles";
-import { generateSeededOpponentName } from "@/utils/opponentNameGenerator";
+import { getAiProfileForOpponent } from "./aiProfiles.js";
+import { generateSeededOpponentName } from "./opponentNameGenerator.js";
 
 function pad(value) {
   return String(value).padStart(2, "0");
