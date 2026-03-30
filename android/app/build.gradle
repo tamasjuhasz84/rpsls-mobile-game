@@ -1,8 +1,18 @@
 apply plugin: 'com.android.application'
 
+def uploadStoreFile = System.getenv('RPSLS_UPLOAD_STORE_FILE')
+def uploadStorePassword = System.getenv('RPSLS_UPLOAD_STORE_PASSWORD')
+def uploadKeyAlias = System.getenv('RPSLS_UPLOAD_KEY_ALIAS')
+def uploadKeyPassword = System.getenv('RPSLS_UPLOAD_KEY_PASSWORD')
+def hasReleaseSigning = uploadStoreFile && uploadStorePassword && uploadKeyAlias && uploadKeyPassword
+
 android {
     namespace "com.rpsls.mobile"
     compileSdk rootProject.ext.compileSdkVersion
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
     defaultConfig {
         applicationId "com.rpsls.mobile"
         minSdkVersion rootProject.ext.minSdkVersion
@@ -16,9 +26,26 @@ android {
             ignoreAssetsPattern '!.svn:!.git:!.ds_store:!*.scc:.*:!CVS:!thumbs.db:!picasa.ini:!*~'
         }
     }
+    signingConfigs {
+        release {
+            if (hasReleaseSigning) {
+                storeFile file(uploadStoreFile)
+                storePassword uploadStorePassword
+                keyAlias uploadKeyAlias
+                keyPassword uploadKeyPassword
+                enableV1Signing true
+                enableV2Signing true
+            }
+        }
+    }
     buildTypes {
         release {
             minifyEnabled false
+            if (hasReleaseSigning) {
+                signingConfig signingConfigs.release
+            } else {
+                logger.lifecycle('Release signing env vars are missing. bundleRelease will be unsigned.')
+            }
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }

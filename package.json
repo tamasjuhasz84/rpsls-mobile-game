@@ -11,7 +11,10 @@
     "test:watch": "vitest",
     "playtest:ai": "node scripts/ai-balance-playtest.js",
     "cap": "npm run build && npx cap sync android",
-    "cap:open": "npx cap open android"
+    "cap:open": "npx cap open android",
+    "android:sync": "npm run build && npx cap sync android",
+    "android:aab:release": "cd android && gradlew.bat bundleRelease",
+    "android:release:check": "echo Set RPSLS_UPLOAD_STORE_FILE, RPSLS_UPLOAD_STORE_PASSWORD, RPSLS_UPLOAD_KEY_ALIAS, RPSLS_UPLOAD_KEY_PASSWORD before android:aab:release"
   },
   "dependencies": {
     "@capacitor/android": "^7.6.1",
