@@ -2,12 +2,12 @@
 
 Mobile-first single-player RPSLS tournament game built with Vue 3 and Vite.
 
-Current release focus:
+Release focus:
 
 - Stable local gameplay loop
 - Fast round pacing
-- Persistent continue flow
-- Portfolio-ready project structure and docs
+- Persistent Continue flow
+- Portfolio-ready documentation and release process
 
 ## Quick Start
 
@@ -17,84 +17,68 @@ Current release focus:
 npm install
 ```
 
-2. Start dev server
+2. Start development server
 
 ```bash
 npm run dev
 ```
 
-3. Build production bundle
-
-```bash
-npm run build
-```
-
-4. Optional: preview production build
-
-```bash
-npm run preview
-```
-
-5. Run test suite
+3. Run tests
 
 ```bash
 npm test
 ```
 
-## Feature Overview (User Facing)
+4. Build production bundle
+
+```bash
+npm run build
+```
+
+5. Optional: preview production build
+
+```bash
+npm run preview
+```
+
+## User-Facing Features
 
 ### Core gameplay
 
 - Classic RPSLS rules with quick round resolution
-- Countdown-based round lock and reveal sequence
-- Multiple AI opponents in bracket progression
+- Countdown-based lock and reveal sequence
+- AI opponents with archetype personalities
 
-### Game modes
+### Modes
 
 - Best of 3
 - Best of 5
-- Survival mode
-- Daily challenge run
+- Survival
+- Daily challenge
 
-### Progression and retention loops
+### Progression loops
 
-- Daily missions with progress + claim flow
+- Daily missions with progress and claim flow
 - Daily challenge status tracking
-- Local leaderboard (daily + all-time)
+- Local leaderboard (daily and all-time)
 - Session stats (wins/losses/draws/win rate/streak)
 
 ### Quality of life
 
-- Continue from saved tournament state
+- Continue from valid saved tournament state
 - Hungarian and English language support
-- Responsive home and game layouts for mobile and desktop
+- Responsive layout on mobile and desktop
 
-## User Guide (Short)
+## User Guide
 
-### Home screen
+For the finalized user-facing documentation (HU/EN), see:
 
-1. Enter player name.
-2. Choose mode (BO3, BO5, Survival).
-3. Tap Start to begin a new run.
-4. Tap Continue if a valid saved run exists.
-5. Expand extra panels when needed (Daily, Missions, Stats, Leaderboard).
+- [docs/user-guide-hu-en.md](docs/user-guide-hu-en.md)
 
-### Game screen
+In-app legal routes:
 
-1. Select your move before countdown ends.
-2. After reveal, check round result and explanation.
-3. Continue until match target is reached.
-4. Advance to next opponent after a match win.
-
-### Bracket and rules
-
-- Bracket screen shows opponent progression.
-- Rules screen lists all RPSLS outcomes.
-
-### Privacy and terms
-
-- Privacy page: /privacy
-- Terms page: /terms
+- Privacy: `/privacy`
+- Terms: `/terms`
 
 ## Product Positioning
 
@@ -102,17 +86,13 @@ npm test
 - No paid advantage
 - No pay-to-win mechanics
 
-The game is designed as a skill-first single-player experience with transparent progression.
+Skill-first single-player experience with transparent progression.
 
-## Developer
+## Documentation Index
 
-Developed by Tamas Juhasz as an independent portfolio-focused project.
-
-## Contact
-
-Feedback and collaboration:
-
-- tamasjuhasz84@yahoo.com
+- Release closeout package v1: [docs/release/day16-release-closeout-package-v1.md](docs/release/day16-release-closeout-package-v1.md)
+- Release note (updated): [docs/release/day29-release-note-v1.0.md](docs/release/day29-release-note-v1.0.md)
+- Monitoring runbook: [docs/analytics/monitoring-runbook.md](docs/analytics/monitoring-runbook.md)
 
 ## Technical Stack
 
@@ -128,15 +108,15 @@ Feedback and collaboration:
 
 ```text
 src/
-	components/   Reusable UI and game/tournament components
-	composables/  Countdown, AI, audio, and haptics logic
-	i18n/         Localization setup and hu/en message files
-	router/       Route definitions
-	services/     Analytics and monitoring integrations
-	stores/       Pinia stores (game, tournament, UI, stats, missions)
-	styles/       Global custom CSS
-	utils/        Core game rules, AI engine, storage, helpers
-	views/        Page-level screens (home, game, bracket, rules, legal)
+  components/   Reusable UI and game/tournament components
+  composables/  Countdown, AI, audio, and haptics logic
+  i18n/         Localization setup and hu/en message files
+  router/       Route definitions
+  services/     Analytics and monitoring integrations
+  stores/       Pinia stores (game, tournament, UI, stats, missions)
+  styles/       Global custom CSS
+  utils/        Core game rules, AI engine, storage, helpers
+  views/        Page-level screens (home, game, bracket, rules, legal)
 ```
 
 ## Persistence
@@ -148,14 +128,15 @@ Stored locally in browser storage:
 - Language preference
 - Player stats and leaderboard entries
 
-If saved tournament payload is valid, Continue resumes from the stored round.
+Continue resumes from the stored round when the saved payload is valid.
 
-## Release Status
+## Developer and Contact
 
-- Web app flow: stable
-- Core smoke tests: passing
-- Android wrapper pipeline: configured
-- Compliance docs and legal routes: present
+Developed by Tamas Juhasz as an independent portfolio-focused project.
+
+Feedback and collaboration:
+
+- tamasjuhasz84@yahoo.com
 
 ## License
 

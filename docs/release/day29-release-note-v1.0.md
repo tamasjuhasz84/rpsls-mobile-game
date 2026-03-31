@@ -1,8 +1,8 @@
-# Release Note - v1.0 (Day 29 Draft)
+# Release Note - v1.0 (Day 29 Draft, Day 16 Update)
 
-Datum: 2026-03-30
-Statusz: v1.0 candidate
-Build scope: Soft launch RC stabilization pass
+Datum: 2026-03-31
+Statusz: Updated for release closeout v1
+Build scope: Soft launch RC stabilization pass + Week 3 quality hardening
 
 ## Summary
 
@@ -28,6 +28,19 @@ Ez a v1.0 release note a 6 hetes MVP+ roadmap fo eredmenyeit foglalja ossze, Day
 - Home first-session fokusz tisztabb primary start path-tal.
 - Continue/resume helper copy pontositva.
 - Match-end action hierarchy egyszerusitve (primary vs secondary action).
+
+## Day 16 addendum (Week 3 consolidation)
+
+- Day 11: retention copy tuning + continue-flow minifriction csokkentes + event payload validacio.
+- Day 12: survival pacing finomhangolas + score/readability javitas.
+- Day 13: opponent personality polish + HU/EN copy minosegi atnezes.
+- Day 14: edge-case tesztcsomag bovites (game loop + persistence), flaky trigger vedelmek megerositese.
+- Day 15: heti trend review + release-prep gyorsjavitasok.
+
+## Verification snapshot
+
+- Regression suite: PASS (231/231)
+- Build verification: PASS (`npm run build`)
 
 ## Known limitations (v1.0)
 

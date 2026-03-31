@@ -9,7 +9,7 @@ Target: Google Play Console internal testing
 - [ ] Confirm the signed artifact exists: android/app/build/outputs/bundle/release/app-release.aab
 - [ ] Confirm version is still 0.1.0 / versionCode 1
 - [ ] Confirm the upload key matches the Play Console expectation for this app
-- [ ] Keep the release notes file open: docs/release/day25-internal-test-release-notes.md
+- [ ] Keep the release notes file open: docs/release/day29-release-note-v1.0.md
 - [ ] Keep the QA matrix file open: docs/release/day25-pre-release-qa-matrix.md
 
 ## 2. Play Console upload order
@@ -20,7 +20,7 @@ Target: Google Play Console internal testing
 4. Upload android/app/build/outputs/bundle/release/app-release.aab.
 5. Wait for Play Console validation to finish.
 6. Review all warnings and blockers before saving.
-7. Paste the final release note text from docs/release/day25-internal-test-release-notes.md.
+7. Paste the final release note text from docs/release/day29-release-note-v1.0.md.
 8. Save the release draft.
 9. Confirm or add the tester list.
 10. Start rollout to Internal testing.

@@ -23,7 +23,7 @@ A jelenlegi implementacio alapjan az app account nelkul fut, es foleg alkalmazas
 - Daily challenge es mission allapot
 - Leaderboard local allapot (daily/all-time)
 
-Technikai reszlet: localStorage kulcsok a [src/utils/storage.js](src/utils/storage.js)-ben.
+Technikai reszlet: localStorage kulcsok a [src/utils/storage.js](../../src/utils/storage.js)-ben.
 
 ### 2.2 Telemetria / monitoring adatok
 
@@ -34,9 +34,9 @@ Technikai reszlet: localStorage kulcsok a [src/utils/storage.js](src/utils/stora
 
 Forras:
 
-- Analytics bootstrap: [src/services/analytics/index.js](src/services/analytics/index.js)
-- Monitoring bootstrap: [src/services/monitoring/index.js](src/services/monitoring/index.js)
-- Event matrix: [docs/analytics/event-matrix-v1.md](docs/analytics/event-matrix-v1.md)
+- Analytics bootstrap: [src/services/analytics/index.js](../../src/services/analytics/index.js)
+- Monitoring bootstrap: [src/services/monitoring/index.js](../../src/services/monitoring/index.js)
+- Event matrix: [docs/analytics/event-matrix-v1.md](../analytics/event-matrix-v1.md)
 
 ## 3. Mire es milyen jogalappal kezeljuk
 
@@ -55,7 +55,7 @@ Jelenlegi cel stack:
 - Firebase Analytics (Google)
 - Sentry (web + Android WebView monitoring)
 
-Reszletek a [docs/release/day21-data-disclosure-matrix.md](docs/release/day21-data-disclosure-matrix.md) dokumentumban.
+Reszletek a [docs/release/day21-data-disclosure-matrix.md](day21-data-disclosure-matrix.md) dokumentumban.
 
 ## 5. Adatmegorzes
 
