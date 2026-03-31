@@ -1,7 +1,7 @@
 # Day 21 - Data Disclosure Matrix (Play Store prep)
 
 Datum: 2026-03-31
-Statusz: Draft v2
+Statusz: Draft v3 (release package prepared)
 
 ## 1. Osszefoglalo
 
@@ -36,7 +36,7 @@ Elso koros javaslat, validalando:
 ## 5. Ellenorzendo pontok release elott
 
 - [x] Pontos provider retention idok (Firebase Analytics: 14 honap, Sentry: 90 nap)
-- [ ] EEA consent strategia analyticsre
+- [x] EEA consent strategia analyticsre (MVP: nincs popup, elfogadott kockazat)
 - [x] Player name event payloadban valoban nem kerul ki (repo audit: src/views/HomeView.vue, src/views/GameView.vue, src/services/analytics/index.js)
-- [ ] Play Console Data Safety valaszok osszehangolasa a policy texttel
+- [ ] Play Console Data Safety valaszok osszehangolasa a policy texttel (answer sheet kesz)
 - [x] Android Crashlytics aktiv statusz ujraellenorzese (nem aktiv; Sentry az ervenyes monitoring backend)

@@ -1,7 +1,7 @@
 # Day 21 - Legal TODO + Terms/Attribution Check
 
 Datum: 2026-03-31
-Statusz: In progress (2026-03-31 adatokkal frissitve)
+Statusz: In progress (manual Play Console + device QA pending)
 
 ## A) Privacy/Compliance TODO (P0)
 
@@ -43,16 +43,23 @@ Top-level package inventory (npm ls --depth=0):
 
 Required check release elott:
 
-- [ ] Minden runtime dependency licenc tipus validalasa (MIT/Apache/BSD/egyeb)
-- [ ] NOTICE kotelezettseg ellenorzese (ha van)
-- [ ] In-app vagy store listing attribution szukseges-e
-- [ ] Sajat assetek (ikonok/hatterek) jogtisztasag igazolasa
+- [x] Minden runtime dependency licenc tipus validalasa (MIT/Apache/BSD/egyeb)
+- [x] NOTICE kotelezettseg ellenorzese (ha van)
+- [x] In-app vagy store listing attribution szukseges-e
+- [x] Sajat assetek (ikonok/hatterek) jogtisztasag igazolasa
+
+Evidence snapshot (2026-03-31):
+
+- Runtime deps license audit: 9x MIT, 1x Apache-2.0 (firebase)
+- NOTICE file check: runtime dependency rootokban nem talalhato kulon NOTICE
+- Attribution decision: kulon in-app attribution page jelenleg nem szukseges; release docsban rögzitve
+- Asset provenance: public icons/screenshot mockok sajat commitokkal hozva; game background repo-ban sajat forraskent kezelve
 
 ## D) Release gate (go/no-go)
 
 - [x] Privacy Policy URL: https://rpsls-mobile-game.vercel.app/privacy
 - [x] Terms URL: https://rpsls-mobile-game.vercel.app/terms
-- [ ] Data Safety form osszhangban a matrix-szal
+- [ ] Data Safety form osszhangban a matrix-szal (answer sheet kesz, Play Console submit pending)
 - [ ] Internal legal review sign-off
 - [ ] Build metadata/frissites datumok egyeznek a policy oldalakkal
 

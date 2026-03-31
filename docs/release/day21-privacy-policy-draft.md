@@ -1,7 +1,7 @@
 # Day 21 - Privacy Policy Draft (HU/EN launch prep)
 
 Datum: 2026-03-31
-Statusz: Draft v3
+Statusz: Draft v4 (release-ready, manual Play Console sync pending)
 Scope: RPSLS mobile web + Android wrapper (Capacitor)
 
 ## 1. Ki az adatkezelo
@@ -40,13 +40,15 @@ Forras:
 
 ## 3. Mire es milyen jogalappal kezeljuk
 
-Javasolt jogalap launchra (egyeztetendo jogi tanacsadoval):
+RPSLS launch jogalap-terv (egyeztetendo jogi tanacsadoval):
 
-- Essential app function (helyi state mentes): szerzodes teljesitese / jogos erdek
-- Product analytics (usage, retention): hozzajarulas vagy jogos erdek (regiofuggo)
-- Error monitoring (stabilitas, bugfix): jogos erdek
+| Regio | Essential app function (helyi mentes) | Analytics                                                          | Error monitoring |
+| ----- | ------------------------------------- | ------------------------------------------------------------------ | ---------------- |
+| EEA   | Szerzodes teljesitese + jogos erdek   | Jogos erdek (MVP), consent popup kesobbi iteracioban ujraertekeles | Jogos erdek      |
+| UK    | Szerzodes teljesitese + jogos erdek   | Jogos erdek (MVP)                                                  | Jogos erdek      |
+| US    | Jogos erdek / uzemeltetesi szukseglet | Jogos erdek                                                        | Jogos erdek      |
 
-MVP dontes (2026-03-31): consent popup az MVP launch szakaszban nem kerül implementalasra. Elfogadott kockazat; elso nagyobb frissitesnel ujraertekelheto.
+MVP dontes (2026-03-31): consent popup az MVP launch szakaszban nem kerul implementalasra. Elfogadott kockazat; elso nagyobb frissitesnel ujraertekelheto.
 
 ## 4. Harmadik felek es adattovabbitas
 
@@ -56,6 +58,12 @@ Jelenlegi cel stack:
 - Sentry (web + Android WebView monitoring)
 
 Reszletek a [docs/release/day21-data-disclosure-matrix.md](day21-data-disclosure-matrix.md) dokumentumban.
+
+EEA/UK adattovabbitasi safeguard szoveg (policy draftba emelheto):
+
+- Amennyiben szemelyes adat EEA/UK teruletrol EGT-n kivuli orszagba kerul tovabbitasra, a tovabbitas megfelelo garanciakkal tortenik.
+- A garanciak tipikusan: Standard Contractual Clauses (SCC), illetve szolgaltatoi szerzodeses es technikai vedelmi intezkedesek.
+- A tovabbitas celja kizarolag alkalmazas-analitika es hibamonitoring, minimalis adatelv mellett.
 
 ## 5. Adatmegorzes
 
@@ -101,5 +109,5 @@ A kovetkezok hianyoznak, publish elott kotelezo:
 - [x] Privacy contact email (tamasjuhasz84@yahoo.com)
 - [x] Pontos retention idotartamok providerenkent (Firebase: 14 honap, Sentry: 90 nap)
 - [x] Publikus Privacy Policy URL: https://rpsls-mobile-game.vercel.app/privacy
-- [ ] Regios jogalap veglegesites (EEA/UK/US)
-- [ ] Data transfer safeguard szoveg (ha EEA -> US transfer van)
+- [x] Regios jogalap veglegesites (EEA/UK/US)
+- [x] Data transfer safeguard szoveg (ha EEA -> US transfer van)

@@ -1,7 +1,7 @@
 # Day 31 - Compliance Closeout Checklist
 
 Datum: 2026-03-31
-Statusz: In progress (Play Console + EEA safeguard meg manualis)
+Statusz: In progress (manual Play Console + real device gate only)
 Purpose: Day 4 roadmap blokk lezarasahoz hasznalhato publish-gate checklist
 
 ## 1. Repo alapjan lezart pontok
@@ -16,7 +16,7 @@ Purpose: Day 4 roadmap blokk lezarasahoz hasznalhato publish-gate checklist
 
 - [x] Privacy Policy publikus URL: https://rpsls-mobile-game.vercel.app/privacy
 - [x] Terms publikus URL: https://rpsls-mobile-game.vercel.app/terms
-- [ ] Play Console Data Safety kerdoiv kitoltese a disclosure matrix alapjan
+- [ ] Play Console Data Safety kerdoiv kitoltese a disclosure matrix alapjan (answer sheet: day31-play-console-data-safety-answer-sheet.md)
 - [ ] Policy warnings / content declarations ujraellenorzese Play Console-ban
 - [x] Provider retention idok rogzitese a publikus policy szovegben (Firebase: 14 honap, Sentry: 90 nap)
 
@@ -27,9 +27,15 @@ Purpose: Day 4 roadmap blokk lezarasahoz hasznalhato publish-gate checklist
 - [x] Public contact email: tamasjuhasz84@yahoo.com
 - [x] EEA/UK analytics consent dontes: MVP szakaszban nincs popup (elfogadott kockazat)
 - [x] Governing law: Magyar jog
-- [ ] EEA -> harmadik orszag adattovabbitasi safeguard szoveg veglegesitese
+- [x] EEA -> harmadik orszag adattovabbitasi safeguard szoveg veglegesitese
 
-## 4. Publish gate minimum allapot
+## 4. Megmaradt tenyleges release blokkolok
+
+- [ ] Play Console Data Safety submit + screenshot bizonyitek
+- [ ] Play Console policy/content declarations vegso ellenorzes
+- [ ] Minimum 2 real Android device QA matrix kitoltese (day25)
+
+## 5. Publish gate minimum allapot
 
 A nap 4 blokk akkor tekintheto lezartnak, ha:
 
