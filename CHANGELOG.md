@@ -12,6 +12,7 @@ All notable changes to this project will be documented in this file.
 - Survival mode, local leaderboard, and shareable result flow.
 - Day 24 Android release pipeline scripts for sync and AAB generation.
 - Day 24 release process documentation for signing, versioning, and internal testing.
+- Day 20 closeout documentation bundle: final KPI status summary, go/no-go refresh decision, V2 wrap-up note, and V3 backlog seed.
 
 #### Changed
 
