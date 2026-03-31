@@ -77,7 +77,29 @@ Based on current implementation:
 - [x] error capture visible when failures occur
 - [x] dashboard filtered to launch app version
 
-## 7. Day 29 clean-up summary
+## 8. Alert ownership (V2 Day 2)
+
+| Alert                              | Owner    | Reakcio ido | Elso lepes                                              |
+| ---------------------------------- | -------- | ----------- | ------------------------------------------------------- |
+| Crash-free sessions < 99.5%        | Solo dev | 30 perc     | Sentry legfrissebb event + Play Console Android Vitals  |
+| match_start / session_start < 0.4  | Solo dev | 2 ora       | Home panel CTA vizsgalat, resume flow ellenorzes        |
+| match_end / match_start < 0.85     | Solo dev | 2 ora       | GameView phase watcher log, tournament store allapot    |
+| daily_complete / daily_start < 0.3 | Solo dev | 4 ora       | Daily challenge UX + logika audit                       |
+| error_captured spike (> 5x alap)   | Solo dev | 30 perc     | Sentry error grouping, release rollback fontolora vetel |
+
+Reszletes rollback triggerek: docs/analytics/monitoring-runbook.md#4-rollback-trigger-kovetelmenyek
+
+## 9. Day 2 (V2) funnel javitasok
+
+A kovetkezo bugok javitva a GameView.vue-ban (V2 Day 2):
+
+- `trackedMatchStartKeys`, `trackedMatchEndKeys`, `trackedTournamentEndKeys`, `trackedDailyCompleteKeys` Set-ek torlodnek `resetLoopRuntime()` hivaskor → 2. tornaban is erkeznek match_start / match_end eventek
+- `continue_click` kettos kuldes megszunt: `onMounted` resume agaban torolve a redundans `trackEvent` hivas
+- `tournament_end` dedup key kiegeszult `tournamentStartedAt` timestamppel → azonos mod + eredmeny u mas tornaugy nem nemaul el
+- `tournament_end` `total_duration_sec` ertek javitva: `tournamentStartedAt` (torna elejetol) helyett nem `activeMatchStartedAt` (utolso meccs) alapjan szamitodik
+- `match_end` `result` mezo javitva: `playerScore > aiScore` konkret match winner, nem `tournamentLost` global flag
+
+## 10. Day 29 clean-up summary
 
 - Event naming aligned with event matrix v1 (no ad-hoc aliases).
 - Funnel panels pinned in stable order: home -> game -> match_start -> match_end -> tournament_end.

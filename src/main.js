@@ -12,7 +12,12 @@ import {
 import { useUiStore } from "./stores/ui";
 import { useStatsStore } from "./stores/stats";
 import { useLeaderboardStore } from "./stores/leaderboard";
-import { initAnalytics, trackEvent, trackScreen } from "./services/analytics";
+import {
+  initAnalytics,
+  trackEvent,
+  trackScreen,
+  getSessionId,
+} from "./services/analytics";
 import { initMonitoring, captureException } from "./services/monitoring";
 import "./styles/main.css";
 
@@ -77,6 +82,8 @@ function reportFatalError(errorLike, source, extra = {}) {
   trackEvent("error_captured", {
     source,
     monitoring_backend: monitoringRuntime.backend,
+    platform: monitoringRuntime.platform,
+    session_id: getSessionId(),
     message: normalizedError.message,
   });
 

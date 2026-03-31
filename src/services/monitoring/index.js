@@ -21,7 +21,7 @@ function hasSentryDsn() {
 export function initMonitoring({ app } = {}) {
   monitoringPlatform = resolvePlatform();
 
-  if (monitoringPlatform === "web" && hasSentryDsn() && app) {
+  if (hasSentryDsn() && app) {
     Sentry.init({
       app,
       dsn: import.meta.env.VITE_SENTRY_DSN,
@@ -30,8 +30,6 @@ export function initMonitoring({ app } = {}) {
     });
     sentryEnabled = true;
     monitoringBackend = "sentry";
-  } else if (monitoringPlatform === "android") {
-    monitoringBackend = "crashlytics_pending";
   } else {
     monitoringBackend = "console";
   }

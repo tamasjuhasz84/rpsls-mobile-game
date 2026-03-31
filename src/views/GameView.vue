@@ -287,6 +287,7 @@ let plannedAiMove = null;
 let lastPersistedTournamentState = "";
 let activeMatchKey = "";
 let activeMatchStartedAt = 0;
+let tournamentStartedAt = 0;
 let trackedMatchStartKeys = new Set();
 let trackedMatchEndKeys = new Set();
 let trackedTournamentEndKeys = new Set();
@@ -674,6 +675,11 @@ function resetLoopRuntime() {
   lastPersistedTournamentState = "";
   activeMatchKey = "";
   activeMatchStartedAt = 0;
+  tournamentStartedAt = 0;
+  trackedMatchStartKeys = new Set();
+  trackedMatchEndKeys = new Set();
+  trackedTournamentEndKeys = new Set();
+  trackedDailyCompleteKeys = new Set();
   trackedLeaderboardKeys = new Set();
   isResultExtrasExpanded.value = false;
 }
@@ -699,6 +705,7 @@ function trackMatchStartIfNeeded(source = "unknown") {
 
   activeMatchKey = matchKey;
   activeMatchStartedAt = Date.now();
+  if (!tournamentStartedAt) tournamentStartedAt = activeMatchStartedAt;
   trackedMatchStartKeys.add(matchKey);
 
   trackEvent("match_start", {
@@ -722,7 +729,8 @@ function trackMatchEndIfNeeded() {
   trackEvent("match_end", {
     mode: tournamentStore.mode,
     opponent_id: tournamentStore.currentOpponent?.id ?? null,
-    result: tournamentStore.tournamentLost ? "ai" : "player",
+    result:
+      tournamentStore.playerScore > tournamentStore.aiScore ? "player" : "ai",
     player_score: tournamentStore.playerScore,
     ai_score: tournamentStore.aiScore,
     rounds_played: gameStore.roundNumber,
@@ -738,6 +746,7 @@ function trackTournamentEndIfNeeded() {
     tournamentStore.mode,
     tournamentStore.bracket.length,
     tournamentStore.tournamentLost ? "lost" : "won",
+    tournamentStartedAt,
   ].join("|");
 
   if (trackedTournamentEndKeys.has(tournamentKey)) return;
@@ -750,7 +759,7 @@ function trackTournamentEndIfNeeded() {
       ? tournamentStore.currentRoundIndex
       : tournamentStore.bracket.length,
     total_rounds_played: gameStore.roundNumber,
-    total_duration_sec: getDurationSeconds(activeMatchStartedAt),
+    total_duration_sec: getDurationSeconds(tournamentStartedAt),
   });
 }
 
@@ -1151,12 +1160,6 @@ onMounted(() => {
   const wantsResume = resumeParam === "1";
 
   if (wantsResume) {
-    trackEvent("continue_click", {
-      source_screen: "game",
-      has_saved_tournament: true,
-      mode: tournamentStore.mode,
-      action: "resume_query_param",
-    });
     resumeTournamentFlow();
     return;
   }

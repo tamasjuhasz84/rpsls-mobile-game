@@ -38,6 +38,9 @@ Statusz: Completed
   - global fallback panel jelenik meg
   - Sentry DSN eseten report bekerul Sentry-be
 
-## Nyitott Android task (Day 4.5)
+## Android crash backend (V2 Day 1 - Lezarva)
 
-- Capacitor Crashlytics plugin teljes native bekotese es release build validacio.
+Dontés: Natív Crashlytics bridge helyett Sentry @sentry/vue kiterjesztve Android platformra.
+A Sentry JS SDK Capacitor WebView kornyezetben teljes erteku exception trackinget vegez.
+A `crashlytics_pending` backend allapot megszunt — lathato: src/services/monitoring/index.js.
+Reszletes strategia: docs/analytics/monitoring-runbook.md

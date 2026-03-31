@@ -213,35 +213,6 @@
           </ul>
         </section>
 
-        <div class="button-stack">
-          <button class="primary-button" type="button" @click="startGame">
-            {{ t("menu.start") }}
-          </button>
-
-          <button
-            class="secondary-button"
-            type="button"
-            :disabled="!hasContinue"
-            @click="continueGame"
-          >
-            {{ t("menu.continue") }}
-          </button>
-
-          <RouterLink
-            class="secondary-button"
-            :to="{ path: '/rules', query: { from: 'home' } }"
-          >
-            {{ t("menu.rules") }}
-          </RouterLink>
-
-          <RouterLink
-            class="secondary-button"
-            :to="{ path: '/bracket', query: { from: 'home' } }"
-          >
-            {{ t("menu.bracket") }}
-          </RouterLink>
-        </div>
-
         <section class="stats-panel">
           <p class="section-label">{{ t("stats.title") }}</p>
 
