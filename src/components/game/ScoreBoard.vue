@@ -6,7 +6,20 @@
     </div>
 
     <p v-if="isSurvivalMode" class="score-survival-line">
-      {{ t("score.survivalPoints", { score: tournamentStore.survivalScore }) }}
+      {{ t("score.survivalPoints", { score: formattedSurvivalScore }) }}
+    </p>
+
+    <p v-if="isSurvivalMode" class="score-survival-meta">
+      <span class="score-survival-chip">
+        {{
+          t("score.survivalDefeatedShort", {
+            count: tournamentStore.survivalOpponentsDefeated,
+          })
+        }}
+      </span>
+      <span class="score-survival-chip">
+        {{ t("score.targetWins", { count: tournamentStore.targetWins }) }}
+      </span>
     </p>
 
     <div class="score-main">
@@ -46,6 +59,12 @@ const targetText = computed(() => {
 });
 
 const isSurvivalMode = computed(() => tournamentStore.mode === "survival");
+
+const formattedSurvivalScore = computed(() => {
+  return new Intl.NumberFormat(uiStore.locale).format(
+    tournamentStore.survivalScore,
+  );
+});
 
 const playerLabel = computed(() => {
   return uiStore.playerName || t("game.player");

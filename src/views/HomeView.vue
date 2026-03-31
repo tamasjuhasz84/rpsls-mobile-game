@@ -725,11 +725,24 @@ function handleClaimMission(missionId) {
 }
 
 function continueGame() {
+  const tournament = savedTournament.value;
+  const resumeMode = tournament?.mode || tournamentStore.mode;
+
+  if (!hasContinue.value) {
+    startGame();
+    return;
+  }
+
   trackEvent("continue_click", {
     source_screen: "home",
-    has_saved_tournament: hasContinue.value,
-    mode: tournamentStore.mode,
-    action: "resume",
+    has_saved_tournament: true,
+    mode: resumeMode,
+    action:
+      tournament?.sessionType === "daily"
+        ? "resume_daily_from_home"
+        : "resume_standard_from_home",
+    session_type: tournament?.sessionType || "standard",
+    current_round_index: tournament?.currentRoundIndex ?? 0,
   });
 
   router.push("/game?resume=1");

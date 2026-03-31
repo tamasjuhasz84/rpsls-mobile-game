@@ -8,6 +8,17 @@ let provider = createConsoleProvider();
 let providerName = "console";
 let localeResolver = () => "hu";
 
+const EVENT_REQUIRED_FIELDS = {
+  screen_view: ["screen_name"],
+  continue_click: ["source_screen", "mode"],
+  match_start: ["mode"],
+  match_end: ["mode", "result"],
+  tournament_end: ["mode", "tournament_result"],
+  daily_complete: ["daily_challenge_id", "mode", "result"],
+};
+
+const NON_EMPTY_FIELDS = ["mode", "result", "screen_name"];
+
 function isBrowser() {
   return typeof window !== "undefined";
 }
@@ -20,8 +31,31 @@ function sanitizeParams(params = {}) {
   }, {});
 }
 
+function isEmptyValue(value) {
+  if (typeof value === "string") return value.trim().length === 0;
+  return false;
+}
+
+function isPayloadValid(eventName, payload) {
+  const requiredFields = EVENT_REQUIRED_FIELDS[eventName] || [];
+
+  for (const field of requiredFields) {
+    if (!(field in payload) || isEmptyValue(payload[field])) {
+      return false;
+    }
+  }
+
+  for (const field of NON_EMPTY_FIELDS) {
+    if (field in payload && isEmptyValue(payload[field])) {
+      return false;
+    }
+  }
+
+  return true;
+}
+
 function shouldDebugLog() {
-  return Boolean(import.meta.env.DEV);
+  return Boolean(import.meta.env.DEV) && import.meta.env.MODE !== "test";
 }
 
 function debugLog(eventName, payload) {
@@ -88,6 +122,11 @@ export function trackEvent(eventName, params = {}) {
     ...params,
     locale: localeResolver(),
   });
+
+  if (!isPayloadValid(eventName, payload)) {
+    debugLog(`${eventName}_dropped_invalid_payload`, payload);
+    return;
+  }
 
   provider.trackEvent(eventName, payload);
   debugLog(eventName, payload);

@@ -62,3 +62,16 @@ Statusz: Draft v1 (Day 1 output)
 - tournament_end csak egyszer kuldheto egy tournament_id-re
 - continue_click eventnel kotelezo source_screen parameter
 - null/empty mode, result, screen_name nem mehet ki
+
+## Day 11 validacios update (2026-03-31)
+
+- Kozponti payload validacio aktivalva az analytics service-ben.
+- Kotelezo mezok ellenorzese event-tipus szerint:
+  - screen_view: screen_name
+  - continue_click: source_screen, mode
+  - match_start: mode
+  - match_end: mode, result
+  - tournament_end: mode, tournament_result
+  - daily_complete: daily_challenge_id, mode, result
+- Ervenytelen payload eseten az event eldobasra kerul (debug log marad fejlesztoi modban).
+- continue_click payload konzisztensitve Home es Game flow kozott (session_type, current_round_index mezokkel).

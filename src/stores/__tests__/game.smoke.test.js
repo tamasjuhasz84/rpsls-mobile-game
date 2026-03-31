@@ -156,6 +156,15 @@ describe("game store – revealRound", () => {
     store.revealRound();
     expect(store.phase).toBe("locked");
   });
+
+  it("nem locked fázisban nem vált reveal-re", () => {
+    const store = useGameStore();
+    store.startRound();
+    store.selectMove("rock");
+    store.setAiMove("scissors");
+    store.revealRound();
+    expect(store.phase).toBe("countdown");
+  });
 });
 
 describe("game store – resolveRound", () => {
@@ -200,6 +209,44 @@ describe("game store – resolveRound", () => {
     reachReveal(store, "rock", "scissors");
     store.resolveRound();
     expect(store.explanationKey.length).toBeGreaterThan(0);
+  });
+
+  it("nem reveal fázisban nem változtat result mezőt", () => {
+    const store = useGameStore();
+    store.startRound();
+    store.selectMove("rock");
+    store.lockRound();
+    store.setAiMove("scissors");
+    store.resolveRound();
+
+    expect(store.phase).toBe("locked");
+    expect(store.result).toBeNull();
+  });
+});
+
+describe("game store – tickCountdown edge cases", () => {
+  it("countdown 1-ről 0-ra lépve lockolja a kört", () => {
+    const store = useGameStore();
+    store.startRound();
+    store.selectMove("paper");
+    store.countdown = 1;
+
+    store.tickCountdown();
+
+    expect(store.countdown).toBe(0);
+    expect(store.phase).toBe("locked");
+    expect(store.lockedMove).toBe("paper");
+    expect(store.isCountdownRunning).toBe(false);
+  });
+
+  it("nem countdown fázisban tickCountdown nem módosít állapotot", () => {
+    const store = useGameStore();
+    store.resetGame();
+
+    store.tickCountdown();
+
+    expect(store.phase).toBe("idle");
+    expect(store.countdown).toBe(5);
   });
 });
 

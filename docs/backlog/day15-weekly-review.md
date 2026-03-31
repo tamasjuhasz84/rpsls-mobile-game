@@ -1,39 +1,69 @@
-# Day 15 - Heti Review es Risk Lista
+# Day 15 - Heti Review es Metrika Trend
 
-Datum: 2026-03-30
+Datum: 2026-03-31
 Statusz: Completed
+Scope: Het 3 review + trend elemzes + gyors javitasok + kovetkezo het priorizalas
 
-## Het 3 osszefoglalo
+## Het 3 tenyleges output (Day 11-14)
 
-- Day 11-12: onboarding tutorial flow kesz, skip path-tal es meressel.
-- Day 13: AI pacing tuning, local playtest script, cel-sav CSV.
-- Day 14: match end motivacios panel es CTA erosites.
-- Day 15: feature flag prep a retention feluletekhez + regresszios ellenorzes.
+- Day 11: retention copy tuning, continue flow egyertelmusites, analytics payload validacio.
+- Day 12: survival pacing es score olvashatosag javitas.
+- Day 13: opponent personality copy polish (HU/EN) + lokalizacios minosegteszt.
+- Day 14: edge-case tesztbovites (game loop + persistence), flaky trigger-ekre dedup vedelmi tesztek, build verification.
 
-## Jelenlegi eros pontok
+## Trend elemzes (elerheto adatok alapjan)
 
-- Az onboarding, daily es mission retention loop mar nem kulonallo elemek, hanem ugyanabban a jatekflowban kapcsolodnak ossze.
-- A Day 14 motivacios panel mar kontrollalhato flag alatt fut, igy kisebb a rollout kockazata.
-- A Node-kompatibilis playtest script mar a tuning gyors ujraellenorzeset is lehetove teszi.
+Megjegyzes: valos soft launch dashboard adat tovabbra sem erheto el ebben a workspace-ben, ezert a trend review jelenleg engineering proxy metrikakon alapul.
 
-## Fobb kockazatok
+### Engineering proxy trend
 
-1. A Day 13 winrate-ek nem mindenhol erik el a cel CSV savjait.
+- Teljes automated teszt darabszam novekedett: 215 -> 223 -> 231.
+- Build allapot: folyamatosan PASS (`npm run build`).
+- Kritikus funnel eventek (continue/match/tournament) parameter validacioja szigorubb lett.
+- Persistence edge-case vedelmek tesztelt allapotba kerultek (korrupt payload, invalid shape).
 
-- A local random-playtest szerint a korai ellenfelek meg mindig gyengebb kezdobarat savban vannak a celhoz kepest.
-- Kovetkezo javaslat: manual play session + celzott easing a legelso 2 ellenfelre, ha a valos jatekos erzet is ezt erositi meg.
+### Stabilitasi kovetkeztetes
 
-2. Nincs remote assignment / experiment backend.
+- A regresszios kockazat csokkent a magasabb edge-case lefedettseg miatt.
+- A release-readiness engineering oldalrol erosodott, de rollout telemetry hianya miatt product-kockazat maradt.
 
-- A flag rendszer most local persisted + dev query override alapu.
-- Kovetkezo javaslat: kesobbi hetben egyszeru remote config vagy build-time env flag support.
+## Day 15 gyors javitasok (visszacsatolas alapjan)
 
-3. A Day 14 panelhez nincs kulon komponenszintu UI smoke teszt.
+1. Analytics debug zaj csokkentese tesztkornyezetben.
+2. Heti review dokumentum frissitese a tenyleges Day 11-14 valtozasokra.
+3. Prioritas lista frissitese a kovetkezo heti blokkokhoz.
 
-- A jelenlegi validacio test + build + store smoke szinten eros, de a panel ket valtozata (flag on/off) nincs DOM szinten automatizalva.
-- Kovetkezo javaslat: kesobb egy minimalis view/component smoke teszt a meccsvegi CTA variansokra.
+## Kockazati lista (aktualizalt)
 
-## Go-forward
+1. Nincs valos rollout dashboard adat (T+2h / T+24h / T+72h).
 
-- Het 3 output a roadmap szerint stabilnak tekintheto.
-- A kovetkezo logikus blokk a Het 4 Day 16: opponent archetype terv, uj ellenfel profilok es nev generator tuning, flavor text.
+- Kovetkezmeny: retention es funnel dontesek tovabbra is proxy jeleken alapulnak.
+
+2. Remote config / experiment assignment tovabbra sincs.
+
+- Kovetkezmeny: feature-flag viselkedes local/dev override kozpontu, nem production assignment.
+
+3. View-szintu match-end panel automation hianyzik (flag on/off varians).
+
+- Kovetkezmeny: store es smoke tesztek erosek, de DOM regresszio lehetoseg marad.
+
+## Kovetkezo het prioritas (data-driven)
+
+P1:
+
+- Day 16-17 release closeout, changelog/readme veglegesites, publish-gate checklist.
+- Monitoring es analytics readout csatornak aktiv ellenorzese rollout ablakban.
+
+P2:
+
+- Minimalis UI-level smoke teszt a meccsvegi panel variansokra.
+- Feature-flag governance egyszerusitese (egyertelmu owner + toggling szabaly).
+
+P3:
+
+- Elokeszites Day 18 docs inventory cleanup hoz (hivatkozas map + torlesi jeloltek).
+
+## Dones
+
+- Het 3 celjai teljesitve a roadmap Day 11-15 elvarasai szerint.
+- A kovetkezo blokk a release closeout + dokumentacios rendbetetel, nem uj feature expanzio.

@@ -404,17 +404,25 @@ const hasResultExtras = computed(() => {
   );
 });
 
+const localeNumberFormatter = computed(
+  () => new Intl.NumberFormat(uiStore.locale),
+);
+
+function formatNumber(value) {
+  return localeNumberFormatter.value.format(Number(value) || 0);
+}
+
 const matchStatusHint = computed(() => {
   if (isSurvivalSession.value && tournamentStore.tournamentFinished) {
     return t("match.survivalLossHint", {
-      score: tournamentStore.survivalScore,
-      opponents: tournamentStore.survivalOpponentsDefeated,
+      score: formatNumber(tournamentStore.survivalScore),
+      opponents: formatNumber(tournamentStore.survivalOpponentsDefeated),
     });
   }
 
   if (isSurvivalSession.value && showAdvanceButton.value) {
     return t("match.survivalContinueHint", {
-      score: tournamentStore.survivalScore,
+      score: formatNumber(tournamentStore.survivalScore),
     });
   }
 
@@ -455,13 +463,13 @@ const matchPreviewItems = computed(() => {
   if (isSurvivalSession.value) {
     items.push({
       label: t("match.survivalScoreLabel"),
-      value: String(tournamentStore.survivalScore),
+      value: formatNumber(tournamentStore.survivalScore),
     });
 
     items.push({
       label: t("match.survivalDefeatedLabel"),
       value: t("match.survivalDefeatedValue", {
-        count: tournamentStore.survivalOpponentsDefeated,
+        count: formatNumber(tournamentStore.survivalOpponentsDefeated),
       }),
     });
   }
@@ -962,6 +970,8 @@ function handleAdvance() {
     has_saved_tournament: true,
     mode: tournamentStore.mode,
     action: "advance",
+    session_type: tournamentStore.sessionType || "standard",
+    current_round_index: tournamentStore.currentRoundIndex,
   });
 
   tournamentStore.advanceOpponent();
@@ -984,6 +994,8 @@ function handleRestartTournament() {
       tournamentStore.sessionType === "daily"
         ? "start_standard_from_daily_end"
         : "restart_tournament",
+    session_type: tournamentStore.sessionType || "standard",
+    current_round_index: tournamentStore.currentRoundIndex,
   });
 
   startNewTournamentFlow();

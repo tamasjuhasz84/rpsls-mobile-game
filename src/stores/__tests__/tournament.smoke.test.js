@@ -207,6 +207,35 @@ describe("survival scoring", () => {
     expect(store.tournamentFinished).toBe(true);
     expect(store.tournamentLost).toBe(true);
   });
+
+  it("draw survival módban kisebb pontot ad, mint egy körgyőzelem", () => {
+    const store = setupStore({ mode: "survival" });
+
+    store.registerRoundResult("draw");
+    const scoreAfterDraw = store.survivalScore;
+
+    store.registerRoundResult("player");
+
+    expect(scoreAfterDraw).toBe(2);
+    expect(store.survivalScore).toBe(16);
+    expect(store.survivalRoundDraws).toBe(1);
+    expect(store.survivalRoundWins).toBe(1);
+  });
+
+  it("hibátlan meccsgyőzelem több survival pontot ad, mint szoros győzelem", () => {
+    const perfectStore = setupStore({ mode: "survival" });
+    winMatch(perfectStore, 3);
+    const perfectRunScore = perfectStore.survivalScore;
+
+    const closeStore = setupStore({ mode: "survival" });
+    closeStore.registerRoundResult("player");
+    closeStore.registerRoundResult("ai");
+    closeStore.registerRoundResult("player");
+    closeStore.registerRoundResult("player");
+    const closeRunScore = closeStore.survivalScore;
+
+    expect(perfectRunScore).toBeGreaterThan(closeRunScore);
+  });
 });
 
 // ─── hasValidSavedTournament ─────────────────────────────────────────────────
@@ -326,6 +355,53 @@ describe("hydrateFromStorage", () => {
       currentRoundIndex: 99,
     });
     expect(store.currentRoundIndex).toBe(0);
+  });
+
+  it("negatív és nem numerikus perzisztált score mezőket 0-ra normalizál", () => {
+    const store = useTournamentStore();
+
+    store.hydrateFromStorage({
+      mode: "survival",
+      bracket: [{ id: 1, name: "Alpha" }],
+      currentRoundIndex: 0,
+      playerScore: -5,
+      aiScore: "not-a-number",
+      survivalScore: -100,
+      survivalOpponentsDefeated: -2,
+      survivalRoundWins: "bad",
+      survivalRoundDraws: -1,
+    });
+
+    expect(store.playerScore).toBe(0);
+    expect(store.aiScore).toBe(0);
+    expect(store.survivalScore).toBe(0);
+    expect(store.survivalOpponentsDefeated).toBe(0);
+    expect(store.survivalRoundWins).toBe(0);
+    expect(store.survivalRoundDraws).toBe(0);
+  });
+});
+
+describe("round result dedup tracking", () => {
+  it("markRoundResultProcessed után ugyanaz a resultKey duplikáltnak számít", () => {
+    const store = useTournamentStore();
+    const key = "3|rock|paper|ai";
+
+    expect(store.isDuplicateRoundResult(key)).toBe(false);
+
+    store.markRoundResultProcessed(key);
+    expect(store.isDuplicateRoundResult(key)).toBe(true);
+    expect(store.isDuplicateRoundResult("3|rock|paper|player")).toBe(false);
+  });
+
+  it("clearRoundResultTracking után a korábbi key már nem duplikált", () => {
+    const store = useTournamentStore();
+    const key = "4|spock|lizard|ai";
+
+    store.markRoundResultProcessed(key);
+    expect(store.isDuplicateRoundResult(key)).toBe(true);
+
+    store.clearRoundResultTracking();
+    expect(store.isDuplicateRoundResult(key)).toBe(false);
   });
 });
 

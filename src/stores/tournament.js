@@ -262,10 +262,11 @@ export const useTournamentStore = defineStore("tournament", {
     },
 
     getSurvivalMatchBonus() {
-      const flawlessBonus = Math.max(this.targetWins - this.aiScore, 0) * 22;
-      const difficultyBonus = this.getCurrentOpponentDifficultyTier() * 14;
-      const streakBonus = Math.min(this.survivalOpponentsDefeated, 20) * 5;
-      return 120 + flawlessBonus + difficultyBonus + streakBonus;
+      const flawlessBonus = Math.max(this.targetWins - this.aiScore, 0) * 18;
+      const difficultyBonus = this.getCurrentOpponentDifficultyTier() * 16;
+      const streakBonus = Math.min(this.survivalOpponentsDefeated, 25) * 6;
+      const tempoBonus = this.aiScore === 0 ? 24 : this.aiScore === 1 ? 12 : 0;
+      return 96 + flawlessBonus + difficultyBonus + streakBonus + tempoBonus;
     },
 
     setOpponent(opponent) {
@@ -279,14 +280,14 @@ export const useTournamentStore = defineStore("tournament", {
         this.playerScore += 1;
         if (this.mode === "survival") {
           this.survivalRoundWins += 1;
-          this.survivalScore += 16;
+          this.survivalScore += 14;
         }
       } else if (winner === "ai") {
         this.aiScore += 1;
       } else if (winner === "draw") {
         if (this.mode === "survival") {
           this.survivalRoundDraws += 1;
-          this.survivalScore += 4;
+          this.survivalScore += 2;
         }
         return;
       }
