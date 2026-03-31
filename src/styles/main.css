@@ -48,6 +48,13 @@
   --button-height-lg: 52px;
   --move-button-height: 64px;
 
+  --home-card-max-width: 420px;
+  --home-card-padding: 14px;
+  --home-section-gap: 8px;
+  --home-stack-gap: 8px;
+  --home-button-min-height: 40px;
+  --home-mode-button-min-height: 40px;
+
   --game-sidebar-width: 300px;
 }
 
@@ -261,8 +268,8 @@ a:focus-visible {
 
 .hero-card {
   width: 100%;
-  max-width: 420px;
-  padding: 14px;
+  max-width: var(--home-card-max-width);
+  padding: var(--home-card-padding);
   border-radius: var(--radius-2xl);
   background: var(--color-surface-strong);
   border: 1px solid var(--color-border);
@@ -311,14 +318,14 @@ a:focus-visible {
 
 .button-stack {
   display: grid;
-  gap: 6px;
+  gap: var(--home-stack-gap);
 }
 
 .home-primary-actions {
   display: grid;
-  gap: 8px;
-  margin-bottom: var(--space-sm);
-  padding: 10px;
+  gap: var(--home-section-gap);
+  margin-bottom: var(--home-section-gap);
+  padding: var(--space-md);
   border-radius: var(--radius-lg);
   border: 1px solid rgba(255, 255, 255, 0.12);
   background: rgba(255, 255, 255, 0.04);
@@ -338,7 +345,7 @@ a:focus-visible {
 .home-secondary-toggle {
   width: 100%;
   min-height: 34px;
-  margin-bottom: var(--space-sm);
+  margin-bottom: var(--home-section-gap);
   padding: 0 12px;
   border-radius: var(--radius-pill);
   border: 1px solid rgba(255, 255, 255, 0.12);
@@ -351,13 +358,41 @@ a:focus-visible {
 
 .home-secondary-sections {
   display: grid;
-  gap: 0;
+  gap: var(--home-section-gap);
+}
+
+.home-collapsible-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-sm);
+  min-height: 28px;
+  margin-bottom: var(--space-xs);
+}
+
+.home-collapsible-header .section-label {
+  margin-bottom: 0;
+}
+
+.home-panel-toggle {
+  min-height: 28px;
+  padding: 0 10px;
+  border-radius: var(--radius-pill);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--color-text-soft);
+  font-size: 10px;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
 }
 
 .home-screen .primary-button,
-.home-screen .secondary-button,
+.home-screen .secondary-button {
+  min-height: var(--home-button-min-height);
+}
+
 .home-screen .mode-button {
-  min-height: 40px;
+  min-height: var(--home-mode-button-min-height);
 }
 
 .mode-switch {
@@ -383,9 +418,9 @@ a:focus-visible {
 
 .daily-challenge-panel {
   display: grid;
-  gap: 8px;
-  margin-bottom: var(--space-sm);
-  padding: 10px;
+  gap: var(--home-section-gap);
+  margin: 0;
+  padding: var(--space-md);
   min-width: 0;
   border-radius: var(--radius-lg);
   border: 1px solid rgba(140, 220, 255, 0.24);
@@ -501,7 +536,11 @@ a:focus-visible {
 /* ---------- Mission panel ---------- */
 
 .mission-panel {
-  margin-bottom: var(--space-sm);
+  margin: 0;
+  padding: var(--space-md);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--color-border);
+  background: var(--color-surface);
 }
 
 .mission-list {
@@ -509,13 +548,13 @@ a:focus-visible {
   margin: 0;
   padding: 0;
   display: grid;
-  gap: 8px;
+  gap: var(--home-section-gap);
 }
 
 .mission-card {
   display: grid;
-  gap: 6px;
-  padding: 10px;
+  gap: var(--home-stack-gap);
+  padding: var(--space-md);
   border-radius: var(--radius-lg);
   border: 1px solid rgba(255, 255, 255, 0.1);
   background: rgba(255, 255, 255, 0.04);
@@ -614,7 +653,7 @@ a:focus-visible {
 }
 
 .lang-switch {
-  margin-top: var(--space-sm);
+  margin: var(--home-section-gap) 0 0;
   display: flex;
   justify-content: center;
 }
@@ -631,8 +670,8 @@ a:focus-visible {
 /* ---------- Stats panel ---------- */
 
 .stats-panel {
-  margin-top: 8px;
-  padding: 8px;
+  margin: 0;
+  padding: var(--space-md);
   border-radius: var(--radius-lg);
   border: 1px solid var(--color-border);
   background: var(--color-surface);
@@ -701,13 +740,64 @@ a:focus-visible {
 /* ---------- Leaderboard panel ---------- */
 
 .leaderboard-panel {
-  margin-top: 8px;
-  padding: 10px;
+  margin: 0;
+  padding: var(--space-md);
   border-radius: var(--radius-lg);
   border: 1px solid var(--color-border);
   background: var(--color-surface);
   display: grid;
   gap: var(--space-sm);
+}
+
+.project-info-panel {
+  margin: 0;
+  padding: var(--space-md);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--color-border);
+  background: var(--color-surface);
+  display: grid;
+  gap: var(--space-sm);
+}
+
+.project-info-list {
+  margin: 0 0 var(--space-sm);
+  padding-left: 18px;
+  display: grid;
+  gap: var(--space-xs);
+  color: var(--color-text-muted);
+  font-size: 13px;
+  line-height: 1.4;
+}
+
+.project-contact-text {
+  margin: 0 0 var(--space-xs);
+  color: var(--color-text-soft);
+  font-size: 12px;
+}
+
+.project-contact-link {
+  width: 100%;
+}
+
+.project-github-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-xs);
+}
+
+.project-github-link-badge {
+  display: inline-grid;
+  place-items: center;
+  width: 22px;
+  height: 22px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.24);
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--color-text);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.03em;
 }
 
 .leaderboard-columns {
@@ -1732,43 +1822,34 @@ a:focus-visible {
 /* ---------- Shared responsive rules ---------- */
 
 @media (max-width: 767px) {
+  :root {
+    --home-card-max-width: 420px;
+    --home-card-padding: 14px;
+    --home-section-gap: 8px;
+    --home-stack-gap: 8px;
+    --home-button-min-height: 40px;
+    --home-mode-button-min-height: 40px;
+  }
+
   .home-screen {
     align-items: flex-start;
   }
 
-  .hero-card {
-    padding: 12px;
-  }
-
   .hero-card h1 {
-    font-size: 24px;
+    font-size: clamp(24px, 7vw, 28px);
   }
 
   .subtitle {
-    margin-bottom: var(--space-sm);
+    margin-bottom: var(--home-section-gap);
   }
 
   .player-name-field {
-    margin-bottom: 4px;
+    margin-bottom: var(--space-xs);
   }
 
   .player-name-input {
     min-height: 28px;
     font-size: 13px;
-  }
-
-  .button-stack {
-    gap: 6px;
-  }
-
-  .home-screen .primary-button,
-  .home-screen .secondary-button,
-  .home-screen .mode-button {
-    min-height: 38px;
-  }
-
-  .stats-panel {
-    margin-top: 6px;
   }
 
   .daily-challenge-header {
@@ -1988,6 +2069,12 @@ a:focus-visible {
     --screen-padding-x: 20px;
     --screen-padding-top: 24px;
     --screen-padding-bottom: 36px;
+    --home-card-max-width: 540px;
+    --home-card-padding: 16px;
+    --home-section-gap: 10px;
+    --home-stack-gap: 8px;
+    --home-button-min-height: 42px;
+    --home-mode-button-min-height: 42px;
   }
 
   .game-screen {
@@ -2107,12 +2194,45 @@ a:focus-visible {
     grid-template-columns: repeat(5, minmax(0, 1fr));
   }
 
-  .hero-card {
-    padding: 20px;
-  }
-
   .hero-card h1 {
     font-size: 30px;
+  }
+}
+
+@media (max-width: 359px) {
+  :root {
+    --home-card-max-width: 100%;
+    --home-card-padding: 12px;
+    --home-section-gap: 8px;
+    --home-stack-gap: 8px;
+    --home-button-min-height: 38px;
+    --home-mode-button-min-height: 38px;
+  }
+}
+
+@media (min-width: 480px) and (max-width: 767px) {
+  :root {
+    --home-card-max-width: 460px;
+    --home-card-padding: 14px;
+    --home-section-gap: 8px;
+    --home-stack-gap: 8px;
+    --home-button-min-height: 40px;
+    --home-mode-button-min-height: 40px;
+  }
+}
+
+@media (min-width: 1024px) {
+  :root {
+    --home-card-max-width: 560px;
+    --home-card-padding: 18px;
+    --home-section-gap: 12px;
+    --home-stack-gap: 10px;
+    --home-button-min-height: 44px;
+    --home-mode-button-min-height: 44px;
+  }
+
+  .home-screen {
+    align-items: flex-start;
   }
 }
 

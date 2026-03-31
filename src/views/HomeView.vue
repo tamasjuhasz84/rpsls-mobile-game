@@ -102,7 +102,6 @@
       </section>
 
       <button
-        v-if="showHomeExtrasToggle"
         class="home-secondary-toggle"
         type="button"
         :aria-expanded="showHomeExtras"
@@ -120,54 +119,84 @@
         <section
           :class="['daily-challenge-panel', isDailyExpanded && 'is-expanded']"
         >
-          <div class="daily-challenge-header">
-            <div>
-              <p class="section-label">{{ t("daily.title") }}</p>
-              <h2>{{ t("daily.headline") }}</h2>
-            </div>
-
-            <div class="daily-challenge-actions">
-              <span :class="['daily-status-pill', dailyStatusClass]">
-                {{ t(dailyStatusKey) }}
-              </span>
-
-              <button
-                v-if="showDailyPromoDetails"
-                class="daily-toggle-button"
-                type="button"
-                :aria-expanded="isDailyExpanded"
-                aria-controls="daily-challenge-body"
-                @click="toggleDailyExpanded"
-              >
-                {{ t(isDailyExpanded ? "daily.showLess" : "daily.showMore") }}
-              </button>
-            </div>
+          <div class="home-collapsible-header">
+            <p class="section-label">{{ t("daily.title") }}</p>
+            <button
+              class="home-panel-toggle"
+              type="button"
+              :aria-expanded="isDailyPanelExpanded"
+              aria-controls="home-daily-panel"
+              @click="togglePanel('daily')"
+            >
+              {{ getPanelToggleLabel("daily.title", isDailyPanelExpanded) }}
+            </button>
           </div>
 
-          <div
-            v-if="showDailyPromoDetails && isDailyExpanded"
-            id="daily-challenge-body"
-            class="daily-challenge-body"
-          >
-            <p class="daily-challenge-copy">
-              {{ t("daily.description") }}
-            </p>
+          <div v-if="isDailyPanelExpanded" id="home-daily-panel">
+            <div class="daily-challenge-header">
+              <div>
+                <h2>{{ t("daily.headline") }}</h2>
+              </div>
 
-            <div class="daily-challenge-meta">
-              <span>{{ t(modeLabelKey) }}</span>
-              <span>{{
-                t("daily.opponents", {
-                  count: dailyChallenge?.bracketSize || 0,
-                })
-              }}</span>
-              <span>{{ dailyChallenge?.dateKey }}</span>
+              <div class="daily-challenge-actions">
+                <span :class="['daily-status-pill', dailyStatusClass]">
+                  {{ t(dailyStatusKey) }}
+                </span>
+
+                <button
+                  v-if="showDailyPromoDetails"
+                  class="daily-toggle-button"
+                  type="button"
+                  :aria-expanded="isDailyExpanded"
+                  aria-controls="daily-challenge-body"
+                  @click="toggleDailyExpanded"
+                >
+                  {{ t(isDailyExpanded ? "daily.showLess" : "daily.showMore") }}
+                </button>
+              </div>
+            </div>
+
+            <div
+              v-if="showDailyPromoDetails && isDailyExpanded"
+              id="daily-challenge-body"
+              class="daily-challenge-body"
+            >
+              <p class="daily-challenge-copy">
+                {{ t("daily.description") }}
+              </p>
+
+              <div class="daily-challenge-meta">
+                <span>{{ t(modeLabelKey) }}</span>
+                <span>{{
+                  t("daily.opponents", {
+                    count: dailyChallenge?.bracketSize || 0,
+                  })
+                }}</span>
+                <span>{{ dailyChallenge?.dateKey }}</span>
+              </div>
             </div>
           </div>
         </section>
 
         <section v-if="missionStore.isLoaded" class="mission-panel">
-          <p class="section-label">{{ t("mission.title") }}</p>
-          <ul class="mission-list">
+          <div class="home-collapsible-header">
+            <p class="section-label">{{ t("mission.title") }}</p>
+            <button
+              class="home-panel-toggle"
+              type="button"
+              :aria-expanded="isMissionPanelExpanded"
+              aria-controls="home-mission-panel"
+              @click="togglePanel('mission')"
+            >
+              {{ getPanelToggleLabel("mission.title", isMissionPanelExpanded) }}
+            </button>
+          </div>
+
+          <ul
+            v-if="isMissionPanelExpanded"
+            id="home-mission-panel"
+            class="mission-list"
+          >
             <li
               v-for="mission in missionStore.missions"
               :key="mission.id"
@@ -214,62 +243,101 @@
         </section>
 
         <section class="stats-panel">
-          <p class="section-label">{{ t("stats.title") }}</p>
-
-          <p v-if="!statsStore.hasGames" class="stats-empty">
-            {{ t("stats.noGames") }}
-          </p>
-
-          <template v-else>
-            <div class="stats-grid">
-              <div class="stats-cell">
-                <span class="stats-value">{{ statsStore.totalGames }}</span>
-                <span class="stats-label">{{ t("stats.totalGames") }}</span>
-              </div>
-              <div class="stats-cell">
-                <span class="stats-value stats-value--win">{{
-                  statsStore.wins
-                }}</span>
-                <span class="stats-label">{{ t("stats.wins") }}</span>
-              </div>
-              <div class="stats-cell">
-                <span class="stats-value stats-value--lose">{{
-                  statsStore.losses
-                }}</span>
-                <span class="stats-label">{{ t("stats.losses") }}</span>
-              </div>
-              <div class="stats-cell">
-                <span class="stats-value">{{ statsStore.draws }}</span>
-                <span class="stats-label">{{ t("stats.draws") }}</span>
-              </div>
-              <div class="stats-cell">
-                <span class="stats-value">{{ statsStore.winrate }}%</span>
-                <span class="stats-label">{{ t("stats.winrate") }}</span>
-              </div>
-              <div class="stats-cell">
-                <span class="stats-value">{{ statsStore.currentStreak }}</span>
-                <span class="stats-label">{{ t("stats.currentStreak") }}</span>
-              </div>
-              <div class="stats-cell">
-                <span class="stats-value">{{ statsStore.bestWinStreak }}</span>
-                <span class="stats-label">{{ t("stats.bestStreak") }}</span>
-              </div>
-            </div>
-
+          <div class="home-collapsible-header">
+            <p class="section-label">{{ t("stats.title") }}</p>
             <button
-              class="stats-reset-button"
+              class="home-panel-toggle"
               type="button"
-              @click="statsStore.resetStats()"
+              :aria-expanded="isStatsPanelExpanded"
+              aria-controls="home-stats-panel"
+              @click="togglePanel('stats')"
             >
-              {{ t("stats.reset") }}
+              {{ getPanelToggleLabel("stats.title", isStatsPanelExpanded) }}
             </button>
-          </template>
+          </div>
+
+          <div v-if="isStatsPanelExpanded" id="home-stats-panel">
+            <p v-if="!statsStore.hasGames" class="stats-empty">
+              {{ t("stats.noGames") }}
+            </p>
+
+            <template v-else>
+              <div class="stats-grid">
+                <div class="stats-cell">
+                  <span class="stats-value">{{ statsStore.totalGames }}</span>
+                  <span class="stats-label">{{ t("stats.totalGames") }}</span>
+                </div>
+                <div class="stats-cell">
+                  <span class="stats-value stats-value--win">{{
+                    statsStore.wins
+                  }}</span>
+                  <span class="stats-label">{{ t("stats.wins") }}</span>
+                </div>
+                <div class="stats-cell">
+                  <span class="stats-value stats-value--lose">{{
+                    statsStore.losses
+                  }}</span>
+                  <span class="stats-label">{{ t("stats.losses") }}</span>
+                </div>
+                <div class="stats-cell">
+                  <span class="stats-value">{{ statsStore.draws }}</span>
+                  <span class="stats-label">{{ t("stats.draws") }}</span>
+                </div>
+                <div class="stats-cell">
+                  <span class="stats-value">{{ statsStore.winrate }}%</span>
+                  <span class="stats-label">{{ t("stats.winrate") }}</span>
+                </div>
+                <div class="stats-cell">
+                  <span class="stats-value">{{
+                    statsStore.currentStreak
+                  }}</span>
+                  <span class="stats-label">{{
+                    t("stats.currentStreak")
+                  }}</span>
+                </div>
+                <div class="stats-cell">
+                  <span class="stats-value">{{
+                    statsStore.bestWinStreak
+                  }}</span>
+                  <span class="stats-label">{{ t("stats.bestStreak") }}</span>
+                </div>
+              </div>
+
+              <button
+                class="stats-reset-button"
+                type="button"
+                @click="statsStore.resetStats()"
+              >
+                {{ t("stats.reset") }}
+              </button>
+            </template>
+          </div>
         </section>
 
         <section class="leaderboard-panel">
-          <p class="section-label">{{ t("leaderboard.title") }}</p>
+          <div class="home-collapsible-header">
+            <p class="section-label">{{ t("leaderboard.title") }}</p>
+            <button
+              class="home-panel-toggle"
+              type="button"
+              :aria-expanded="isLeaderboardPanelExpanded"
+              aria-controls="home-leaderboard-panel"
+              @click="togglePanel('leaderboard')"
+            >
+              {{
+                getPanelToggleLabel(
+                  "leaderboard.title",
+                  isLeaderboardPanelExpanded,
+                )
+              }}
+            </button>
+          </div>
 
-          <div class="leaderboard-columns">
+          <div
+            v-if="isLeaderboardPanelExpanded"
+            id="home-leaderboard-panel"
+            class="leaderboard-columns"
+          >
             <article class="leaderboard-column">
               <h3 class="leaderboard-heading">{{ t("leaderboard.daily") }}</h3>
               <p v-if="!topDailyEntries.length" class="leaderboard-empty">
@@ -321,6 +389,56 @@
             </article>
           </div>
         </section>
+
+        <section class="project-info-panel">
+          <div class="home-collapsible-header">
+            <p class="section-label">{{ t("home.project.title") }}</p>
+            <button
+              class="home-panel-toggle"
+              type="button"
+              :aria-expanded="isProjectPanelExpanded"
+              aria-controls="home-project-panel"
+              @click="togglePanel('project')"
+            >
+              {{
+                getPanelToggleLabel(
+                  "home.project.title",
+                  isProjectPanelExpanded,
+                )
+              }}
+            </button>
+          </div>
+
+          <div v-if="isProjectPanelExpanded" id="home-project-panel">
+            <ul class="project-info-list">
+              <li>{{ t("home.project.noAds") }}</li>
+              <li>{{ t("home.project.noPaidAdvantage") }}</li>
+              <li>{{ t("home.project.githubStar") }}</li>
+            </ul>
+
+            <a
+              class="secondary-button project-contact-link project-github-link"
+              href="https://github.com/tamasjuhasz84/rpsls-mobile-game"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <span class="project-github-link-badge" aria-hidden="true"
+                >GH</span
+              >
+              <span>{{ t("home.project.githubCta") }}</span>
+            </a>
+
+            <p class="project-contact-text">
+              {{ t("home.project.contactIntro") }}
+            </p>
+            <a
+              class="secondary-button project-contact-link"
+              href="mailto:tamasjuhasz84@yahoo.com"
+            >
+              {{ t("home.project.contactCta") }}
+            </a>
+          </div>
+        </section>
       </div>
 
       <div class="lang-switch">
@@ -362,6 +480,11 @@ const leaderboardStore = useLeaderboardStore();
 const { t, locale } = useI18n();
 const isDailyExpanded = ref(false);
 const isHomeExtrasExpanded = ref(false);
+const isDailyPanelExpanded = ref(false);
+const isMissionPanelExpanded = ref(false);
+const isStatsPanelExpanded = ref(false);
+const isLeaderboardPanelExpanded = ref(false);
+const isProjectPanelExpanded = ref(false);
 
 dailyStore.hydrateToday();
 missionStore.hydrateToday();
@@ -436,10 +559,7 @@ const topAllTimeEntries = computed(() =>
 const isFirstSessionFocus = computed(
   () => !statsStore.hasGames && !hasContinue.value,
 );
-const showHomeExtrasToggle = computed(() => isFirstSessionFocus.value);
-const showHomeExtras = computed(
-  () => !showHomeExtrasToggle.value || isHomeExtrasExpanded.value,
-);
+const showHomeExtras = computed(() => isHomeExtrasExpanded.value);
 const continueHintKey = computed(() => {
   if (!hasContinue.value) return "";
   if (savedTournament.value?.sessionType === "daily") {
@@ -503,6 +623,38 @@ function toggleDailyExpanded() {
 
 function toggleHomeExtras() {
   isHomeExtrasExpanded.value = !isHomeExtrasExpanded.value;
+}
+
+function togglePanel(panel) {
+  if (panel === "daily") {
+    isDailyPanelExpanded.value = !isDailyPanelExpanded.value;
+    return;
+  }
+
+  if (panel === "mission") {
+    isMissionPanelExpanded.value = !isMissionPanelExpanded.value;
+    return;
+  }
+
+  if (panel === "stats") {
+    isStatsPanelExpanded.value = !isStatsPanelExpanded.value;
+    return;
+  }
+
+  if (panel === "leaderboard") {
+    isLeaderboardPanelExpanded.value = !isLeaderboardPanelExpanded.value;
+    return;
+  }
+
+  if (panel === "project") {
+    isProjectPanelExpanded.value = !isProjectPanelExpanded.value;
+  }
+}
+
+function getPanelToggleLabel(titleKey, isExpanded) {
+  return t(isExpanded ? "home.hideSection" : "home.showSection", {
+    section: t(titleKey),
+  });
 }
 
 function handleDailyChallenge() {
