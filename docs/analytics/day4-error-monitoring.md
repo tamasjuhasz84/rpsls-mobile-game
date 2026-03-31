@@ -6,7 +6,7 @@ Statusz: Completed
 ## Rogzitett strategia
 
 - Web build: Firebase Analytics + Sentry
-- Android wrapper build: Firebase Analytics + Crashlytics
+- Android wrapper build: Firebase Analytics + Sentry
 
 ## Implementalt elemek
 
@@ -27,7 +27,8 @@ Statusz: Completed
 
 - Web + VITE_SENTRY_DSN beallitva: exception report megy Sentry-be.
 - Web + DSN nelkul: console fallback.
-- Android wrapper: backend jeloles crashlytics_pending (native crashlytics bridge kov. lepessel aktiv).
+- Android wrapper + VITE_SENTRY_DSN beallitva: exception report megy Sentry-be.
+- Android wrapper DSN nelkul: console fallback.
 
 ## Test crash/report szimulacio
 

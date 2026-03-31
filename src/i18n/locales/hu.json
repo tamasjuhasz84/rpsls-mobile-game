@@ -21,6 +21,8 @@
   "screen.game": "Játék",
   "screen.bracket": "Ágrajz",
   "screen.rules": "Szabályok",
+  "screen.privacy": "Adatvédelem",
+  "screen.terms": "Feltételek",
   "common.backHome": "Vissza a főoldalra",
   "rule.draw": "Döntetlen.",
   "rule.rock_scissors": "A kő töri az ollót.",

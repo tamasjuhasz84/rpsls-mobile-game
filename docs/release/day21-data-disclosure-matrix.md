@@ -1,7 +1,7 @@
 # Day 21 - Data Disclosure Matrix (Play Store prep)
 
-Datum: 2026-03-30
-Statusz: Draft v1
+Datum: 2026-03-31
+Statusz: Draft v2
 
 ## 1. Osszefoglalo
 
@@ -9,21 +9,20 @@ Ez a matrix a jelenlegi kodalap alapjan keszult disclosure draft. Veglegesites e
 
 ## 2. Data type matrix
 
-| Data tipus                 | Peldak                                                                         | Forras              | Celu                                   | Megorzes                                 | Megosztas third-partyval                                      |
-| -------------------------- | ------------------------------------------------------------------------------ | ------------------- | -------------------------------------- | ---------------------------------------- | ------------------------------------------------------------- |
-| App activity               | screen_view, match_start, match_end, tournament_end, continue_click, daily\_\* | app telemetry       | Product analytics, retention, funnel   | Provider retention policy szerint        | Igen (Firebase)                                               |
-| App diagnostics            | error message, source, platform metadata                                       | runtime monitoring  | Stabilitas, hibajavitas                | 90-180 nap javasolt                      | Igen (Sentry web, Crashlytics Android target)                 |
-| Device/session identifier  | session_id (sessionStorage), app/platform metadata                             | analytics bootstrap | Session-level analysis, dedup          | Session + provider retention             | Igen (analytics provider)                                     |
-| In-app progress (local)    | tournament state, daily/mission/leaderboard local state                        | localStorage        | Continue flow, user UX                 | User device-en marad                     | Nem (by default)                                              |
-| User-provided display data | playerName (nickname)                                                          | home input          | In-app megjelenites, local leaderboard | User device-en + local leaderboard state | Nem kozvetlenul, kiv ha event payloadba kerül (ellenorizendo) |
+| Data tipus                 | Peldak                                                                         | Forras              | Celu                                   | Megorzes                                 | Megosztas third-partyval                                 |
+| -------------------------- | ------------------------------------------------------------------------------ | ------------------- | -------------------------------------- | ---------------------------------------- | -------------------------------------------------------- |
+| App activity               | screen_view, match_start, match_end, tournament_end, continue_click, daily\_\* | app telemetry       | Product analytics, retention, funnel   | Firebase: max 14 honap                   | Igen (Firebase)                                          |
+| App diagnostics            | error message, source, platform metadata                                       | runtime monitoring  | Stabilitas, hibajavitas                | Sentry: 90 nap                           | Igen (Sentry web + Android WebView target)               |
+| Device/session identifier  | session_id (sessionStorage), app/platform metadata                             | analytics bootstrap | Session-level analysis, dedup          | Session + provider retention             | Igen (analytics provider)                                |
+| In-app progress (local)    | tournament state, daily/mission/leaderboard local state                        | localStorage        | Continue flow, user UX                 | User device-en marad                     | Nem (by default)                                         |
+| User-provided display data | playerName (nickname)                                                          | home input          | In-app megjelenites, local leaderboard | User device-en + local leaderboard state | Nem; repo audit alapjan analytics payloadba nem kerul be |
 
 ## 3. Provider matrix
 
-| Provider                    | Funkcio                         | Kulfoldi adattovabbitas kockazat | Notes                                      |
-| --------------------------- | ------------------------------- | -------------------------------- | ------------------------------------------ |
-| Firebase Analytics (Google) | Event tracking                  | Lehetseges                       | GDPR/EEA transfer safeguards ellenorizendo |
-| Sentry                      | Web error monitoring            | Lehetseges                       | DSN only when configured                   |
-| Crashlytics (pending)       | Android native crash monitoring | Lehetseges                       | Integracio roadmapban pending              |
+| Provider                    | Funkcio          | Kulfoldi adattovabbitas kockazat | Notes                                                  |
+| --------------------------- | ---------------- | -------------------------------- | ------------------------------------------------------ |
+| Firebase Analytics (Google) | Event tracking   | Lehetseges                       | GDPR/EEA transfer safeguards ellenorizendo             |
+| Sentry                      | Error monitoring | Lehetseges                       | DSN only when configured; web + Android WebView target |
 
 ## 4. Data safety questionnaire draft input (Play Console)
 
@@ -36,8 +35,8 @@ Elso koros javaslat, validalando:
 
 ## 5. Ellenorzendo pontok release elott
 
-- [ ] Pontos provider retention idok
+- [x] Pontos provider retention idok (Firebase Analytics: 14 honap, Sentry: 90 nap)
 - [ ] EEA consent strategia analyticsre
-- [ ] Player name event payloadban valoban nem kerul ki (event audit)
+- [x] Player name event payloadban valoban nem kerul ki (repo audit: src/views/HomeView.vue, src/views/GameView.vue, src/services/analytics/index.js)
 - [ ] Play Console Data Safety valaszok osszehangolasa a policy texttel
-- [ ] Android Crashlytics aktiv statusz ujraellenorzese
+- [x] Android Crashlytics aktiv statusz ujraellenorzese (nem aktiv; Sentry az ervenyes monitoring backend)

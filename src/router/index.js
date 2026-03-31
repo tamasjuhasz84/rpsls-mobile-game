@@ -3,6 +3,8 @@ import HomeView from "@/views/HomeView.vue";
 import GameView from "@/views/GameView.vue";
 import BracketView from "@/views/BracketView.vue";
 import RulesView from "@/views/RulesView.vue";
+import PrivacyView from "@/views/PrivacyView.vue";
+import TermsView from "@/views/TermsView.vue";
 
 const routes = [
   {
@@ -24,6 +26,16 @@ const routes = [
     path: "/rules",
     name: "rules",
     component: RulesView,
+  },
+  {
+    path: "/privacy",
+    name: "privacy",
+    component: PrivacyView,
+  },
+  {
+    path: "/terms",
+    name: "terms",
+    component: TermsView,
   },
 ];
 

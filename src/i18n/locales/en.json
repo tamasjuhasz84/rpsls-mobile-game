@@ -21,6 +21,8 @@
   "screen.game": "Game",
   "screen.bracket": "Bracket",
   "screen.rules": "Rules",
+  "screen.privacy": "Privacy",
+  "screen.terms": "Terms",
   "common.backHome": "Back to home",
   "rule.draw": "Draw.",
   "rule.rock_scissors": "Rock crushes scissors.",
