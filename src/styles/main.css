@@ -1029,6 +1029,7 @@ a:focus-visible {
 .score-survival-meta {
   display: flex;
   align-items: center;
+  flex-wrap: wrap;
   gap: var(--space-xs);
   margin: 0;
 }
@@ -1036,15 +1037,18 @@ a:focus-visible {
 .score-survival-chip {
   display: inline-flex;
   align-items: center;
+  justify-content: center;
   min-height: 24px;
+  max-width: 100%;
   padding: 0 8px;
   border-radius: var(--radius-pill);
   border: 1px solid rgba(196, 235, 255, 0.28);
   background: rgba(91, 177, 255, 0.14);
   color: #d9f2ff;
   font-size: 11px;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
+  line-height: 1.2;
+  white-space: normal;
+  word-break: break-word;
 }
 
 .score-header {
@@ -1969,6 +1973,16 @@ a:focus-visible {
   .score-header {
     gap: var(--space-xs);
     margin-bottom: 0;
+  }
+
+  .score-header .section-label {
+    margin-bottom: 0;
+    word-break: normal;
+    overflow-wrap: normal;
+  }
+
+  .score-target {
+    text-align: right;
   }
 
   .score-main {
