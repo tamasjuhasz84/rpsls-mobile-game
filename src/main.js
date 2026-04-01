@@ -194,6 +194,34 @@ async function initNativeBackButtonHandling() {
 
 initNativeBackButtonHandling();
 
-registerSW({ immediate: true });
+async function cleanupNativeServiceWorkerState() {
+  if (typeof window === "undefined") return;
+  if (!Capacitor.isNativePlatform()) return;
+  if (!("serviceWorker" in navigator)) return;
+
+  try {
+    const registrations = await navigator.serviceWorker.getRegistrations();
+    await Promise.all(
+      registrations.map((registration) => registration.unregister()),
+    );
+
+    if (typeof caches !== "undefined") {
+      const cacheKeys = await caches.keys();
+      await Promise.all(cacheKeys.map((key) => caches.delete(key)));
+    }
+  } catch (error) {
+    captureException(error, {
+      tags: {
+        source: "native_service_worker_cleanup",
+      },
+    });
+  }
+}
+
+if (Capacitor.isNativePlatform()) {
+  cleanupNativeServiceWorkerState();
+} else {
+  registerSW({ immediate: true });
+}
 
 app.mount("#app");
