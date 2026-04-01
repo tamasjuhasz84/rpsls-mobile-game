@@ -244,7 +244,7 @@
 
 <script setup>
 import { ref, computed, onMounted, onBeforeUnmount, watch } from "vue";
-import { useRoute } from "vue-router";
+import { useRoute, onBeforeRouteLeave } from "vue-router";
 import { useI18n } from "vue-i18n";
 import TopBar from "@/components/ui/TopBar.vue";
 import OpponentBadge from "@/components/game/OpponentBadge.vue";
@@ -927,6 +927,18 @@ const showRestartButton = computed(() => {
   );
 });
 
+const shouldBlockBackNavigation = computed(() => {
+  if (!tournamentStore.bracket.length) return false;
+  if (tournamentStore.tournamentFinished) return false;
+  return true;
+});
+
+const isPopStateNavigationPending = ref(false);
+
+function handlePopStateNavigation() {
+  isPopStateNavigationPending.value = true;
+}
+
 function getMissionLabel(mission) {
   if (mission.type === "round_wins") {
     return t("mission.roundWins", { target: mission.target });
@@ -1162,7 +1174,31 @@ watch(
   { deep: true },
 );
 
+onBeforeRouteLeave((to, from, next) => {
+  if (to.path === from.path) {
+    next();
+    return;
+  }
+
+  if (shouldBlockBackNavigation.value && isPopStateNavigationPending.value) {
+    isPopStateNavigationPending.value = false;
+    next(false);
+    return;
+  }
+
+  isPopStateNavigationPending.value = false;
+
+  if (!shouldBlockBackNavigation.value) {
+    next();
+    return;
+  }
+
+  next();
+});
+
 onMounted(() => {
+  window.addEventListener("popstate", handlePopStateNavigation);
+
   dailyStore.hydrateToday();
   missionStore.hydrateToday();
 
@@ -1189,6 +1225,7 @@ onMounted(() => {
 });
 
 onBeforeUnmount(() => {
+  window.removeEventListener("popstate", handlePopStateNavigation);
   clearRoundTimeouts();
   stop();
 });

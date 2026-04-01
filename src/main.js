@@ -1,6 +1,7 @@
 import { createApp } from "vue";
 import { createPinia } from "pinia";
 import { registerSW } from "virtual:pwa-register";
+import { Capacitor } from "@capacitor/core";
 import App from "./App.vue";
 import router from "./router";
 import i18n from "./i18n";
@@ -12,6 +13,7 @@ import {
 import { useUiStore } from "./stores/ui";
 import { useStatsStore } from "./stores/stats";
 import { useLeaderboardStore } from "./stores/leaderboard";
+import { useTournamentStore } from "./stores/tournament";
 import {
   initAnalytics,
   trackEvent,
@@ -43,6 +45,8 @@ statsStore.hydrateFromStorage(loadStats() || {});
 
 const leaderboardStore = useLeaderboardStore();
 leaderboardStore.hydrateToday();
+
+const tournamentStore = useTournamentStore();
 
 const savedLang = loadLanguage() || uiStore.locale || "hu";
 uiStore.setLocale(savedLang);
@@ -145,6 +149,50 @@ router.isReady().then(() => {
     from_route: "app_start",
   });
 });
+
+async function initNativeBackButtonHandling() {
+  if (typeof window === "undefined") return;
+  if (!Capacitor.isNativePlatform()) return;
+
+  try {
+    const { App: CapacitorApp } = await import("@capacitor/app");
+
+    CapacitorApp.addListener("backButton", ({ canGoBack }) => {
+      const currentPath = router.currentRoute.value?.path || "/";
+      const isActiveGame =
+        currentPath === "/game" &&
+        tournamentStore.bracket.length > 0 &&
+        !tournamentStore.tournamentFinished;
+
+      if (isActiveGame) {
+        return;
+      }
+
+      if (canGoBack) {
+        router.back();
+        return;
+      }
+
+      if (currentPath !== "/") {
+        router.replace("/");
+        return;
+      }
+
+      const shouldExit = window.confirm(i18n.global.t("app.exitConfirm"));
+      if (shouldExit) {
+        CapacitorApp.exitApp();
+      }
+    });
+  } catch (error) {
+    captureException(error, {
+      tags: {
+        source: "native_back_button_init",
+      },
+    });
+  }
+}
+
+initNativeBackButtonHandling();
 
 registerSW({ immediate: true });
 
