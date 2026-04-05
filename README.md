@@ -94,6 +94,20 @@ Skill-first single-player experience with transparent progression.
 - Release note (latest): [docs/release/day36-release-note-v1.0.3.md](docs/release/day36-release-note-v1.0.3.md)
 - Monitoring runbook: [docs/analytics/monitoring-runbook.md](docs/analytics/monitoring-runbook.md)
 
+## Quality and Release Automation
+
+- Lint: `npm run lint`
+- Auto-fix lint issues where possible: `npm run lint:fix`
+- Format check (tooling/config scope): `npm run format:check`
+- Full local quality gate: `npm run quality`
+
+Automation in CI:
+
+- Quality workflow: `.github/workflows/quality.yml`
+- Semantic release workflow: `.github/workflows/release.yml`
+
+Semantic-release config is in `.releaserc.json` and updates `CHANGELOG.md` plus git tags/releases on main/master.
+
 ## Technical Stack
 
 - Vue 3 (Composition API)
