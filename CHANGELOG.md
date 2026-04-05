@@ -1,3 +1,10 @@
+# [1.3.0](https://github.com/tamasjuhasz84/rpsls-mobile-game/compare/v1.2.0...v1.3.0) (2026-04-05)
+
+
+### Features
+
+* **governance:** complete week 4 package with release governance, stricter lint policy, and recruiter case study ([287a195](https://github.com/tamasjuhasz84/rpsls-mobile-game/commit/287a19554f1dfb25b36c0f42dcb21fb88013b515))
+
 # [1.2.0](https://github.com/tamasjuhasz84/rpsls-mobile-game/compare/v1.1.0...v1.2.0) (2026-04-05)
 
 
