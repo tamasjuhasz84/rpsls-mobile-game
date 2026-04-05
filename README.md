@@ -93,6 +93,9 @@ Skill-first single-player experience with transparent progression.
 - Release closeout package v1: [docs/release/day16-release-closeout-package-v1.md](docs/release/day16-release-closeout-package-v1.md)
 - Release note (latest): [docs/release/day36-release-note-v1.0.3.md](docs/release/day36-release-note-v1.0.3.md)
 - Monitoring runbook: [docs/analytics/monitoring-runbook.md](docs/analytics/monitoring-runbook.md)
+- Medior readiness scorecard: [docs/backlog/day37-medior-readiness-scorecard.md](docs/backlog/day37-medior-readiness-scorecard.md)
+- Architecture system map: [docs/architecture/system-map.md](docs/architecture/system-map.md)
+- ADR index: [docs/adr/README.md](docs/adr/README.md)
 
 ## Quality and Release Automation
 
@@ -100,11 +103,16 @@ Skill-first single-player experience with transparent progression.
 - Auto-fix lint issues where possible: `npm run lint:fix`
 - Format check (tooling/config scope): `npm run format:check`
 - Full local quality gate: `npm run quality`
+- Coverage report + threshold check: `npm run test:coverage`
+- E2E tests (Playwright): `npm run test:e2e`
 
 Automation in CI:
 
 - Quality workflow: `.github/workflows/quality.yml`
+- E2E workflow: `.github/workflows/e2e.yml`
 - Semantic release workflow: `.github/workflows/release.yml`
+
+Coverage thresholds are enforced in `vite.config.js` for critical application logic layers.
 
 Semantic-release config is in `.releaserc.json` and updates `CHANGELOG.md` plus git tags/releases on main/master.
 

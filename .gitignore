@@ -39,3 +39,7 @@ android/*.keystore
 
 # Test coverage
 coverage/
+
+# Playwright artifacts
+playwright-report/
+test-results/

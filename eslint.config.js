@@ -30,7 +30,7 @@ export default [
         {
           argsIgnorePattern: "^_",
           varsIgnorePattern: "^_",
-          caughtErrorsIgnorePattern: "^(_|error)$",
+          caughtErrorsIgnorePattern: "^(_|_error|error)$",
         },
       ],
       "no-console": "off",
@@ -58,7 +58,7 @@ export default [
         {
           argsIgnorePattern: "^_",
           varsIgnorePattern: "^_",
-          caughtErrorsIgnorePattern: "^(_|error)$",
+          caughtErrorsIgnorePattern: "^(_|_error|error)$",
         },
       ],
       "vue/multi-word-component-names": "off",

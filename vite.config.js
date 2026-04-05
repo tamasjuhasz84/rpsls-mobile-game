@@ -95,6 +95,29 @@ export default defineConfig({
     environment: "jsdom",
     include: ["src/**/*.smoke.test.js"],
     setupFiles: ["./src/test/setup.js"],
+    coverage: {
+      provider: "v8",
+      reporter: ["text", "html", "lcov"],
+      reportsDirectory: "coverage",
+      include: [
+        "src/stores/**/*.js",
+        "src/utils/**/*.js",
+        "src/services/**/*.js",
+      ],
+      exclude: [
+        "src/test/**",
+        "src/**/*.smoke.test.js",
+        "src/**/__tests__/**",
+        "src/services/analytics/providers/*.js",
+        "src/services/monitoring/index.js",
+      ],
+      thresholds: {
+        lines: 65,
+        statements: 60,
+        functions: 55,
+        branches: 50,
+      },
+    },
     plugins: [
       {
         name: "svg-mock",
