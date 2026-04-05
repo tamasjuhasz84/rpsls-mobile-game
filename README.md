@@ -91,7 +91,7 @@ Skill-first single-player experience with transparent progression.
 ## Documentation Index
 
 - Release closeout package v1: [docs/release/day16-release-closeout-package-v1.md](docs/release/day16-release-closeout-package-v1.md)
-- Release note (updated): [docs/release/day29-release-note-v1.0.md](docs/release/day29-release-note-v1.0.md)
+- Release note (latest): [docs/release/day36-release-note-v1.0.3.md](docs/release/day36-release-note-v1.0.3.md)
 - Monitoring runbook: [docs/analytics/monitoring-runbook.md](docs/analytics/monitoring-runbook.md)
 
 ## Technical Stack

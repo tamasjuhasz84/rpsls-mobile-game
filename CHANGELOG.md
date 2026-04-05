@@ -4,6 +4,20 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### Added
+
+- TBD
+
+### Changed
+
+- TBD
+
+### Fixed
+
+- TBD
+
+## [1.0.3] - 2026-04-05
+
 ### Week 3-4 Release Closeout (Day 11-16)
 
 #### Added

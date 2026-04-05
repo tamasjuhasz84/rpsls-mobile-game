@@ -22,7 +22,14 @@ import { useI18n } from "vue-i18n";
 import { useTournamentStore } from "@/stores/tournament";
 
 const tournamentStore = useTournamentStore();
-const { t, te } = useI18n();
+const { t } = useI18n();
+
+function resolveI18nValue(key, fallback = "") {
+  if (typeof key !== "string" || key.length === 0) return fallback;
+
+  const translated = t(key);
+  return translated === key ? fallback : translated;
+}
 
 const opponentName = computed(() => {
   return tournamentStore.currentOpponent?.name || t("opponent.fallback");
@@ -35,20 +42,12 @@ const archetypeLabel = computed(() => {
       ? `opponent.archetype.${archetypeKey}.label`
       : "";
 
-  if (labelKey && te(labelKey)) {
-    return t(labelKey);
-  }
-
-  return t("game.opponentSubtitle");
+  return resolveI18nValue(labelKey, t("game.opponentSubtitle"));
 });
 
 const opponentIntroText = computed(() => {
   const introKey = tournamentStore.currentOpponent?.opponentIntroKey;
 
-  if (typeof introKey === "string" && introKey.length > 0 && te(introKey)) {
-    return t(introKey);
-  }
-
-  return "";
+  return resolveI18nValue(introKey, "");
 });
 </script>

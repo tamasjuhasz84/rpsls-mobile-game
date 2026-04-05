@@ -3,6 +3,7 @@ import {
   buildTournament,
   buildSurvivalOpponent,
 } from "@/utils/tournamentBuilder";
+import { getOpponentArchetypeForSlot } from "@/utils/aiProfiles";
 import { saveGameState, loadGameState, clearGameState } from "@/utils/storage";
 
 export const useTournamentStore = defineStore("tournament", {
@@ -71,6 +72,43 @@ export const useTournamentStore = defineStore("tournament", {
       return true;
     },
 
+    withDerivedOpponentCopy(node, index, total) {
+      if (!node || typeof node !== "object") return node;
+
+      const archetype = getOpponentArchetypeForSlot(index, total);
+      const hasArchetypeKey =
+        typeof node.archetypeKey === "string" && node.archetypeKey.length > 0;
+      const hasFlavorKey =
+        typeof node.strategyFlavorKey === "string" &&
+        node.strategyFlavorKey.length > 0;
+      const hasIntroKey =
+        typeof node.opponentIntroKey === "string" &&
+        node.opponentIntroKey.length > 0;
+
+      if (hasArchetypeKey && hasFlavorKey && hasIntroKey) {
+        return node;
+      }
+
+      return {
+        ...node,
+        archetypeKey: hasArchetypeKey ? node.archetypeKey : archetype.key,
+        strategyFlavorKey: hasFlavorKey
+          ? node.strategyFlavorKey
+          : archetype.strategyFlavorKey,
+        opponentIntroKey: hasIntroKey
+          ? node.opponentIntroKey
+          : archetype.introKey,
+      };
+    },
+
+    normalizeBracketNodes(bracket = []) {
+      if (!Array.isArray(bracket) || bracket.length === 0) return [];
+
+      return bracket.map((node, index) =>
+        this.withDerivedOpponentCopy(node, index, bracket.length),
+      );
+    },
+
     setMode(mode) {
       if (mode === "bo5") {
         this.mode = "bo5";
@@ -89,9 +127,9 @@ export const useTournamentStore = defineStore("tournament", {
     },
 
     setBracket(bracket = []) {
-      this.bracket = bracket;
+      this.bracket = this.normalizeBracketNodes(bracket);
       this.currentRoundIndex = 0;
-      this.currentOpponent = bracket[0] ?? null;
+      this.currentOpponent = this.bracket[0] ?? null;
       this.playerScore = 0;
       this.aiScore = 0;
       this.survivalScore = 0;
@@ -143,7 +181,7 @@ export const useTournamentStore = defineStore("tournament", {
         payload.survivalRoundDraws,
         0,
       );
-      this.bracket = Array.isArray(payload.bracket) ? payload.bracket : [];
+      this.bracket = this.normalizeBracketNodes(payload.bracket);
       this.currentRoundIndex = this.normalizeNonNegativeNumber(
         payload.currentRoundIndex,
         0,
