@@ -193,9 +193,9 @@ All items below are repository/process improvements and do not require shipping 
 
 ### Week 4
 
-- Add release governance document (promotion + rollback)
-- Tighten selected ESLint rules from warn to error where safe
-- Publish a concise case study summary for recruiters
+- Done: Add release governance document (promotion + rollback)
+- Done: Tighten selected ESLint rules from warn to error where safe
+- Done: Publish a concise case study summary for recruiters
 
 ## Recruiter/Interviewer Framing
 

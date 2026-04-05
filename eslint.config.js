@@ -26,7 +26,7 @@ export default [
     rules: {
       ...js.configs.recommended.rules,
       "no-unused-vars": [
-        "warn",
+        "error",
         {
           argsIgnorePattern: "^_",
           varsIgnorePattern: "^_",
@@ -54,7 +54,7 @@ export default [
     rules: {
       ...pluginVue.configs["flat/recommended"].rules,
       "no-unused-vars": [
-        "warn",
+        "error",
         {
           argsIgnorePattern: "^_",
           varsIgnorePattern: "^_",

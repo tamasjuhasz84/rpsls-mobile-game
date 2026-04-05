@@ -99,6 +99,8 @@ Skill-first single-player experience with transparent progression.
 - ADR index: [docs/adr/README.md](docs/adr/README.md)
 - Accessibility checklist and audit: [docs/backlog/day38-accessibility-checklist-and-manual-audit.md](docs/backlog/day38-accessibility-checklist-and-manual-audit.md)
 - KPI dashboard spec: [docs/analytics/day38-kpi-dashboard-spec.md](docs/analytics/day38-kpi-dashboard-spec.md)
+- Release governance and rollback policy: [docs/release/day39-release-governance-and-rollback.md](docs/release/day39-release-governance-and-rollback.md)
+- Recruiter case study summary: [docs/backlog/day39-recruiter-case-study-summary.md](docs/backlog/day39-recruiter-case-study-summary.md)
 
 ## Quality and Release Automation
 
