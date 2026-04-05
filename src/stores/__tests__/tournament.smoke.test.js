@@ -342,8 +342,13 @@ describe("hydrateFromStorage", () => {
       bracket,
       currentRoundIndex: 1,
     });
-    // Pinia reaktív proxyt csomagol a bracket elemek köré, ezért mély egyenlőséget vizsgálunk
-    expect(store.currentOpponent).toStrictEqual(bracket[1]);
+    // hydrateFromStorage normalizálja az ellenfelet (származtatott archetype mezőkkel),
+    // ezért legalább a forrás mezőket és a store bracket referencia-konzisztenciát ellenőrizzük.
+    expect(store.currentOpponent).toMatchObject(bracket[1]);
+    expect(store.currentOpponent).toBe(store.bracket[1]);
+    expect(store.currentOpponent.archetypeKey).toBeTruthy();
+    expect(store.currentOpponent.strategyFlavorKey).toBeTruthy();
+    expect(store.currentOpponent.opponentIntroKey).toBeTruthy();
   });
 
   it("határon kívüli index esetén 0-ra visszaesik", () => {
