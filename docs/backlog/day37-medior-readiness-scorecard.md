@@ -187,9 +187,9 @@ All items below are repository/process improvements and do not require shipping 
 
 ### Week 3
 
-- Add performance budget document and basic bundle size check
-- Add accessibility checklist and manual audit report (top 5 screens)
-- Add monitoring KPI dashboard spec (events -> KPI mapping)
+- Done: Add performance budget document and basic bundle size check
+- Done: Add accessibility checklist and manual audit report (top 5 screens)
+- Done: Add monitoring KPI dashboard spec (events -> KPI mapping)
 
 ### Week 4
 

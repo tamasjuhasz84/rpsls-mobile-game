@@ -95,7 +95,10 @@ Skill-first single-player experience with transparent progression.
 - Monitoring runbook: [docs/analytics/monitoring-runbook.md](docs/analytics/monitoring-runbook.md)
 - Medior readiness scorecard: [docs/backlog/day37-medior-readiness-scorecard.md](docs/backlog/day37-medior-readiness-scorecard.md)
 - Architecture system map: [docs/architecture/system-map.md](docs/architecture/system-map.md)
+- Performance budget: [docs/architecture/performance-budget.md](docs/architecture/performance-budget.md)
 - ADR index: [docs/adr/README.md](docs/adr/README.md)
+- Accessibility checklist and audit: [docs/backlog/day38-accessibility-checklist-and-manual-audit.md](docs/backlog/day38-accessibility-checklist-and-manual-audit.md)
+- KPI dashboard spec: [docs/analytics/day38-kpi-dashboard-spec.md](docs/analytics/day38-kpi-dashboard-spec.md)
 
 ## Quality and Release Automation
 
@@ -105,6 +108,8 @@ Skill-first single-player experience with transparent progression.
 - Full local quality gate: `npm run quality`
 - Coverage report + threshold check: `npm run test:coverage`
 - E2E tests (Playwright): `npm run test:e2e`
+- Bundle budget check: `npm run perf:bundle-check`
+- CI-style perf check (build + budget): `npm run perf:ci`
 
 Automation in CI:
 
