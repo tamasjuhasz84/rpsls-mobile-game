@@ -1,3 +1,10 @@
+# [1.2.0](https://github.com/tamasjuhasz84/rpsls-mobile-game/compare/v1.1.0...v1.2.0) (2026-04-05)
+
+
+### Features
+
+* **perf-docs:** add week 3 quality package with bundle budget gate, a11y audit baseline, and KPI dashboard spec ([64ea95b](https://github.com/tamasjuhasz84/rpsls-mobile-game/commit/64ea95b4d9870995bf96e52c574cc6a88120e92d))
+
 # [1.1.0](https://github.com/tamasjuhasz84/rpsls-mobile-game/compare/v1.0.0...v1.1.0) (2026-04-05)
 
 
