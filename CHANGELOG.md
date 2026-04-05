@@ -1,3 +1,10 @@
+# [1.1.0](https://github.com/tamasjuhasz84/rpsls-mobile-game/compare/v1.0.0...v1.1.0) (2026-04-05)
+
+
+### Features
+
+* **quality:** establish readiness baseline with CI, coverage gates, E2E, architecture map and ADRs ([3f5dd7a](https://github.com/tamasjuhasz84/rpsls-mobile-game/commit/3f5dd7af70252e12b5a50185eb42b49ce5ab1cf1))
+
 # 1.0.0 (2026-04-05)
 
 
