@@ -1,30 +1,26 @@
 # [1.3.0](https://github.com/tamasjuhasz84/rpsls-mobile-game/compare/v1.2.0...v1.3.0) (2026-04-05)
 
-
 ### Features
 
-* **governance:** complete week 4 package with release governance, stricter lint policy, and recruiter case study ([287a195](https://github.com/tamasjuhasz84/rpsls-mobile-game/commit/287a19554f1dfb25b36c0f42dcb21fb88013b515))
+- **governance:** complete week 4 package with release governance, stricter lint policy, and recruiter case study ([287a195](https://github.com/tamasjuhasz84/rpsls-mobile-game/commit/287a19554f1dfb25b36c0f42dcb21fb88013b515))
 
 # [1.2.0](https://github.com/tamasjuhasz84/rpsls-mobile-game/compare/v1.1.0...v1.2.0) (2026-04-05)
 
-
 ### Features
 
-* **perf-docs:** add week 3 quality package with bundle budget gate, a11y audit baseline, and KPI dashboard spec ([64ea95b](https://github.com/tamasjuhasz84/rpsls-mobile-game/commit/64ea95b4d9870995bf96e52c574cc6a88120e92d))
+- **perf-docs:** add week 3 quality package with bundle budget gate, a11y audit baseline, and KPI dashboard spec ([64ea95b](https://github.com/tamasjuhasz84/rpsls-mobile-game/commit/64ea95b4d9870995bf96e52c574cc6a88120e92d))
 
 # [1.1.0](https://github.com/tamasjuhasz84/rpsls-mobile-game/compare/v1.0.0...v1.1.0) (2026-04-05)
 
-
 ### Features
 
-* **quality:** establish readiness baseline with CI, coverage gates, E2E, architecture map and ADRs ([3f5dd7a](https://github.com/tamasjuhasz84/rpsls-mobile-game/commit/3f5dd7af70252e12b5a50185eb42b49ce5ab1cf1))
+- **quality:** establish readiness baseline with CI, coverage gates, E2E, architecture map and ADRs ([3f5dd7a](https://github.com/tamasjuhasz84/rpsls-mobile-game/commit/3f5dd7af70252e12b5a50185eb42b49ce5ab1cf1))
 
 # 1.0.0 (2026-04-05)
 
-
 ### Bug Fixes
 
-* add skipWaiting/clientsClaim, gitattributes for PNG binary safety ([4e8e37d](https://github.com/tamasjuhasz84/rpsls-mobile-game/commit/4e8e37da871c80cd499f5f2ddcd728e2bbc5db04))
+- add skipWaiting/clientsClaim, gitattributes for PNG binary safety ([4e8e37d](https://github.com/tamasjuhasz84/rpsls-mobile-game/commit/4e8e37da871c80cd499f5f2ddcd728e2bbc5db04))
 
 # Changelog
 

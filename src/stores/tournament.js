@@ -105,7 +105,7 @@ export const useTournamentStore = defineStore("tournament", {
       if (!Array.isArray(bracket) || bracket.length === 0) return [];
 
       return bracket.map((node, index) =>
-        this.withDerivedOpponentCopy(node, index, bracket.length),
+        this.withDerivedOpponentCopy(node, index, bracket.length)
       );
     },
 
@@ -162,29 +162,29 @@ export const useTournamentStore = defineStore("tournament", {
           : "";
       this.playerScore = this.normalizeNonNegativeNumber(
         payload.playerScore,
-        0,
+        0
       );
       this.aiScore = this.normalizeNonNegativeNumber(payload.aiScore, 0);
       this.survivalScore = this.normalizeNonNegativeNumber(
         payload.survivalScore,
-        0,
+        0
       );
       this.survivalOpponentsDefeated = this.normalizeNonNegativeNumber(
         payload.survivalOpponentsDefeated,
-        0,
+        0
       );
       this.survivalRoundWins = this.normalizeNonNegativeNumber(
         payload.survivalRoundWins,
-        0,
+        0
       );
       this.survivalRoundDraws = this.normalizeNonNegativeNumber(
         payload.survivalRoundDraws,
-        0,
+        0
       );
       this.bracket = this.normalizeBracketNodes(payload.bracket);
       this.currentRoundIndex = this.normalizeNonNegativeNumber(
         payload.currentRoundIndex,
-        0,
+        0
       );
       if (this.currentRoundIndex >= this.bracket.length) {
         this.currentRoundIndex = 0;

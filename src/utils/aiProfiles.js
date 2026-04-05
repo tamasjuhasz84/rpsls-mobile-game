@@ -165,7 +165,7 @@ export function getOpponentArchetypeForSlot(opponentIndex, totalOpponents) {
   const safeTotal = Math.max(clampRound(totalOpponents, 4), 1);
   const safeIndex = Math.min(
     Math.max(clampRound(opponentIndex, 0), 0),
-    safeTotal - 1,
+    safeTotal - 1
   );
   const isFinalOpponent = safeIndex === safeTotal - 1;
   const progress = safeTotal > 1 ? safeIndex / (safeTotal - 1) : 0;
@@ -187,7 +187,7 @@ export function getAiProfileForOpponent(opponentIndex, totalOpponents) {
   const safeTotal = Math.max(clampRound(totalOpponents, 4), 1);
   const safeIndex = Math.min(
     Math.max(clampRound(opponentIndex, 0), 0),
-    safeTotal - 1,
+    safeTotal - 1
   );
   const archetype = getOpponentArchetypeForSlot(safeIndex, safeTotal);
 

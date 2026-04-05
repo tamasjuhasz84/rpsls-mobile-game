@@ -327,7 +327,7 @@
               {{
                 getPanelToggleLabel(
                   "leaderboard.title",
-                  isLeaderboardPanelExpanded,
+                  isLeaderboardPanelExpanded
                 )
               }}
             </button>
@@ -403,7 +403,7 @@
               {{
                 getPanelToggleLabel(
                   "home.project.title",
-                  isProjectPanelExpanded,
+                  isProjectPanelExpanded
                 )
               }}
             </button>
@@ -551,13 +551,13 @@ const modeLabelKey = computed(() => {
 });
 
 const topDailyEntries = computed(() =>
-  leaderboardStore.dailyEntries.slice(0, 5),
+  leaderboardStore.dailyEntries.slice(0, 5)
 );
 const topAllTimeEntries = computed(() =>
-  leaderboardStore.allTimeEntries.slice(0, 5),
+  leaderboardStore.allTimeEntries.slice(0, 5)
 );
 const isFirstSessionFocus = computed(
-  () => !statsStore.hasGames && !hasContinue.value,
+  () => !statsStore.hasGames && !hasContinue.value
 );
 const showHomeExtras = computed(() => isHomeExtrasExpanded.value);
 const continueHintKey = computed(() => {
@@ -572,7 +572,7 @@ const continueHintParams = computed(() => ({
   round: (savedTournament.value?.currentRoundIndex ?? 0) + 1,
 }));
 const startHintKey = computed(() =>
-  isFirstSessionFocus.value ? "home.startHintFresh" : "home.startHint",
+  isFirstSessionFocus.value ? "home.startHintFresh" : "home.startHint"
 );
 
 function getModeLabel(modeValue) {

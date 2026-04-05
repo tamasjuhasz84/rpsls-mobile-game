@@ -33,7 +33,7 @@ export function normalizeFeatureFlags(payload = {}, options = {}) {
 export function parseFeatureFlagOverridesFromSearch(search = "") {
   const source = typeof search === "string" ? search : "";
   const params = new URLSearchParams(
-    source.startsWith("?") || source.length === 0 ? source : `?${source}`,
+    source.startsWith("?") || source.length === 0 ? source : `?${source}`
   );
   const overrides = {};
 

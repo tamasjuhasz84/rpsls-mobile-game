@@ -115,7 +115,7 @@ if (typeof window !== "undefined") {
   window.addEventListener("unhandledrejection", (event) => {
     reportFatalError(
       event?.reason || "Unhandled rejection",
-      "promise_rejection",
+      "promise_rejection"
     );
   });
 
@@ -202,7 +202,7 @@ async function cleanupNativeServiceWorkerState() {
   try {
     const registrations = await navigator.serviceWorker.getRegistrations();
     await Promise.all(
-      registrations.map((registration) => registration.unregister()),
+      registrations.map((registration) => registration.unregister())
     );
 
     if (typeof caches !== "undefined") {

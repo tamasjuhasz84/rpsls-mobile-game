@@ -14,7 +14,7 @@ function safeNonNegativeNumber(value, fallback = 0) {
 function normalizeMission(savedMission, fallbackMission) {
   const progress = Math.min(
     safeNonNegativeNumber(savedMission?.progress, 0),
-    fallbackMission.target,
+    fallbackMission.target
   );
   const completedFromProgress = progress >= fallbackMission.target;
   const completed =
@@ -37,7 +37,7 @@ function mergePackWithSaved(basePack, savedPack) {
   const savedByCode = new Map(
     Array.isArray(savedPack?.missions)
       ? savedPack.missions.map((mission) => [mission?.code, mission])
-      : [],
+      : []
   );
 
   return {
@@ -66,7 +66,7 @@ export const useMissionStore = defineStore("mission", {
       (state.pack?.missions || []).filter((mission) => mission.claimed).length,
     hasClaimableMission: (state) =>
       (state.pack?.missions || []).some(
-        (mission) => mission.completed && !mission.claimed,
+        (mission) => mission.completed && !mission.claimed
       ),
   },
 
@@ -115,7 +115,7 @@ export const useMissionStore = defineStore("mission", {
         if (mission.type === "win_streak") {
           mission.progress = Math.max(
             mission.progress,
-            this.pack.currentWinStreak,
+            this.pack.currentWinStreak
           );
           mission.progress = Math.min(mission.progress, mission.target);
         }

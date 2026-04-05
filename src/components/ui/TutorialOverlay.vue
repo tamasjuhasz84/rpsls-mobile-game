@@ -75,10 +75,10 @@ const { play } = useFeedbackAudio();
 const { tap, urgency, win } = useHaptics();
 
 const stepTitleKey = computed(
-  () => `tutorial.step${tutorialStore.currentStep}.title`,
+  () => `tutorial.step${tutorialStore.currentStep}.title`
 );
 const stepBodyKey = computed(
-  () => `tutorial.step${tutorialStore.currentStep}.body`,
+  () => `tutorial.step${tutorialStore.currentStep}.body`
 );
 const progressPercent = computed(() => {
   const max = tutorialStore.stepCount - 1;

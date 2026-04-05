@@ -62,7 +62,7 @@ const isSurvivalMode = computed(() => tournamentStore.mode === "survival");
 
 const formattedSurvivalScore = computed(() => {
   return new Intl.NumberFormat(uiStore.locale).format(
-    tournamentStore.survivalScore,
+    tournamentStore.survivalScore
   );
 });
 

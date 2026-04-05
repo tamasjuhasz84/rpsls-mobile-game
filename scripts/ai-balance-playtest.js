@@ -54,7 +54,7 @@ function run() {
     }
 
     const playerWinrate = Number(
-      ((playerWins / SAMPLES_PER_OPPONENT) * 100).toFixed(1),
+      ((playerWins / SAMPLES_PER_OPPONENT) * 100).toFixed(1)
     );
 
     return {

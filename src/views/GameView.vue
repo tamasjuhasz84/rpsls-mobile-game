@@ -82,7 +82,7 @@
                   t(
                     isResultExtrasExpanded
                       ? "match.hideOptions"
-                      : "match.moreOptions",
+                      : "match.moreOptions"
                   )
                 }}
               </button>
@@ -185,7 +185,7 @@
                   t(
                     isResultExtrasExpanded
                       ? "match.hideOptions"
-                      : "match.moreOptions",
+                      : "match.moreOptions"
                   )
                 }}
               </button>
@@ -339,26 +339,26 @@ const defeatedOpponentsCount = computed(() => {
   if (tournamentStore.matchFinished || tournamentStore.tournamentFinished) {
     return Math.min(
       tournamentStore.currentRoundIndex + 1,
-      tournamentStore.bracket.length,
+      tournamentStore.bracket.length
     );
   }
 
   return Math.min(
     tournamentStore.currentRoundIndex,
-    tournamentStore.bracket.length,
+    tournamentStore.bracket.length
   );
 });
 
 const claimableMissionCount = computed(() => {
   return missionStore.missions.filter(
-    (mission) => mission.completed && !mission.claimed,
+    (mission) => mission.completed && !mission.claimed
   ).length;
 });
 
 const nextMission = computed(() => {
   return (
     missionStore.missions.find(
-      (mission) => !mission.completed && !mission.claimed,
+      (mission) => !mission.completed && !mission.claimed
     ) || null
   );
 });
@@ -405,7 +405,7 @@ const hasResultExtras = computed(() => {
 });
 
 const localeNumberFormatter = computed(
-  () => new Intl.NumberFormat(uiStore.locale),
+  () => new Intl.NumberFormat(uiStore.locale)
 );
 
 function formatNumber(value) {
@@ -1127,7 +1127,7 @@ watch(
         nextRoundTimeoutId = null;
       }, 1600);
     }
-  },
+  }
 );
 
 watch(
@@ -1136,7 +1136,7 @@ watch(
     if (!matchFinished && !tournamentFinished) {
       isResultExtrasExpanded.value = false;
     }
-  },
+  }
 );
 
 watch(
@@ -1149,7 +1149,7 @@ watch(
     lastUrgencyCountdown = value;
     play("countdown", uiStore.soundEnabled);
     urgency(uiStore.hapticsEnabled);
-  },
+  }
 );
 
 watch(
@@ -1171,7 +1171,7 @@ watch(
 
     persistState();
   },
-  { deep: true },
+  { deep: true }
 );
 
 onBeforeRouteLeave((to, from, next) => {

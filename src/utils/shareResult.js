@@ -28,12 +28,12 @@ export function buildShareResultText(payload = {}) {
     lines.push(`${labels.survivalScore || "Run score"}: ${survivalScore}`);
   } else {
     lines.push(
-      `${labels.matchScore || "Match score"}: ${playerScore}-${aiScore}`,
+      `${labels.matchScore || "Match score"}: ${playerScore}-${aiScore}`
     );
   }
 
   lines.push(
-    `${labels.opponents || "Opponents defeated"}: ${opponentsDefeated}`,
+    `${labels.opponents || "Opponents defeated"}: ${opponentsDefeated}`
   );
 
   if (winStreak > 1) {

@@ -54,7 +54,7 @@ watch(
   () => {
     imageFailed.value = false;
   },
-  { immediate: true },
+  { immediate: true }
 );
 
 const buttonClasses = computed(() => ({

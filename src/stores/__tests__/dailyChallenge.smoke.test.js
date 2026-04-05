@@ -90,7 +90,7 @@ describe("dailyChallenge store", () => {
       store.isSavedChallengeForToday({
         sessionType: "daily",
         dailyChallengeId: store.hydrateToday(new Date()).id,
-      }),
+      })
     ).toBe(true);
   });
 

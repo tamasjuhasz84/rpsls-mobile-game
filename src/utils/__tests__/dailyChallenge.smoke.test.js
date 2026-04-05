@@ -36,10 +36,10 @@ describe("dailyChallenge utils", () => {
 
   it("ugyanazon a napon eltérő időpontban is azonos challenge készül", () => {
     const morning = buildDailyChallengeDefinition(
-      new Date(2026, 2, 30, 8, 0, 0),
+      new Date(2026, 2, 30, 8, 0, 0)
     );
     const evening = buildDailyChallengeDefinition(
-      new Date(2026, 2, 30, 23, 59, 59),
+      new Date(2026, 2, 30, 23, 59, 59)
     );
 
     expect(evening).toStrictEqual(morning);

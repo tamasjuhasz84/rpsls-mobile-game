@@ -50,7 +50,7 @@ describe("mission store", () => {
     store.hydrateToday(new Date(2026, 2, 30));
 
     const moveMission = store.missions.find(
-      (item) => item.type === "move_wins",
+      (item) => item.type === "move_wins"
     );
     const targetMove = moveMission.meta.move;
 
@@ -68,7 +68,7 @@ describe("mission store", () => {
     });
 
     expect(moveMission.progress).toBe(
-      afterWrongMove + (targetMove === "rock" ? 1 : 1),
+      afterWrongMove + (targetMove === "rock" ? 1 : 1)
     );
   });
 
@@ -178,7 +178,7 @@ describe("mission store", () => {
     store.hydrateToday(new Date(2026, 2, 30));
 
     const moveMission = store.missions.find(
-      (item) => item.type === "move_wins",
+      (item) => item.type === "move_wins"
     );
     const targetMove = moveMission.meta.move;
     const startProgress = moveMission.progress;
@@ -197,7 +197,7 @@ describe("mission store", () => {
     store.hydrateToday(new Date(2026, 2, 30));
 
     const streakMission = store.missions.find(
-      (item) => item.type === "win_streak",
+      (item) => item.type === "win_streak"
     );
 
     store.registerRound({

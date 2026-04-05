@@ -251,7 +251,7 @@ describe("hasValidSavedTournament", () => {
       store.hasValidSavedTournament({
         bracket: validBracket,
         currentRoundIndex: 0,
-      }),
+      })
     ).toBe(true);
   });
 
@@ -264,13 +264,13 @@ describe("hasValidSavedTournament", () => {
       useTournamentStore().hasValidSavedTournament({
         bracket: [],
         currentRoundIndex: 0,
-      }),
+      })
     ).toBe(false);
   });
 
   it("hiányzó bracket esetén hamis", () => {
     expect(
-      useTournamentStore().hasValidSavedTournament({ currentRoundIndex: 0 }),
+      useTournamentStore().hasValidSavedTournament({ currentRoundIndex: 0 })
     ).toBe(false);
   });
 
@@ -279,7 +279,7 @@ describe("hasValidSavedTournament", () => {
       useTournamentStore().hasValidSavedTournament({
         bracket: [{ id: 1 }],
         currentRoundIndex: 0,
-      }),
+      })
     ).toBe(false);
   });
 
@@ -288,7 +288,7 @@ describe("hasValidSavedTournament", () => {
       useTournamentStore().hasValidSavedTournament({
         bracket: validBracket,
         currentRoundIndex: 5,
-      }),
+      })
     ).toBe(false);
   });
 
@@ -297,7 +297,7 @@ describe("hasValidSavedTournament", () => {
       useTournamentStore().hasValidSavedTournament({
         bracket: validBracket,
         currentRoundIndex: -1,
-      }),
+      })
     ).toBe(false);
   });
 });
@@ -434,7 +434,7 @@ describe("resumeTournament", () => {
   it("érvénytelen/korrupt mentésnél új tornát indít", () => {
     localStorage.setItem(
       "rpsls-game-state",
-      JSON.stringify({ tournament: { bracket: [], currentRoundIndex: 0 } }),
+      JSON.stringify({ tournament: { bracket: [], currentRoundIndex: 0 } })
     );
     const store = useTournamentStore();
     const result = store.resumeTournament({ size: 4 });

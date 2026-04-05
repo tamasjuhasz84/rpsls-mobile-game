@@ -21,7 +21,7 @@ describe("leaderboard store", () => {
         losses: 6,
         draws: 2,
         bestWinStreak: 5,
-      }),
+      })
     );
 
     const store = useLeaderboardStore();
@@ -50,7 +50,7 @@ describe("leaderboard store", () => {
     expect(store.dailyEntries).toHaveLength(10);
     expect(store.allTimeEntries).toHaveLength(10);
     expect(store.dailyEntries[0].score).toBeGreaterThan(
-      store.dailyEntries[store.dailyEntries.length - 1].score,
+      store.dailyEntries[store.dailyEntries.length - 1].score
     );
   });
 });

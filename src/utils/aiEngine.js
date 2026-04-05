@@ -121,7 +121,7 @@ export function getAiMoveByProfile(context = {}) {
   applyFavoriteBias(
     weights,
     profile.favoriteMoves,
-    1 + profile.difficultyTier * 0.2,
+    1 + profile.difficultyTier * 0.2
   );
 
   if (profile.strategyType === "favorite") {

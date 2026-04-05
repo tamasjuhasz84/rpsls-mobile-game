@@ -53,7 +53,7 @@ describe("WIN_RULES integritás", () => {
 
   it("összesen pontosan 10 győztes kapcsolat van (5×2)", () => {
     const allBeats = MOVES.flatMap((m) =>
-      WIN_RULES[m].map((beaten) => [m, beaten]),
+      WIN_RULES[m].map((beaten) => [m, beaten])
     );
     expect(allBeats).toHaveLength(10);
   });

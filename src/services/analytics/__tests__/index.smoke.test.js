@@ -129,7 +129,7 @@ describe("analytics init provider selection", () => {
       "session_start",
       expect.objectContaining({
         locale: "en",
-      }),
+      })
     );
   });
 
@@ -147,7 +147,7 @@ describe("analytics init provider selection", () => {
       "session_start",
       expect.objectContaining({
         locale: "en",
-      }),
+      })
     );
   });
 
@@ -165,7 +165,7 @@ describe("analytics init provider selection", () => {
       "session_start",
       expect.objectContaining({
         locale: "en",
-      }),
+      })
     );
   });
 });
