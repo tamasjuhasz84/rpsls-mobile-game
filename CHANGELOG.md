@@ -1,3 +1,10 @@
+# 1.0.0 (2026-04-05)
+
+
+### Bug Fixes
+
+* add skipWaiting/clientsClaim, gitattributes for PNG binary safety ([4e8e37d](https://github.com/tamasjuhasz84/rpsls-mobile-game/commit/4e8e37da871c80cd499f5f2ddcd728e2bbc5db04))
+
 # Changelog
 
 All notable changes to this project will be documented in this file.
